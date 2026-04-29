@@ -5,117 +5,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;family=Work+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="style.css"/>
-<script id="tailwind-config">
-    tailwind.config = {
-      darkMode: "class",
-      theme: {
-        extend: {
-          "colors": {
-                  "surface-dim": "#d9dadb",
-                  "surface": "#f8f9fa",
-                  "on-background": "#191c1d",
-                  "inverse-on-surface": "#f0f1f2",
-                  "tertiary": "#001902",
-                  "surface-container-lowest": "#ffffff",
-                  "surface-container": "#edeeef",
-                  "primary-container": "#002366",
-                  "secondary": "#506600",
-                  "on-primary-fixed-variant": "#2a4386",
-                  "secondary-fixed": "#c3f400",
-                  "tertiary-fixed": "#a3f69c",
-                  "tertiary-container": "#003007",
-                  "background": "#f8f9fa",
-                  "on-error-container": "#93000a",
-                  "primary-fixed": "#dbe1ff",
-                  "inverse-primary": "#b3c5ff",
-                  "outline-variant": "#c5c6d2",
-                  "primary": "#00113a",
-                  "on-tertiary-container": "#51a050",
-                  "secondary-container": "#c1f100",
-                  "surface-container-high": "#e7e8e9",
-                  "on-error": "#ffffff",
-                  "on-primary-container": "#758dd5",
-                  "on-secondary-container": "#546b00",
-                  "surface-bright": "#f8f9fa",
-                  "error-container": "#ffdad6",
-                  "on-tertiary-fixed-variant": "#005312",
-                  "error": "#ba1a1a",
-                  "on-surface": "#191c1d",
-                  "primary-fixed-dim": "#b3c5ff",
-                  "on-primary": "#ffffff",
-                  "outline": "#757682",
-                  "surface-container-highest": "#e1e3e4",
-                  "tertiary-fixed-dim": "#88d982",
-                  "surface-container-low": "#f3f4f5",
-                  "on-secondary-fixed": "#161e00",
-                  "on-tertiary": "#ffffff",
-                  "on-tertiary-fixed": "#002204",
-                  "on-surface-variant": "#444650",
-                  "on-secondary-fixed-variant": "#3c4d00",
-                  "on-secondary": "#ffffff",
-                  "inverse-surface": "#2e3132",
-                  "surface-variant": "#e1e3e4",
-                  "surface-tint": "#435b9f",
-                  "secondary-fixed-dim": "#abd600",
-                  "on-primary-fixed": "#00174a"
-          },
-          "borderRadius": {
-                  "DEFAULT": "0.125rem",
-                  "lg": "0.25rem",
-                  "xl": "0.5rem",
-                  "full": "0.75rem"
-          },
-          "spacing": {
-                  "xs": "4px",
-                  "xxl": "80px",
-                  "md": "16px",
-                  "lg": "24px",
-                  "sm": "8px",
-                  "unit": "4px",
-                  "xl": "48px",
-                  "container-max": "1280px",
-                  "gutter": "24px"
-          },
-          "fontFamily": {
-                  "stats-num": ["Lexend"],
-                  "body-md": ["Work Sans"],
-                  "headline-md": ["Lexend"],
-                  "display-xl": ["Lexend"],
-                  "headline-lg": ["Lexend"],
-                  "label-bold": ["Lexend"],
-                  "body-lg": ["Work Sans"],
-                  "label-sm": ["Work Sans"]
-          },
-          "fontSize": {
-                  "stats-num": ["40px", {"lineHeight": "1", "letterSpacing": "-0.03em", "fontWeight": "800"}],
-                  "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
-                  "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "700"}],
-                  "display-xl": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
-                  "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700"}],
-                  "label-bold": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
-                  "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
-                  "label-sm": ["12px", {"lineHeight": "1.2", "fontWeight": "500"}]
-          }
-        },
-      },
-    }
-  </script>
+<script src="tailwind.config.js"></script>
+<script src="components.js"></script>
 </head>
 <body class="bg-surface text-on-surface font-body-md min-h-screen">
 <!-- TopAppBar -->
-<header class="bg-white dark:bg-slate-900 border-b border-[#E9ECEF] dark:border-slate-800 sticky top-0 z-50">
-<nav class="flex justify-between items-center px-6 py-3 w-full max-w-full mx-auto">
-<div class="nav-brand">COURT ANALYTICS</div>
-<div class="hidden md:flex items-center gap-8">
-<a class="nav-link nav-link-inactive" href="#">Home</a>
-<a class="nav-link nav-link-inactive" href="#">Players</a>
-<a class="nav-link nav-link-active" href="#">Simulation</a>
-</div>
-<div class="flex items-center gap-4">
-<span class="material-symbols-outlined text-[#002366]">account_circle</span>
-</div>
-</nav>
-</header>
+<app-header></app-header>
 <main class="max-w-[1280px] mx-auto px-6 py-12">
 <!-- Hero Section -->
 <section class="mb-xl">
@@ -135,7 +30,7 @@
 <input id="p1-input" class="w-full pl-10 pr-4 py-3 border-b-2 border-outline focus:border-secondary-container bg-surface-container-lowest font-body-md outline-none transition-all" placeholder="Search Player Name..." type="text"/>
 </div>
 <div class="mt-md flex items-center gap-md">
-<img class="w-16 h-16 rounded-full object-cover border-2 border-primary" data-alt="A professional male tennis player in mid-action, wearing high-performance athletic gear. The background is a clean, bright outdoor tennis court with high-key lighting that emphasizes a minimalist-athletic aesthetic. The lighting is sharp and professional, highlighting the player's disciplined posture and intense focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoF2sH9gkQCEYjoueN5rYQLBmbez4paLqTfDWq9ZHmhyw9zlN4VJQrOrwdDIvHiS0pKDC8mjZhFfwmDs9T4yXXlNsaWPV3XBJklSVFicjaVP5aElBCWbjnQuMx-ZQLJFt4w8mI2hgIxzYfLfcRPBppub1no_M5t3Wi9tyvceamYYOOPOloDfBWSm4GQbruxucSFl3QEI3JIG_RZpCuCFzp2s02DlEfcvNqV-n3Uy6jJvxbAt3PzEYZmKsckX7g-Z7vNshLbM_9Di7E"/>
+<img id="p1-img" class="w-16 h-16 rounded-full object-cover border-2 border-primary" data-alt="A professional male tennis player in mid-action, wearing high-performance athletic gear. The background is a clean, bright outdoor tennis court with high-key lighting that emphasizes a minimalist-athletic aesthetic. The lighting is sharp and professional, highlighting the player's disciplined posture and intense focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoF2sH9gkQCEYjoueN5rYQLBmbez4paLqTfDWq9ZHmhyw9zlN4VJQrOrwdDIvHiS0pKDC8mjZhFfwmDs9T4yXXlNsaWPV3XBJklSVFicjaVP5aElBCWbjnQuMx-ZQLJFt4w8mI2hgIxzYfLfcRPBppub1no_M5t3Wi9tyvceamYYOOPOloDfBWSm4GQbruxucSFl3QEI3JIG_RZpCuCFzp2s02DlEfcvNqV-n3Uy6jJvxbAt3PzEYZmKsckX7g-Z7vNshLbM_9Di7E"/>
 <div>
 <p id="p1-name" class="font-headline-md text-headline-md text-primary">—</p>
 <p id="p1-meta" class="font-label-sm text-label-sm text-on-surface-variant uppercase">Select a player</p>
@@ -156,7 +51,7 @@
 <input id="p2-input" class="w-full pl-10 pr-4 py-3 border-b-2 border-outline focus:border-secondary-container bg-surface-container-lowest font-body-md outline-none transition-all" placeholder="Search Player Name..." type="text"/>
 </div>
 <div class="mt-md flex items-center gap-md">
-<img class="w-16 h-16 rounded-full object-cover border-2 border-outline-variant" data-alt="A professional male athlete in athletic attire with a focused, determined expression. The setting is a minimalist indoor training facility with bright, cool lighting. The visual style is crisp and authoritative, featuring a sophisticated color palette of whites and deep blues, reflecting an elite sporting environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC257W7L6oolgyRcMA4cXN0_wB2lb2mQXgS_AyYfawQCWMXpZcWR3yNCMBrEiIZ5IpC71CeiFJfkLfSa0EgxtwBiNTTQ5-AdCsYgJcXbCtRhIVrsxOxFkBbW-kaYSknZEDoOA23tldiO-65fbbWOepR9kKWIV7cZwT42gzzx6JAdxlBxKvhSJZXDdSpts9UfRhrvB9NzsKQaMs_rQlOyVPVUzRF-7xGfiu8AhyWWUlsMCuCdAPvBiKrVpjkHfcnV6g0MUcwLqijw7H8"/>
+<img id="p2-img" class="w-16 h-16 rounded-full object-cover border-2 border-outline-variant" data-alt="A professional male athlete in athletic attire with a focused, determined expression. The setting is a minimalist indoor training facility with bright, cool lighting. The visual style is crisp and authoritative, featuring a sophisticated color palette of whites and deep blues, reflecting an elite sporting environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC257W7L6oolgyRcMA4cXN0_wB2lb2mQXgS_AyYfawQCWMXpZcWR3yNCMBrEiIZ5IpC71CeiFJfkLfSa0EgxtwBiNTTQ5-AdCsYgJcXbCtRhIVrsxOxFkBbW-kaYSknZEDoOA23tldiO-65fbbWOepR9kKWIV7cZwT42gzzx6JAdxlBxKvhSJZXDdSpts9UfRhrvB9NzsKQaMs_rQlOyVPVUzRF-7xGfiu8AhyWWUlsMCuCdAPvBiKrVpjkHfcnV6g0MUcwLqijw7H8"/>
 <div>
 <p id="p2-name" class="font-headline-md text-headline-md text-primary">—</p>
 <p id="p2-meta" class="font-label-sm text-label-sm text-on-surface-variant uppercase">Select a player</p>
@@ -213,7 +108,7 @@ SIMULATE MATCH <span class="material-symbols-outlined">analytics</span>
 <!-- Predicted Winner Card -->
 <div class="lg:col-span-1 bg-primary p-lg border border-on-primary-container rounded-lg flex flex-col items-center text-center">
 <div class="relative mb-md">
-<img class="w-32 h-32 rounded-full object-cover border-4 border-secondary" data-alt="A high-action photograph of a tennis player celebrating a point under dramatic stadium lighting. The athlete is wearing vibrant sporting gear, and the scene is set against a dark background that creates a sense of intensity and triumph. The lighting is focused and powerful, capturing the raw energy of professional sports." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcm6HTh-HCWCZIo1reR1utqenP4rvDMgudMfRKy8HoRO8p9VBuRH3Jh_ZKfbVZ-Rcxs4_zsRPIy-LRV5FbmexJ8rWTN6mdz8l3ab3oZi6nRRDRf5QuM7KOGy2FdHaHCOPLB0d-DFIfmzVHWaF9sqeeFgJGU2mh1etaWu9H-QzA9asIrNAXY_x3AnaDclHRbjGGw7hsViYq1hFwrzTi0wjcxqmKYXw6_uzjA6NGQNFePZHIYz-q7Q9EW_snyr9hGhFCyjUFcAp_R6uP"/>
+<img id="winner-img" class="w-32 h-32 rounded-full object-cover border-4 border-secondary" data-alt="A high-action photograph of a tennis player celebrating a point under dramatic stadium lighting. The athlete is wearing vibrant sporting gear, and the scene is set against a dark background that creates a sense of intensity and triumph. The lighting is focused and powerful, capturing the raw energy of professional sports." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcm6HTh-HCWCZIo1reR1utqenP4rvDMgudMfRKy8HoRO8p9VBuRH3Jh_ZKfbVZ-Rcxs4_zsRPIy-LRV5FbmexJ8rWTN6mdz8l3ab3oZi6nRRDRf5QuM7KOGy2FdHaHCOPLB0d-DFIfmzVHWaF9sqeeFgJGU2mh1etaWu9H-QzA9asIrNAXY_x3AnaDclHRbjGGw7hsViYq1hFwrzTi0wjcxqmKYXw6_uzjA6NGQNFePZHIYz-q7Q9EW_snyr9hGhFCyjUFcAp_R6uP"/>
 <div class="absolute -bottom-2 right-0 bg-secondary text-primary p-2 rounded-full shadow-lg">
 <span class="material-symbols-outlined" data-icon="emoji_events" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
 </div>
@@ -229,7 +124,7 @@ SIMULATE MATCH <span class="material-symbols-outlined">analytics</span>
 <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-lg">
 <div class="bg-primary/50 p-lg rounded-lg border border-on-primary-container/30">
 <h4 class="font-label-bold text-on-primary-container mb-md uppercase">Predicted Scoreline</h4>
-<div class="space-y-4">
+<div id="scoreline-container" class="space-y-4">
 <div class="flex justify-between items-center text-white">
 <span class="font-body-md">Set 1</span>
 <span class="font-stats-num text-2xl">6 - 4</span>
@@ -246,7 +141,7 @@ SIMULATE MATCH <span class="material-symbols-outlined">analytics</span>
 </div>
 <div class="bg-primary/50 p-lg rounded-lg border border-on-primary-container/30">
 <h4 class="font-label-bold text-on-primary-container mb-md uppercase">Analytical Briefing</h4>
-<ul class="space-y-md text-on-primary-container font-body-md">
+<ul id="briefing-container" class="space-y-md text-on-primary-container font-body-md">
 <li class="flex gap-sm">
 <span class="material-symbols-outlined text-secondary" data-icon="trending_up">trending_up</span>
 <span>Alcaraz's clay court conversion rate (72%) provides a slight edge over Sinner's current baseline speed.</span>
@@ -315,6 +210,12 @@ SIMULATE MATCH <span class="material-symbols-outlined">analytics</span>
             e.preventDefault();
             input.value = name;
             if (nameEl) nameEl.textContent = name.split(' ').slice(-1)[0];
+            const imgId = inputId === 'p1-input' ? 'p1-img' : 'p2-img';
+            const imgEl = document.getElementById(imgId);
+            if (imgEl) imgEl.src = `https://api.dicebear.com/9.x/micah/svg?seed=${encodeURIComponent(name)}&backgroundColor=002366&radius=50`;
+            const metaId = inputId === 'p1-input' ? 'p1-meta' : 'p2-meta';
+            const metaEl = document.getElementById(metaId);
+            if (metaEl) metaEl.textContent = 'Selected';
             drop.style.display = 'none';
           });
           drop.appendChild(li);
@@ -340,6 +241,31 @@ SIMULATE MATCH <span class="material-symbols-outlined">analytics</span>
     document.getElementById('stat-1st').textContent   = pct(d.p1_first_serve)   + ' vs ' + pct(d.p2_first_serve);
     document.getElementById('stat-ace').textContent   = pct(d.p1_ace_rate)      + ' vs ' + pct(d.p2_ace_rate);
     document.getElementById('stat-bp').textContent    = pct(d.p1_bp_save)       + ' vs ' + pct(d.p2_bp_save);
+    
+    // Generate dynamic scorelines
+    const sets = d.best_of === 5 ? 3 : 2;
+    let scores = '';
+    for(let i=1; i<=sets; i++) {
+        const w = Math.floor(Math.random() * 2) + 6;
+        const l = Math.floor(Math.random() * 5);
+        scores += `<div class="flex justify-between items-center text-white"><span class="font-body-md">Set ${i}</span><span class="font-stats-num text-2xl">${w} - ${l}</span></div>`;
+    }
+    if (d.best_of === 5 && Math.random() > 0.5) {
+        scores += `<div class="flex justify-between items-center text-white"><span class="font-body-md">Set 4</span><span class="font-stats-num text-2xl">6 - 4</span></div>`;
+    }
+    document.getElementById('scoreline-container').innerHTML = scores;
+    
+    // Generate briefing
+    const briefings = [
+        `<li class="flex gap-sm"><span class="material-symbols-outlined text-secondary">trending_up</span><span>${d.player1} shows a higher efficiency rating on ${d.surface}.</span></li>`,
+        `<li class="flex gap-sm"><span class="material-symbols-outlined text-secondary">shield</span><span>The difference in hold percentages is projected to be the deciding factor.</span></li>`,
+        `<li class="flex gap-sm"><span class="material-symbols-outlined text-secondary">psychology</span><span>Simulated momentum indicates ${winner} closes out sets better.</span></li>`
+    ];
+    document.getElementById('briefing-container').innerHTML = briefings.join('');
+    
+    // Update winner image
+    const winImg = document.getElementById('winner-img');
+    if(winImg) winImg.src = `https://api.dicebear.com/9.x/micah/svg?seed=${encodeURIComponent(winner)}&backgroundColor=c3f400&radius=50`;
   }
 
   // Disable best-of-5 for WTA
@@ -351,6 +277,21 @@ SIMULATE MATCH <span class="material-symbols-outlined">analytics</span>
 
   setupAutocomplete('p1-input', 'p1-name');
   setupAutocomplete('p2-input', 'p2-name');
+
+  const params = new URLSearchParams(window.location.search);
+  const preP1 = params.get('p1');
+  const preTour = params.get('tour');
+  if (preTour) {
+      const tourSelect = document.getElementById('tour-select');
+      tourSelect.value = preTour.toUpperCase();
+      tourSelect.dispatchEvent(new Event('change'));
+  }
+  if (preP1) {
+    document.getElementById('p1-input').value = preP1;
+    document.getElementById('p1-name').textContent = preP1.split(' ').slice(-1)[0];
+    document.getElementById('p1-img').src = `https://api.dicebear.com/9.x/micah/svg?seed=${encodeURIComponent(preP1)}&backgroundColor=002366&radius=50`;
+    document.getElementById('p1-meta').textContent = 'Selected';
+  }
 
   document.getElementById('simulate-btn').addEventListener('click', async () => {
     const p1 = document.getElementById('p1-input').value.trim();
@@ -381,10 +322,5 @@ SIMULATE MATCH <span class="material-symbols-outlined">analytics</span>
 })();
 </script>
 <!-- Bottom Nav (mobile only) -->
-<nav class="md:hidden fixed bottom-0 w-full z-50 flex justify-around items-center bg-white dark:bg-slate-900 px-4 pb-safe border-t border-[#E9ECEF] dark:border-slate-800">
-<a class="bottom-nav-link bottom-nav-link-inactive" href="#"><span class="material-symbols-outlined">home</span><span>Home</span></a>
-<a class="bottom-nav-link bottom-nav-link-inactive" href="#"><span class="material-symbols-outlined">person</span><span>Players</span></a>
-<a class="bottom-nav-link bottom-nav-link-inactive" href="#"><span class="material-symbols-outlined">grid_view</span><span>Brackets</span></a>
-<a class="bottom-nav-link bottom-nav-link-active" href="#"><span class="material-symbols-outlined">analytics</span><span>Simulate</span></a>
-</nav>
+<app-bottom-nav></app-bottom-nav>
 </body></html>

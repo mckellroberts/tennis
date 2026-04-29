@@ -117,10 +117,33 @@ def player_profile(name):
     """, (name, name))
     recent = [dict(r) for r in cur.fetchall()]
 
+    cur = conn.execute(f"""
+        SELECT 
+            SUM(return_pts_won) * 1.0 / NULLIF(SUM(return_pts_total), 0) AS return_dominance,
+            AVG(CASE WHEN total_games > 0 AND minutes > 0 THEN minutes * 1.0 / total_games ELSE NULL END) AS grind_factor
+        FROM (
+            SELECT 
+                l_svpt - (COALESCE(l_1stWon, 0) + COALESCE(l_2ndWon, 0)) AS return_pts_won,
+                l_svpt AS return_pts_total,
+                minutes,
+                COALESCE(w_SvGms, 0) + COALESCE(l_SvGms, 0) AS total_games
+            FROM {table} WHERE winner_name = ? AND match_type = 'main' AND l_svpt IS NOT NULL
+            UNION ALL
+            SELECT 
+                w_svpt - (COALESCE(w_1stWon, 0) + COALESCE(w_2ndWon, 0)) AS return_pts_won,
+                w_svpt AS return_pts_total,
+                minutes,
+                COALESCE(w_SvGms, 0) + COALESCE(l_SvGms, 0) AS total_games
+            FROM {table} WHERE loser_name = ? AND match_type = 'main' AND w_svpt IS NOT NULL
+        )
+    """, (name, name))
+    adv_row = cur.fetchone()
+    advanced = dict(adv_row) if adv_row else {"return_dominance": None, "grind_factor": None}
+
     conn.close()
     if not surfaces:
         abort(404)
-    return jsonify({"name": name, "tour": tour, "surfaces": surfaces, "recent_matches": recent})
+    return jsonify({"name": name, "tour": tour, "surfaces": surfaces, "recent_matches": recent, "advanced": advanced})
 
 # ── API: simulate ─────────────────────────────────────────────────────────────
 @app.route("/api/simulate", methods=["POST"])
