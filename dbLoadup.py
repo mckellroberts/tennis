@@ -493,7 +493,7 @@ def main():
     elapsed = time.time() - t0
     print(f"\n✓ Done — {total:,} singles matches loaded in {elapsed:.1f}s")
     print(f"  Database: {DB_PATH}")
-    print(f"\nNext step:\n  python simulator.py --db {DB_PATH}")
+    print(f"\nNext step:\n  python3 simulator.py")
 
 if __name__ == "__main__":
     main()
