@@ -1,15 +1,16 @@
 """
-ATP What-If Match Simulator
-============================
+Tennis What-If Match Simulator
+================================
 Given two player names and a surface, uses historical serve statistics from
 the SQLite database to estimate each player's probability of winning via a
-Markov-chain tennis model.
+Markov-chain tennis model. Supports both ATP (men) and WTA (women) tours.
 
 Usage:
     python simulator.py                         # interactive mode
     python simulator.py --db atp.db             # specify db path
-    python simulator.py --player1 "Roger Federer" --player2 "Rafael Nadal" --surface Clay
+    python simulator.py --tour WTA --player1 "Iga Swiatek" --player2 "Aryna Sabalenka" --surface Clay
     python simulator.py --list-players          # show all players with stats
+    python simulator.py --tour WTA --list-players
 
 How the math works:
     1. Pull each player's average serve_win_pct (p) per surface from SQLite.
@@ -25,18 +26,25 @@ from functools import lru_cache
 from typing import Optional
 
 # ── Args ──────────────────────────────────────────────────────────────────────
-parser = argparse.ArgumentParser(description="ATP What-If Match Simulator")
+parser = argparse.ArgumentParser(description="Tennis What-If Match Simulator")
 parser.add_argument("--db",      default="atp.db", help="SQLite database path")
+parser.add_argument("--tour",    default=None, choices=["ATP","WTA"],
+                    help="Tour to simulate (ATP=men, WTA=women)")
 parser.add_argument("--player1", default=None)
 parser.add_argument("--player2", default=None)
 parser.add_argument("--surface", default=None, choices=["Hard","Clay","Grass","Carpet"])
 parser.add_argument("--best-of", default=None, type=int, choices=[3,5],
-                    help="Best of 3 or 5 sets (default: infer from surface/era)")
+                    help="Best of 3 or 5 sets (default: 3 for WTA, 3 for ATP non-Slams)")
 parser.add_argument("--list-players", action="store_true",
                     help="Print all players that have surface stats in the DB")
-args = parser.parse_args()
+args, _ = parser.parse_known_args()
 
 DB_PATH = args.db
+
+TOUR_VIEW = {
+    "ATP": "player_surface_stats",
+    "WTA": "wta_player_surface_stats",
+}
 
 # ── Database helpers ──────────────────────────────────────────────────────────
 def get_conn():
@@ -49,30 +57,27 @@ def get_conn():
         print("Run setup_db.py first.")
         sys.exit(1)
 
-def fetch_player_stats(conn, player: str, surface: str) -> Optional[sqlite3.Row]:
+def fetch_player_stats(conn, player: str, surface: str, stats_view: str) -> Optional[sqlite3.Row]:
     """Return player stats row for given surface, or None if not found."""
     cur = conn.execute(
-        """SELECT * FROM player_surface_stats
-           WHERE player = ? AND surface = ?""",
+        f"SELECT * FROM {stats_view} WHERE player = ? AND surface = ?",
         (player, surface)
     )
     return cur.fetchone()
 
-def search_players(conn, query: str) -> list[str]:
+def search_players(conn, query: str, stats_view: str) -> list[str]:
     """Fuzzy search player names (case-insensitive substring)."""
     cur = conn.execute(
-        """SELECT DISTINCT player FROM player_surface_stats
-           WHERE LOWER(player) LIKE LOWER(?)
-           ORDER BY player""",
+        f"SELECT DISTINCT player FROM {stats_view}"
+        " WHERE LOWER(player) LIKE LOWER(?) ORDER BY player",
         (f"%{query}%",)
     )
     return [r["player"] for r in cur.fetchall()]
 
-def list_all_players(conn):
+def list_all_players(conn, stats_view: str):
     cur = conn.execute(
-        """SELECT player, surface, match_count, ROUND(serve_win_pct*100,1) AS swp
-           FROM player_surface_stats
-           ORDER BY player, surface"""
+        f"SELECT player, surface, match_count, ROUND(serve_win_pct*100,1) AS swp"
+        f" FROM {stats_view} ORDER BY player, surface"
     )
     rows = cur.fetchall()
     print(f"\n{'Player':<30} {'Surface':<10} {'Matches':>8} {'Serve Win%':>11}")
@@ -238,11 +243,12 @@ def simulate(
     p2_name: str,
     surface: str,
     best_of: int,
-    conn: sqlite3.Connection
+    conn: sqlite3.Connection,
+    stats_view: str = "player_surface_stats",
 ) -> dict:
 
-    s1 = fetch_player_stats(conn, p1_name, surface)
-    s2 = fetch_player_stats(conn, p2_name, surface)
+    s1 = fetch_player_stats(conn, p1_name, surface, stats_view)
+    s2 = fetch_player_stats(conn, p2_name, surface, stats_view)
 
     if s1 is None:
         return {"error": f"No {surface} stats found for '{p1_name}'"}
@@ -368,12 +374,23 @@ def print_result(r: dict):
     print()
 
 # ── Interactive mode ──────────────────────────────────────────────────────────
-def pick_player(conn, prompt: str) -> str:
+def pick_tour() -> str:
+    print("\n  Tour:")
+    print("    1. ATP (Men)")
+    print("    2. WTA (Women)")
+    while True:
+        choice = input("  Pick tour (1-2): ").strip()
+        if choice == "1":
+            return "ATP"
+        if choice == "2":
+            return "WTA"
+
+def pick_player(conn, prompt: str, stats_view: str) -> str:
     while True:
         query = input(prompt).strip()
         if not query:
             continue
-        matches = search_players(conn, query)
+        matches = search_players(conn, query, stats_view)
         if not matches:
             print(f"  No players found matching '{query}'. Try a shorter name.")
             continue
@@ -408,22 +425,30 @@ def pick_surface(conn, player1: str, player2: str) -> str:
         except ValueError:
             pass
 
-def interactive(conn):
+def interactive(conn, tour: Optional[str] = None):
     print()
     print("╔══════════════════════════════════════════╗")
-    print("║   🎾  ATP What-If Match Simulator        ║")
+    print("║   🎾  Tennis What-If Match Simulator     ║")
     print("║   Powered by historical serve stats      ║")
     print("╚══════════════════════════════════════════╝")
     print()
 
     while True:
-        p1 = pick_player(conn, "\nPlayer 1 name (partial OK): ")
-        p2 = pick_player(conn, "Player 2 name (partial OK): ")
-        surface = pick_surface(conn, p1, p2)
-        bo_input = input("Best of 3 or 5? [3]: ").strip()
-        best_of = 5 if bo_input == "5" else 3
+        current_tour = tour or pick_tour()
+        stats_view = TOUR_VIEW[current_tour]
+        default_bo = 3  # WTA is always best-of-3; ATP Slams can be 5
 
-        result = simulate(p1, p2, surface, best_of, conn)
+        p1 = pick_player(conn, "\nPlayer 1 name (partial OK): ", stats_view)
+        p2 = pick_player(conn, "Player 2 name (partial OK): ", stats_view)
+        surface = pick_surface(conn, p1, p2)
+
+        if current_tour == "ATP":
+            bo_input = input("Best of 3 or 5? [3]: ").strip()
+            best_of = 5 if bo_input == "5" else 3
+        else:
+            best_of = 3
+
+        result = simulate(p1, p2, surface, best_of, conn, stats_view)
         if "error" in result:
             print(f"\n  ⚠  {result['error']}")
         else:
@@ -438,21 +463,22 @@ def interactive(conn):
 # ── Entry point ───────────────────────────────────────────────────────────────
 def main():
     conn = get_conn()
+    tour = args.tour or "ATP"
+    stats_view = TOUR_VIEW[tour]
 
     if args.list_players:
-        list_all_players(conn)
+        list_all_players(conn, stats_view)
         return
 
     if args.player1 and args.player2 and args.surface:
-        # Non-interactive mode
         best_of = args.best_of or 3
-        result = simulate(args.player1, args.player2, args.surface, best_of, conn)
+        result = simulate(args.player1, args.player2, args.surface, best_of, conn, stats_view)
         if "error" in result:
             print(f"Error: {result['error']}")
             sys.exit(1)
         print_result(result)
     else:
-        interactive(conn)
+        interactive(conn, tour=args.tour)
 
     conn.close()
 

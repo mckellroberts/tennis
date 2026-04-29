@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;family=Work+Sans:wght@100..900&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#d9dadb",
+                        "surface": "#f8f9fa",
+                        "on-background": "#191c1d",
+                        "inverse-on-surface": "#f0f1f2",
+                        "tertiary": "#001902",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#edeeef",
+                        "primary-container": "#002366",
+                        "secondary": "#506600",
+                        "on-primary-fixed-variant": "#2a4386",
+                        "secondary-fixed": "#c3f400",
+                        "tertiary-fixed": "#a3f69c",
+                        "tertiary-container": "#003007",
+                        "background": "#f8f9fa",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#dbe1ff",
+                        "inverse-primary": "#b3c5ff",
+                        "outline-variant": "#c5c6d2",
+                        "primary": "#00113a",
+                        "on-tertiary-container": "#51a050",
+                        "secondary-container": "#c1f100",
+                        "surface-container-high": "#e7e8e9",
+                        "on-error": "#ffffff",
+                        "on-primary-container": "#758dd5",
+                        "on-secondary-container": "#546b00",
+                        "surface-bright": "#f8f9fa",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#005312",
+                        "error": "#ba1a1a",
+                        "on-surface": "#191c1d",
+                        "primary-fixed-dim": "#b3c5ff",
+                        "on-primary": "#ffffff",
+                        "outline": "#757682",
+                        "surface-container-highest": "#e1e3e4",
+                        "surface-container-low": "#f3f4f5",
+                        "on-secondary-fixed": "#161e00",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#002204",
+                        "on-surface-variant": "#444650",
+                        "on-secondary-fixed-variant": "#3c4d00",
+                        "on-secondary": "#ffffff",
+                        "inverse-surface": "#2e3132",
+                        "surface-variant": "#e1e3e4",
+                        "surface-tint": "#435b9f",
+                        "secondary-fixed-dim": "#abd600",
+                        "on-primary-fixed": "#00174a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "xxl": "80px",
+                        "md": "16px",
+                        "lg": "24px",
+                        "sm": "8px",
+                        "unit": "4px",
+                        "xl": "48px",
+                        "container-max": "1280px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "stats-num": ["Lexend"],
+                        "body-md": ["Work Sans"],
+                        "headline-md": ["Lexend"],
+                        "display-xl": ["Lexend"],
+                        "headline-lg": ["Lexend"],
+                        "label-bold": ["Lexend"],
+                        "body-lg": ["Work Sans"],
+                        "label-sm": ["Work Sans"]
+                    },
+                    "fontSize": {
+                        "stats-num": ["40px", {"lineHeight": "1", "letterSpacing": "-0.03em", "fontWeight": "800"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "700"}],
+                        "display-xl": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "label-bold": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "1.2", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md overflow-x-hidden">
+<!-- Top Navigation -->
+<header class="bg-white dark:bg-slate-900 border-b border-[#E9ECEF] dark:border-slate-800 sticky top-0 z-50">
+<nav class="flex justify-between items-center px-6 py-3 w-full max-w-full mx-auto">
+<div class="nav-brand">COURT ANALYTICS</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="nav-link nav-link-inactive" href="#">Home</a>
+<a class="nav-link nav-link-active" href="#">Players</a>
+<a class="nav-link nav-link-inactive" href="#">Simulation</a>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#002366]">account_circle</span>
+</div>
+</nav>
+</header>
+<main class="w-full">
+<!-- Hero Section -->
+<section class="relative h-[600px] overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover object-top" data-alt="A high-quality, cinematic shot of a tennis court with professional lighting, matching the premium brand aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-la2-hHbbhTb0j3DAvfbk48j7pOg04d8x7Ge4hVI6owCxowhzvzUSw7XK4e415j9vTkLV8Nac_Ia3XQ-HFYU7VOLbYU-lBllebIrJ3tWoascmnbcalevo8RZNAWUSBU2KIiDhkHjGiXwdeJ8gsxZu8I_NHOt34JCOrsOEPMBz_RCpR5uTCuzP5_YJgQ-uqie_CIK0I4J-6KfaRxGilJ6uVy07aJQVVNRWL6VuZnJpCY2NhwW9CBw5KxHl6iJzWbenQt9kuWXtdoi_"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary-container via-transparent to-transparent opacity-90"></div>
+</div>
+<div class="relative z-10 h-full max-w-container-max mx-auto px-gutter flex flex-col justify-end pb-xl">
+<div class="flex items-baseline gap-sm mb-xs">
+<span id="player-rank" class="bg-secondary-container text-on-secondary-container px-md py-xs font-label-bold text-label-bold uppercase rounded-lg">Rank #12</span>
+<span id="player-tour" class="text-surface-bright/80 font-label-bold text-label-bold uppercase">ATP Tour</span>
+</div>
+<h1 id="player-name" class="text-white font-display-xl text-display-xl uppercase tracking-tighter mb-sm">Alexander Volkov</h1>
+<div class="flex gap-lg items-center text-surface-bright/90">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-sm" data-icon="flag">flag</span>
+<span id="player-country" class="font-label-bold text-label-bold uppercase">Germany</span>
+</div>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-sm" data-icon="height">height</span>
+<span class="font-label-bold text-label-bold uppercase">198 cm</span>
+</div>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-sm" data-icon="calendar_today">calendar_today</span>
+<span class="font-label-bold text-label-bold uppercase">Age 26</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Stats Overview Bento Grid -->
+<section class="max-w-container-max mx-auto px-gutter -mt-xl relative z-20 pb-xxl">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-lg">
+<!-- Bio Card -->
+<div class="md:col-span-8 bg-white border border-[#E9ECEF] p-lg">
+<h2 class="font-headline-md text-headline-md mb-md uppercase text-primary">Player Bio</h2>
+<p class="text-on-surface-variant font-body-lg text-body-lg leading-relaxed mb-lg">
+                        Known for his explosive serve and aggressive baseline play, Alexander Volkov has rapidly ascended the global rankings. His strategic intelligence on clay courts has earned him two major titles this season, making him a formidable opponent in the upcoming Grand Slam cycle.
+                    </p>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-md">
+<div class="border-l-2 border-primary-container pl-md py-xs">
+<p class="text-slate-400 font-label-sm text-label-sm uppercase">Serve Win%</p>
+<p id="stat-serve-win" class="text-primary font-stats-num text-stats-num">74%</p>
+</div>
+<div class="border-l-2 border-primary-container pl-md py-xs">
+<p class="text-slate-400 font-label-sm text-label-sm uppercase">Ace Rate</p>
+<p id="stat-ace-rate" class="text-primary font-stats-num text-stats-num">—</p>
+</div>
+<div class="border-l-2 border-primary-container pl-md py-xs">
+<p class="text-slate-400 font-label-sm text-label-sm uppercase">Titles</p>
+<p class="text-primary font-stats-num text-stats-num">08</p>
+</div>
+<div class="border-l-2 border-primary-container pl-md py-xs">
+<p class="text-slate-400 font-label-sm text-label-sm uppercase">Prize Money</p>
+<p class="text-primary font-label-bold text-headline-md mt-sm">$12.4M</p>
+</div>
+</div>
+</div>
+<!-- Surface Preference -->
+<div class="md:col-span-4 bg-primary-container text-white p-lg flex flex-col justify-between">
+<div>
+<h3 class="font-headline-md text-headline-md mb-md uppercase text-on-primary-container">Surface Mastery</h3>
+<div class="space-y-md">
+<div>
+<div class="flex justify-between font-label-bold text-label-sm uppercase mb-xs">
+<span>Clay</span>
+<span id="pct-clay">88%</span>
+</div>
+<div class="h-2 bg-primary w-full overflow-hidden">
+<div id="bar-clay" class="h-full bg-secondary-container" style="width:88%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between font-label-bold text-label-sm uppercase mb-xs">
+<span>Hard Court</span>
+<span id="pct-hard">72%</span>
+</div>
+<div class="h-2 bg-primary w-full overflow-hidden">
+<div id="bar-hard" class="h-full bg-secondary-container" style="width:72%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between font-label-bold text-label-sm uppercase mb-xs">
+<span>Grass</span>
+<span id="pct-grass">45%</span>
+</div>
+<div class="h-2 bg-primary w-full overflow-hidden">
+<div id="bar-grass" class="h-full bg-secondary-container" style="width:45%"></div>
+</div>
+</div>
+</div>
+</div>
+<button class="mt-xl bg-secondary-container text-on-secondary-container py-md font-label-bold text-label-bold uppercase w-full hover:opacity-90 transition-opacity">
+                        Compare Performance
+                    </button>
+</div>
+<!-- Combined History and Analytics Section -->
+<div class="md:col-span-12 grid grid-cols-1 lg:grid-cols-12 gap-lg">
+<!-- Match History Table -->
+<div class="lg:col-span-6 bg-white border border-[#E9ECEF] p-lg">
+<h3 class="font-headline-md text-headline-md mb-lg uppercase text-primary">Recent History</h3>
+<div class="overflow-hidden">
+<table class="w-full text-left">
+<thead>
+<tr class="font-label-bold text-label-sm uppercase text-slate-400 border-b border-[#E9ECEF]">
+<th class="pb-sm font-normal">Tournament</th>
+<th class="pb-sm font-normal">Opponent</th>
+<th class="pb-sm font-normal">Result</th>
+<th class="pb-sm font-normal text-right">Score</th>
+</tr>
+</thead>
+<tbody id="match-tbody" class="font-body-md text-sm">
+<tr class="border-b border-surface-container hover:bg-surface-dim/20">
+<td class="py-md font-bold text-primary">Madrid Open</td>
+<td class="py-md">Carlos Alcaraz</td>
+<td class="py-md text-secondary-container bg-primary-container px-sm inline-block my-md text-[10px] font-bold uppercase rounded-sm">Win</td>
+<td class="py-md text-right font-stats-num text-xs tracking-widest">6-4, 6-7, 6-3</td>
+</tr>
+<tr class="border-b border-surface-container hover:bg-surface-dim/20">
+<td class="py-md font-bold text-primary">Monte Carlo</td>
+<td class="py-md">Novak Djokovic</td>
+<td class="py-md text-error px-sm inline-block my-md text-[10px] font-bold uppercase border border-error">Loss</td>
+<td class="py-md text-right font-stats-num text-xs tracking-widest">3-6, 4-6</td>
+</tr>
+<tr class="border-b border-surface-container hover:bg-surface-dim/20">
+<td class="py-md font-bold text-primary">Miami Open</td>
+<td class="py-md">Casper Ruud</td>
+<td class="py-md text-secondary-container bg-primary-container px-sm inline-block my-md text-[10px] font-bold uppercase rounded-sm">Win</td>
+<td class="py-md text-right font-stats-num text-xs tracking-widest">7-5, 6-2</td>
+</tr>
+<tr class="border-b border-surface-container hover:bg-surface-dim/20">
+<td class="py-md font-bold text-primary">Indian Wells</td>
+<td class="py-md">Taylor Fritz</td>
+<td class="py-md text-secondary-container bg-primary-container px-sm inline-block my-md text-[10px] font-bold uppercase rounded-sm">Win</td>
+<td class="py-md text-right font-stats-num text-xs tracking-widest">6-3, 6-4</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Advanced Analytics Column -->
+<div class="lg:col-span-6 flex flex-col gap-lg">
+<div class="bg-white p-lg border border-[#E9ECEF] flex-1">
+<div class="flex items-center gap-md mb-md">
+<span class="material-symbols-outlined text-on-primary-container text-2xl" data-icon="sports_tennis">sports_tennis</span>
+<h4 class="font-headline-md text-headline-md uppercase text-primary">Shot Quality</h4>
+</div>
+<p class="text-on-surface-variant font-body-md text-body-md mb-md">Volkov's forehand depth averages 1.2m from the baseline, placing him in the top 5th percentile of the tour.</p>
+<div class="flex items-center gap-sm">
+<span class="font-stats-num text-primary text-2xl">9.4</span>
+<span class="text-slate-400 font-label-sm uppercase">/ 10.0 Index</span>
+</div>
+</div>
+<div class="bg-white p-lg border border-[#E9ECEF] flex-1">
+<div class="flex items-center gap-md mb-md">
+<span class="material-symbols-outlined text-on-primary-container text-2xl" data-icon="speed">speed</span>
+<h4 class="font-headline-md text-headline-md uppercase text-primary">Court Coverage</h4>
+</div>
+<p class="text-on-surface-variant font-body-md text-body-md mb-md">Average speed during defensive transitions is 18.5 km/h, showcasing elite lateral movement.</p>
+<div class="flex items-center gap-sm">
+<span class="font-stats-num text-primary text-2xl">18.5</span>
+<span class="text-slate-400 font-label-sm uppercase">KM/H Avg</span>
+</div>
+</div>
+<div class="bg-white p-lg border border-[#E9ECEF] flex-1">
+<div class="flex items-center gap-md mb-md">
+<span class="material-symbols-outlined text-on-primary-container text-2xl" data-icon="psychology">psychology</span>
+<h4 class="font-headline-md text-headline-md uppercase text-primary">Clutch Rating</h4>
+</div>
+<p class="text-on-surface-variant font-body-md text-body-md mb-md">Winning 62% of break points saved, maintaining composure during critical match phases.</p>
+<div class="flex items-center gap-sm">
+<span class="font-stats-num text-primary text-2xl">62%</span>
+<span class="text-slate-400 font-label-sm uppercase">BP Saved</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<script>
+(function () {
+  const params = new URLSearchParams(window.location.search);
+  const name   = params.get('name');
+  const tour   = (params.get('tour') || 'ATP').toUpperCase();
+  if (!name) return;
+
+  document.title = name + ' | Court Analytics';
+
+  async function load() {
+    try {
+      const res = await fetch('/api/player/' + encodeURIComponent(name) + '?tour=' + tour);
+      if (!res.ok) return;
+      const d = await res.json();
+
+      document.getElementById('player-name').textContent    = d.name.toUpperCase();
+      document.getElementById('player-tour').textContent    = tour + ' Tour';
+      document.getElementById('player-rank').textContent    = tour + ' Player';
+
+      // Surface bars
+      const byS = {};
+      d.surfaces.forEach(s => { byS[s.surface] = s; });
+      [['Clay','bar-clay','pct-clay'],['Hard','bar-hard','pct-hard'],['Grass','bar-grass','pct-grass']].forEach(([surf, barId, pctId]) => {
+        const s = byS[surf];
+        const p = s ? Math.round(s.serve_win_pct * 100) : 0;
+        document.getElementById(barId).style.width = p + '%';
+        document.getElementById(pctId).textContent = p + '%';
+      });
+
+      // Overall stats
+      if (d.surfaces.length) {
+        const total   = d.surfaces.reduce((n, s) => n + s.match_count, 0);
+        const avgServe = d.surfaces.reduce((n, s) => n + s.serve_win_pct * s.match_count, 0) / total;
+        const avgAce   = d.surfaces.reduce((n, s) => n + (s.ace_rate || 0) * s.match_count, 0) / total;
+        document.getElementById('stat-serve-win').textContent = (avgServe * 100).toFixed(0) + '%';
+        document.getElementById('stat-ace-rate').textContent  = (avgAce   * 100).toFixed(1) + '%';
+      }
+
+      // Recent matches
+      const tbody = document.getElementById('match-tbody');
+      if (d.recent_matches.length) {
+        tbody.innerHTML = d.recent_matches.map(m => `
+          <tr class="border-b border-surface-container hover:bg-surface-dim/20">
+            <td class="py-md font-bold text-primary">${m.tourney_name}</td>
+            <td class="py-md">${m.opponent}</td>
+            <td class="py-md">${m.result === 'W'
+              ? '<span class="text-secondary-container bg-primary-container px-sm inline-block text-[10px] font-bold uppercase rounded-sm">Win</span>'
+              : '<span class="text-error px-sm inline-block text-[10px] font-bold uppercase border border-error">Loss</span>'}</td>
+            <td class="py-md text-right font-stats-num text-xs tracking-widest">${m.score || '—'}</td>
+          </tr>`).join('');
+      }
+    } catch (e) { console.error(e); }
+  }
+
+  load();
+})();
+</script>
+<!-- Bottom Nav (mobile only) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 flex justify-around items-center bg-white dark:bg-slate-900 px-4 pb-safe border-t border-[#E9ECEF] dark:border-slate-800">
+<a class="bottom-nav-link bottom-nav-link-inactive" href="#"><span class="material-symbols-outlined">home</span><span>Home</span></a>
+<a class="bottom-nav-link bottom-nav-link-active" href="#"><span class="material-symbols-outlined">person</span><span>Players</span></a>
+<a class="bottom-nav-link bottom-nav-link-inactive" href="#"><span class="material-symbols-outlined">grid_view</span><span>Brackets</span></a>
+<a class="bottom-nav-link bottom-nav-link-inactive" href="#"><span class="material-symbols-outlined">analytics</span><span>Simulate</span></a>
+</nav>
+</body></html>

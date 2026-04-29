@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Court Analytics | Professional Tennis Performance</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700;800;900&amp;family=Work+Sans:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-dim": "#d9dadb",
+                      "surface": "#f8f9fa",
+                      "on-background": "#191c1d",
+                      "inverse-on-surface": "#f0f1f2",
+                      "tertiary": "#001902",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container": "#edeeef",
+                      "primary-container": "#002366",
+                      "secondary": "#506600",
+                      "on-primary-fixed-variant": "#2a4386",
+                      "secondary-fixed": "#c3f400",
+                      "tertiary-fixed": "#a3f69c",
+                      "tertiary-container": "#003007",
+                      "background": "#f8f9fa",
+                      "on-error-container": "#93000a",
+                      "primary-fixed": "#dbe1ff",
+                      "inverse-primary": "#b3c5ff",
+                      "outline-variant": "#c5c6d2",
+                      "primary": "#00113a",
+                      "on-tertiary-container": "#51a050",
+                      "secondary-container": "#c1f100",
+                      "surface-container-high": "#e7e8e9",
+                      "on-error": "#ffffff",
+                      "on-primary-container": "#758dd5",
+                      "on-secondary-container": "#546b00",
+                      "surface-bright": "#f8f9fa",
+                      "error-container": "#ffdad6",
+                      "on-tertiary-fixed-variant": "#005312",
+                      "error": "#ba1a1a",
+                      "on-surface": "#191c1d",
+                      "primary-fixed-dim": "#b3c5ff",
+                      "on-primary": "#ffffff",
+                      "outline": "#757682",
+                      "surface-container-highest": "#e1e3e4",
+                      "tertiary-fixed-dim": "#88d982",
+                      "surface-container-low": "#f3f4f5",
+                      "on-secondary-fixed": "#161e00",
+                      "on-tertiary": "#ffffff",
+                      "on-tertiary-fixed": "#002204",
+                      "on-surface-variant": "#444650",
+                      "on-secondary-fixed-variant": "#3c4d00",
+                      "on-secondary": "#ffffff",
+                      "inverse-surface": "#2e3132",
+                      "surface-variant": "#e1e3e4",
+                      "surface-tint": "#435b9f",
+                      "secondary-fixed-dim": "#abd600",
+                      "on-primary-fixed": "#00174a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "xs": "4px",
+                      "xxl": "80px",
+                      "md": "16px",
+                      "lg": "24px",
+                      "sm": "8px",
+                      "unit": "4px",
+                      "xl": "48px",
+                      "container-max": "1280px",
+                      "gutter": "24px"
+              },
+              "fontFamily": {
+                      "stats-num": ["Lexend"],
+                      "body-md": ["Work Sans"],
+                      "headline-md": ["Lexend"],
+                      "display-xl": ["Lexend"],
+                      "headline-lg": ["Lexend"],
+                      "label-bold": ["Lexend"],
+                      "body-lg": ["Work Sans"],
+                      "label-sm": ["Work Sans"]
+              },
+              "fontSize": {
+                      "stats-num": ["40px", {"lineHeight": "1", "letterSpacing": "-0.03em", "fontWeight": "800"}],
+                      "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "700"}],
+                      "display-xl": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                      "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "label-bold": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "label-sm": ["12px", {"lineHeight": "1.2", "fontWeight": "500"}]
+              }
+            },
+          },
+        }
+      </script>
+</head>
+<body class="bg-surface text-on-background font-body-md selection:bg-secondary-fixed selection:text-on-secondary-fixed">
+<!-- TopAppBar -->
+<header class="bg-white dark:bg-slate-900 border-b border-[#E9ECEF] dark:border-slate-800 sticky top-0 z-50">
+<nav class="flex justify-between items-center px-6 py-3 w-full max-w-full mx-auto">
+<div class="nav-brand">COURT ANALYTICS</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="nav-link nav-link-active" href="index.html">Home</a>
+<a class="nav-link nav-link-inactive" href="playerSearch.html">Players</a>
+<a class="nav-link nav-link-inactive" href="simulator.html">Simulation</a>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#002366]">account_circle</span>
+</div>
+</nav>
+</header>
+<main class="pb-24">
+<!-- Hero Search Section -->
+<section class="relative h-[400px] flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover" data-alt="A high-action, professional sports photography shot of a tennis player mid-serve on a sleek blue hardcourt. The lighting is dramatic and high-contrast, capturing water droplets and movement blur in crisp detail. The overall atmosphere is elite and disciplined, utilizing a color palette of deep navy and bright stadium lights. The style is modern, minimalist-athletic, and authoritative." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9SZqsJvzJ57SAb_3XKD6pI8Uod6AxH-XR8k_IID86izJTpMu2ef0N6kxjDfq9mFhaHpZ6wRAxRNMpIgxFx0yigd2t007TU_gp5lZanVRFYyPOeJQRYKZn2fRgucVu122BFKDw9m8Efr6AchAjfGwKTkWU5TKgxPrv6TDjkd8E7i13HJ30T7_mJeGPlAj_8ycX4OF7E_a3rGNoaZzbrYdhcJ8wSq-9PNn_QGJKR2Ml-I2Mz8Tff5GmGT_pzINsqVVcqtKPEMDPz_0b"/>
+<div class="absolute inset-0 bg-primary/60 mix-blend-multiply"></div>
+</div>
+<div class="relative z-10 w-full max-w-3xl px-6">
+<h1 class="font-display-xl text-display-xl text-white mb-lg text-center">PRECISION ANALYTICS FOR ELITE PERFORMANCE.</h1>
+<div class="bg-white/10 backdrop-blur-md p-2 rounded-lg border border-white/20 flex items-center">
+<span class="material-symbols-outlined text-white px-4">search</span>
+<input id="hero-search" class="bg-transparent border-none focus:ring-0 text-white placeholder:text-white/60 font-label-bold uppercase w-full py-4" placeholder="SEARCH PLAYERS..." type="text"/>
+<button id="hero-search-btn" class="bg-secondary-fixed text-on-secondary-fixed font-label-bold uppercase px-8 py-4 rounded transition-transform active:scale-95">
+                        SEARCH
+                    </button>
+</div>
+</div>
+</section>
+<!-- Featured Players Section -->
+<section class="max-w-container-max mx-auto px-6 mt-xl">
+<div class="flex justify-between items-end mb-lg">
+<div>
+<span class="text-secondary-fixed font-label-bold uppercase tracking-widest block mb-2">ELITE TALENT</span>
+<h2 class="font-headline-lg text-headline-lg text-primary">FEATURED PLAYERS</h2>
+</div>
+<a href="playerSearch.html" class="text-primary font-label-bold uppercase flex items-center gap-2 border-b-2 border-primary pb-1">
+                    VIEW ALL RANKINGS <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+<!-- Player Card 1 -->
+<div class="group relative aspect-[3/4] overflow-hidden bg-surface-container border border-outline-variant">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A powerful studio portrait of a professional male tennis player in a dynamic athletic stance, holding a racket. The lighting is sharp, creating deep shadows and highlighting muscle definition. The background is a minimalist dark navy, consistent with the high-performance brand aesthetic. The overall mood is intense, focused, and professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnYWMXdGl1PjYPp98eYE8a2z4O1vQE2YOt_xfUzfqydhkcTgyws3sHyKWihZtpecqitAuxVvjbn1ACNa6ubirbThDI0rEKttpfTbYgAEh9IDO0lWQdqhnKGbYTEWm9ddv6CKFMd4rAVAFP3JdF4La7nhvJ3m3HJ4hTN7RPHsri-KGUdRYG9H7718gZ7ZUk9C5IWEOk7Q5cKmxgrDwuLU0_Vj2e3tiO0l_sR5qijqiRel3I6XVYh9kiUqKOY2Kp27wzVghDGpB5TqQk"/>
+<div class="absolute inset-0 player-card-gradient"></div>
+<div class="absolute bottom-0 left-0 p-lg w-full">
+<div class="flex justify-between items-end">
+<div>
+<p class="text-secondary-fixed font-label-bold uppercase text-xs mb-1">RANK #01</p>
+<h3 class="text-white font-headline-md text-headline-md leading-tight">CARLOS ALCARAZ</h3>
+</div>
+<div class="text-right">
+<p class="text-white/60 font-label-sm uppercase">Win Rate</p>
+<p class="text-secondary-fixed font-stats-num text-2xl">84%</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Player Card 2 -->
+<div class="group relative aspect-[3/4] overflow-hidden bg-surface-container border border-outline-variant">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A focused close-up of a professional female tennis player during a high-stakes match, sweat glistening under bright stadium lights. She is captured mid-swing with intense concentration. The background is softly blurred hardcourt green. The aesthetic is clean and athletic, emphasizing split-second data clarity and performance." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRRG8Au6XxNlVMWirjdvjAQth474tkg6FzJMAflhewN8cAQDWIK4fRVQKt7ADXO85rJb63nrE_74Yz3gnjnN_D-kFXnZFjP5OvaLiFLlktUNXZzV6X4nMZAWcMjlxYypgdg59hP70aGBAZHV_DqyV5eTJXs4sIIsO861lnbBYsxVSkoWbQdrNpaEmKLUCUzFqxx94uNH1_s4U8YEgyS5QD6MuoSD84eOXZaGeSCcwqeFn-3gpIb9No9dsYmEAyKopVtTuBKYcz99Fs"/>
+<div class="absolute inset-0 player-card-gradient"></div>
+<div class="absolute bottom-0 left-0 p-lg w-full">
+<div class="flex justify-between items-end">
+<div>
+<p class="text-secondary-fixed font-label-bold uppercase text-xs mb-1">RANK #02</p>
+<h3 class="text-white font-headline-md text-headline-md leading-tight">IGA SWIATEK</h3>
+</div>
+<div class="text-right">
+<p class="text-white/60 font-label-sm uppercase">Serve Spd</p>
+<p class="text-secondary-fixed font-stats-num text-2xl">188</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Player Card 3 -->
+<div class="group relative aspect-[3/4] overflow-hidden bg-surface-container border border-outline-variant">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A dynamic action shot of a professional tennis player lunging for a low volley on a red clay court. Dust and clay are kicked up into the air, frozen by a fast shutter speed. The lighting is warm natural sunlight. The composition is powerful and energetic, mirroring the discipline of a professional Grand Slam atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVwV20SG_xWOl4veWNjJDYI0rYPBunSyGyL9t4uUhSY9LE9idPHOAfPTg5XWYUTFXh5ZrVQjZ7dPeOCBK67uSr5bGqqBolpeBPxFh0KeQSyeVrKD41dUVxXqvSAiM85jmU3X-Il5YBInkdGcSSXf1e51F_dAu6F2l625HSrFhwQVdlDxGWgVQhAnpvGieYw9_LWTYGuifIpduu2idc_VLN3CpTlAaiEYq13Zmj2R19VRr8bOy5sKD-yZp7YNXlHh2m6i28upjPZic0"/>
+<div class="absolute inset-0 player-card-gradient"></div>
+<div class="absolute bottom-0 left-0 p-lg w-full">
+<div class="flex justify-between items-end">
+<div>
+<p class="text-secondary-fixed font-label-bold uppercase text-xs mb-1">RANK #03</p>
+<h3 class="text-white font-headline-md text-headline-md leading-tight">JANNIK SINNER</h3>
+</div>
+<div class="text-right">
+<p class="text-white/60 font-label-sm uppercase">Forehand</p>
+<p class="text-secondary-fixed font-stats-num text-2xl">134</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Trending Tournaments Section -->
+<section class="max-w-container-max mx-auto px-6 mt-xxl">
+<div class="flex flex-col md:flex-row gap-xl">
+<!-- Tournament List -->
+<div class="flex-1">
+<h2 class="font-headline-lg text-headline-lg text-primary mb-lg uppercase">TRENDING TOURNAMENTS</h2>
+<div class="space-y-4">
+<!-- Tournament Item -->
+<div class="bg-white border border-outline-variant p-md flex items-center justify-between hover:bg-surface-container transition-colors group">
+<div class="flex items-center gap-lg">
+<div class="w-12 h-12 bg-primary flex items-center justify-center text-secondary-fixed">
+<span class="material-symbols-outlined">emoji_events</span>
+</div>
+<div>
+<h4 class="font-label-bold uppercase text-primary">WIMBLEDON CHAMPIONSHIPS</h4>
+<p class="text-on-surface-variant font-label-sm">LONDON, UK • GRASS COURT</p>
+</div>
+</div>
+<div class="flex items-center gap-lg">
+<div class="bg-primary-container px-3 py-1 text-secondary-fixed font-label-bold text-xs">
+                                    LIVE NOW
+                                </div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary">chevron_right</span>
+</div>
+</div>
+<!-- Tournament Item -->
+<div class="bg-white border border-outline-variant p-md flex items-center justify-between hover:bg-surface-container transition-colors group">
+<div class="flex items-center gap-lg">
+<div class="w-12 h-12 bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">stadium</span>
+</div>
+<div>
+<h4 class="font-label-bold uppercase text-primary">ROLAND GARROS</h4>
+<p class="text-on-surface-variant font-label-sm">PARIS, FRANCE • CLAY COURT</p>
+</div>
+</div>
+<div class="flex items-center gap-lg">
+<div class="text-on-surface-variant font-label-bold text-xs uppercase">
+                                    ENDS IN 4 DAYS
+                                </div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary">chevron_right</span>
+</div>
+</div>
+<!-- Tournament Item -->
+<div class="bg-white border border-outline-variant p-md flex items-center justify-between hover:bg-surface-container transition-colors group">
+<div class="flex items-center gap-lg">
+<div class="w-12 h-12 bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">public</span>
+</div>
+<div>
+<h4 class="font-label-bold uppercase text-primary">US OPEN</h4>
+<p class="text-on-surface-variant font-label-sm">NEW YORK, USA • HARD COURT</p>
+</div>
+</div>
+<div class="flex items-center gap-lg">
+<div class="text-on-surface-variant font-label-bold text-xs uppercase">
+                                    AUG 28 - SEP 10
+                                </div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary">chevron_right</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Simulation/Data Teaser -->
+<div class="w-full md:w-1/3">
+<div class="bg-primary-container p-lg text-white h-full flex flex-col justify-between">
+<div>
+<span class="text-secondary-fixed font-label-bold uppercase tracking-widest block mb-2">PREDICTIVE ANALYTICS</span>
+<h3 class="font-headline-lg text-headline-lg mb-md leading-tight">MATCH SIMULATOR PRO</h3>
+<p class="text-on-primary-container font-body-md mb-lg">Run thousands of Monte Carlo simulations using real-time player data to predict tournament outcomes with 94% accuracy.</p>
+</div>
+<a href="simulator.html" class="bg-secondary-fixed text-on-secondary-fixed font-label-bold uppercase w-full py-4 tracking-widest transition-opacity hover:opacity-90 block text-center">
+                            START SIMULATION
+                        </a>
+</div>
+</div>
+</div>
+</section>
+<!-- Stats Grid Section -->
+<section class="max-w-container-max mx-auto px-6 mt-xxl">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="border border-outline-variant p-lg text-center bg-white">
+<p class="font-stats-num text-stats-num text-primary">12.4K</p>
+<p class="font-label-bold uppercase text-on-surface-variant mt-2">PLAYERS TRACKED</p>
+</div>
+<div class="border border-outline-variant p-lg text-center bg-white">
+<p class="font-stats-num text-stats-num text-primary">850+</p>
+<p class="font-label-bold uppercase text-on-surface-variant mt-2">ACTIVE EVENTS</p>
+</div>
+<div class="border border-outline-variant p-lg text-center bg-white">
+<p class="font-stats-num text-stats-num text-primary">99.1%</p>
+<p class="font-label-bold uppercase text-on-surface-variant mt-2">DATA ACCURACY</p>
+</div>
+<div class="border border-outline-variant p-lg text-center bg-white">
+<p class="font-stats-num text-stats-num text-primary">2.1M</p>
+<p class="font-label-bold uppercase text-on-surface-variant mt-2">MATCH REPLAYS</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Nav (mobile only) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 flex justify-around items-center bg-white dark:bg-slate-900 px-4 pb-safe border-t border-[#E9ECEF] dark:border-slate-800">
+<a class="bottom-nav-link bottom-nav-link-active" href="index.html"><span class="material-symbols-outlined">home</span><span>Home</span></a>
+<a class="bottom-nav-link bottom-nav-link-inactive" href="playerSearch.html"><span class="material-symbols-outlined">person</span><span>Players</span></a>
+<a class="bottom-nav-link bottom-nav-link-inactive" href="#"><span class="material-symbols-outlined">grid_view</span><span>Brackets</span></a>
+<a class="bottom-nav-link bottom-nav-link-inactive" href="simulator.html"><span class="material-symbols-outlined">analytics</span><span>Simulate</span></a>
+</nav>
+<script>
+  const searchInput = document.getElementById('hero-search');
+  const searchBtn   = document.getElementById('hero-search-btn');
+
+  function goSearch() {
+    const q = searchInput.value.trim();
+    if (q) window.location.href = 'playerSearch.html?q=' + encodeURIComponent(q);
+  }
+
+  searchBtn.addEventListener('click', goSearch);
+  searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') goSearch(); });
+</script>
+</body>
+</html>

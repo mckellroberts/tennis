@@ -1,0 +1,390 @@
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;family=Work+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+                  "surface-dim": "#d9dadb",
+                  "surface": "#f8f9fa",
+                  "on-background": "#191c1d",
+                  "inverse-on-surface": "#f0f1f2",
+                  "tertiary": "#001902",
+                  "surface-container-lowest": "#ffffff",
+                  "surface-container": "#edeeef",
+                  "primary-container": "#002366",
+                  "secondary": "#506600",
+                  "on-primary-fixed-variant": "#2a4386",
+                  "secondary-fixed": "#c3f400",
+                  "tertiary-fixed": "#a3f69c",
+                  "tertiary-container": "#003007",
+                  "background": "#f8f9fa",
+                  "on-error-container": "#93000a",
+                  "primary-fixed": "#dbe1ff",
+                  "inverse-primary": "#b3c5ff",
+                  "outline-variant": "#c5c6d2",
+                  "primary": "#00113a",
+                  "on-tertiary-container": "#51a050",
+                  "secondary-container": "#c1f100",
+                  "surface-container-high": "#e7e8e9",
+                  "on-error": "#ffffff",
+                  "on-primary-container": "#758dd5",
+                  "on-secondary-container": "#546b00",
+                  "surface-bright": "#f8f9fa",
+                  "error-container": "#ffdad6",
+                  "on-tertiary-fixed-variant": "#005312",
+                  "error": "#ba1a1a",
+                  "on-surface": "#191c1d",
+                  "primary-fixed-dim": "#b3c5ff",
+                  "on-primary": "#ffffff",
+                  "outline": "#757682",
+                  "surface-container-highest": "#e1e3e4",
+                  "tertiary-fixed-dim": "#88d982",
+                  "surface-container-low": "#f3f4f5",
+                  "on-secondary-fixed": "#161e00",
+                  "on-tertiary": "#ffffff",
+                  "on-tertiary-fixed": "#002204",
+                  "on-surface-variant": "#444650",
+                  "on-secondary-fixed-variant": "#3c4d00",
+                  "on-secondary": "#ffffff",
+                  "inverse-surface": "#2e3132",
+                  "surface-variant": "#e1e3e4",
+                  "surface-tint": "#435b9f",
+                  "secondary-fixed-dim": "#abd600",
+                  "on-primary-fixed": "#00174a"
+          },
+          "borderRadius": {
+                  "DEFAULT": "0.125rem",
+                  "lg": "0.25rem",
+                  "xl": "0.5rem",
+                  "full": "0.75rem"
+          },
+          "spacing": {
+                  "xs": "4px",
+                  "xxl": "80px",
+                  "md": "16px",
+                  "lg": "24px",
+                  "sm": "8px",
+                  "unit": "4px",
+                  "xl": "48px",
+                  "container-max": "1280px",
+                  "gutter": "24px"
+          },
+          "fontFamily": {
+                  "stats-num": ["Lexend"],
+                  "body-md": ["Work Sans"],
+                  "headline-md": ["Lexend"],
+                  "display-xl": ["Lexend"],
+                  "headline-lg": ["Lexend"],
+                  "label-bold": ["Lexend"],
+                  "body-lg": ["Work Sans"],
+                  "label-sm": ["Work Sans"]
+          },
+          "fontSize": {
+                  "stats-num": ["40px", {"lineHeight": "1", "letterSpacing": "-0.03em", "fontWeight": "800"}],
+                  "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                  "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "700"}],
+                  "display-xl": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                  "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                  "label-bold": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                  "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                  "label-sm": ["12px", {"lineHeight": "1.2", "fontWeight": "500"}]
+          }
+        },
+      },
+    }
+  </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen">
+<!-- TopAppBar -->
+<header class="bg-white dark:bg-slate-900 border-b border-[#E9ECEF] dark:border-slate-800 sticky top-0 z-50">
+<nav class="flex justify-between items-center px-6 py-3 w-full max-w-full mx-auto">
+<div class="nav-brand">COURT ANALYTICS</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="nav-link nav-link-inactive" href="#">Home</a>
+<a class="nav-link nav-link-inactive" href="#">Players</a>
+<a class="nav-link nav-link-active" href="#">Simulation</a>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#002366]">account_circle</span>
+</div>
+</nav>
+</header>
+<main class="max-w-[1280px] mx-auto px-6 py-12">
+<!-- Hero Section -->
+<section class="mb-xl">
+<h1 class="font-display-xl text-display-xl text-primary mb-md">Match Simulator</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+        Predict the outcome of potential matchups using our proprietary Grand Slam data engine. Select two athletes to generate a high-fidelity match projection.
+      </p>
+</section>
+<!-- Selection Interface -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-lg items-center mb-xxl">
+<!-- Player 1 Selection -->
+<div class="md:col-span-5">
+<div class="bg-white border border-[#E9ECEF] p-lg rounded-lg shadow-sm">
+<label class="font-label-bold text-label-bold text-primary block mb-sm">PLAYER ONE</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline" data-icon="person">person</span>
+<input id="p1-input" class="w-full pl-10 pr-4 py-3 border-b-2 border-outline focus:border-secondary-container bg-surface-container-lowest font-body-md outline-none transition-all" placeholder="Search Player Name..." type="text"/>
+</div>
+<div class="mt-md flex items-center gap-md">
+<img class="w-16 h-16 rounded-full object-cover border-2 border-primary" data-alt="A professional male tennis player in mid-action, wearing high-performance athletic gear. The background is a clean, bright outdoor tennis court with high-key lighting that emphasizes a minimalist-athletic aesthetic. The lighting is sharp and professional, highlighting the player's disciplined posture and intense focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoF2sH9gkQCEYjoueN5rYQLBmbez4paLqTfDWq9ZHmhyw9zlN4VJQrOrwdDIvHiS0pKDC8mjZhFfwmDs9T4yXXlNsaWPV3XBJklSVFicjaVP5aElBCWbjnQuMx-ZQLJFt4w8mI2hgIxzYfLfcRPBppub1no_M5t3Wi9tyvceamYYOOPOloDfBWSm4GQbruxucSFl3QEI3JIG_RZpCuCFzp2s02DlEfcvNqV-n3Uy6jJvxbAt3PzEYZmKsckX7g-Z7vNshLbM_9Di7E"/>
+<div>
+<p id="p1-name" class="font-headline-md text-headline-md text-primary">—</p>
+<p id="p1-meta" class="font-label-sm text-label-sm text-on-surface-variant uppercase">Select a player</p>
+</div>
+</div>
+</div>
+</div>
+<!-- VS Divider -->
+<div class="md:col-span-2 flex flex-col items-center justify-center">
+<div class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center font-display-xl text-2xl shadow-lg">VS</div>
+</div>
+<!-- Player 2 Selection -->
+<div class="md:col-span-5">
+<div class="bg-white border border-[#E9ECEF] p-lg rounded-lg shadow-sm">
+<label class="font-label-bold text-label-bold text-primary block mb-sm">PLAYER TWO</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline" data-icon="person">person</span>
+<input id="p2-input" class="w-full pl-10 pr-4 py-3 border-b-2 border-outline focus:border-secondary-container bg-surface-container-lowest font-body-md outline-none transition-all" placeholder="Search Player Name..." type="text"/>
+</div>
+<div class="mt-md flex items-center gap-md">
+<img class="w-16 h-16 rounded-full object-cover border-2 border-outline-variant" data-alt="A professional male athlete in athletic attire with a focused, determined expression. The setting is a minimalist indoor training facility with bright, cool lighting. The visual style is crisp and authoritative, featuring a sophisticated color palette of whites and deep blues, reflecting an elite sporting environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC257W7L6oolgyRcMA4cXN0_wB2lb2mQXgS_AyYfawQCWMXpZcWR3yNCMBrEiIZ5IpC71CeiFJfkLfSa0EgxtwBiNTTQ5-AdCsYgJcXbCtRhIVrsxOxFkBbW-kaYSknZEDoOA23tldiO-65fbbWOepR9kKWIV7cZwT42gzzx6JAdxlBxKvhSJZXDdSpts9UfRhrvB9NzsKQaMs_rQlOyVPVUzRF-7xGfiu8AhyWWUlsMCuCdAPvBiKrVpjkHfcnV6g0MUcwLqijw7H8"/>
+<div>
+<p id="p2-name" class="font-headline-md text-headline-md text-primary">—</p>
+<p id="p2-meta" class="font-label-sm text-label-sm text-on-surface-variant uppercase">Select a player</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Match Settings -->
+<div class="md:col-span-12 flex flex-wrap justify-center gap-lg mt-sm">
+<div>
+<label class="font-label-bold text-xs text-on-surface-variant uppercase block mb-xs">Tour</label>
+<select id="tour-select" class="border border-[#E9ECEF] px-4 py-2 font-label-bold text-sm bg-white outline-none uppercase focus:ring-2 focus:ring-secondary">
+<option value="ATP">ATP (Men)</option>
+<option value="WTA">WTA (Women)</option>
+</select>
+</div>
+<div>
+<label class="font-label-bold text-xs text-on-surface-variant uppercase block mb-xs">Surface</label>
+<select id="surface-select" class="border border-[#E9ECEF] px-4 py-2 font-label-bold text-sm bg-white outline-none uppercase focus:ring-2 focus:ring-secondary">
+<option value="Hard">Hard Court</option>
+<option value="Clay">Clay</option>
+<option value="Grass">Grass</option>
+<option value="Carpet">Carpet</option>
+</select>
+</div>
+<div>
+<label class="font-label-bold text-xs text-on-surface-variant uppercase block mb-xs">Format</label>
+<select id="best-of-select" class="border border-[#E9ECEF] px-4 py-2 font-label-bold text-sm bg-white outline-none uppercase focus:ring-2 focus:ring-secondary">
+<option value="3">Best of 3</option>
+<option value="5">Best of 5</option>
+</select>
+</div>
+</div>
+<!-- Action Button -->
+<div class="md:col-span-12 flex justify-center mt-lg">
+<button id="simulate-btn" class="bg-primary text-white font-label-bold text-lg px-xl py-4 rounded-lg flex items-center gap-md hover:opacity-90 active:scale-95 transition-all shadow-md">
+SIMULATE MATCH <span class="material-symbols-outlined">analytics</span>
+</button>
+</div>
+</div>
+<!-- Results Section -->
+<div class="bg-primary-container p-xl rounded-xl text-white">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-xl border-b border-on-primary-container pb-lg">
+<div>
+<h2 class="font-label-bold text-on-primary-container mb-xs uppercase">Match Result</h2>
+<h3 id="match-title" class="font-headline-lg text-white">Run a simulation to see results</h3>
+</div>
+<div class="mt-md md:mt-0 flex items-center gap-sm bg-secondary text-primary px-4 py-2 rounded font-label-bold">
+<span class="material-symbols-outlined" data-icon="bolt">bolt</span>
+          LIVE SIMULATION COMPLETE
+        </div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-xl">
+<!-- Predicted Winner Card -->
+<div class="lg:col-span-1 bg-primary p-lg border border-on-primary-container rounded-lg flex flex-col items-center text-center">
+<div class="relative mb-md">
+<img class="w-32 h-32 rounded-full object-cover border-4 border-secondary" data-alt="A high-action photograph of a tennis player celebrating a point under dramatic stadium lighting. The athlete is wearing vibrant sporting gear, and the scene is set against a dark background that creates a sense of intensity and triumph. The lighting is focused and powerful, capturing the raw energy of professional sports." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcm6HTh-HCWCZIo1reR1utqenP4rvDMgudMfRKy8HoRO8p9VBuRH3Jh_ZKfbVZ-Rcxs4_zsRPIy-LRV5FbmexJ8rWTN6mdz8l3ab3oZi6nRRDRf5QuM7KOGy2FdHaHCOPLB0d-DFIfmzVHWaF9sqeeFgJGU2mh1etaWu9H-QzA9asIrNAXY_x3AnaDclHRbjGGw7hsViYq1hFwrzTi0wjcxqmKYXw6_uzjA6NGQNFePZHIYz-q7Q9EW_snyr9hGhFCyjUFcAp_R6uP"/>
+<div class="absolute -bottom-2 right-0 bg-secondary text-primary p-2 rounded-full shadow-lg">
+<span class="material-symbols-outlined" data-icon="emoji_events" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+</div>
+</div>
+<h4 class="font-label-bold text-secondary mb-xs uppercase">Predicted Winner</h4>
+<p id="winner-name" class="font-display-xl text-white mb-sm">—</p>
+<div class="w-full bg-on-primary-container/20 h-2 rounded-full overflow-hidden mb-sm">
+<div id="win-bar" class="bg-secondary h-full" style="width:50%"></div>
+</div>
+<p id="win-pct" class="font-label-sm text-on-primary-container uppercase">—</p>
+</div>
+<!-- Scoreline & Probability -->
+<div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-lg">
+<div class="bg-primary/50 p-lg rounded-lg border border-on-primary-container/30">
+<h4 class="font-label-bold text-on-primary-container mb-md uppercase">Predicted Scoreline</h4>
+<div class="space-y-4">
+<div class="flex justify-between items-center text-white">
+<span class="font-body-md">Set 1</span>
+<span class="font-stats-num text-2xl">6 - 4</span>
+</div>
+<div class="flex justify-between items-center text-white">
+<span class="font-body-md">Set 2</span>
+<span class="font-stats-num text-2xl">3 - 6</span>
+</div>
+<div class="flex justify-between items-center text-white">
+<span class="font-body-md">Set 3</span>
+<span class="font-stats-num text-2xl">7 - 5</span>
+</div>
+</div>
+</div>
+<div class="bg-primary/50 p-lg rounded-lg border border-on-primary-container/30">
+<h4 class="font-label-bold text-on-primary-container mb-md uppercase">Analytical Briefing</h4>
+<ul class="space-y-md text-on-primary-container font-body-md">
+<li class="flex gap-sm">
+<span class="material-symbols-outlined text-secondary" data-icon="trending_up">trending_up</span>
+<span>Alcaraz's clay court conversion rate (72%) provides a slight edge over Sinner's current baseline speed.</span>
+</li>
+<li class="flex gap-sm">
+<span class="material-symbols-outlined text-secondary" data-icon="shield">shield</span>
+<span>Sinner's serve protection remains elite, leading to a projected 5-set marathon probability of 42%.</span>
+</li>
+<li class="flex gap-sm">
+<span class="material-symbols-outlined text-secondary" data-icon="psychology">psychology</span>
+<span>Tactical model suggests 2nd serve return points will decide the final set outcome.</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<!-- Stat Comparison Bento -->
+<div class="mt-xl grid grid-cols-2 md:grid-cols-4 gap-md">
+<div class="bg-white/5 p-md rounded flex flex-col items-center">
+<span class="font-label-sm text-on-primary-container uppercase">Serve Win%</span>
+<span id="stat-serve" class="font-stats-num text-white">— vs —</span>
+</div>
+<div class="bg-white/5 p-md rounded flex flex-col items-center">
+<span class="font-label-sm text-on-primary-container uppercase">1st Serve%</span>
+<span id="stat-1st" class="font-stats-num text-white">— vs —</span>
+</div>
+<div class="bg-white/5 p-md rounded flex flex-col items-center">
+<span class="font-label-sm text-on-primary-container uppercase">Ace Rate</span>
+<span id="stat-ace" class="font-stats-num text-white">— vs —</span>
+</div>
+<div class="bg-white/5 p-md rounded flex flex-col items-center">
+<span class="font-label-sm text-on-primary-container uppercase">BP Save%</span>
+<span id="stat-bp" class="font-stats-num text-white">— vs —</span>
+</div>
+</div>
+</div>
+</main>
+<script>
+(function () {
+  function setupAutocomplete(inputId, nameId) {
+    const input = document.getElementById(inputId);
+    const nameEl = document.getElementById(nameId);
+    const wrap = input.parentElement;
+    wrap.style.position = 'relative';
+    const drop = document.createElement('ul');
+    drop.style.cssText = 'position:absolute;top:100%;left:0;right:0;z-index:200;background:#fff;border:1px solid #E9ECEF;max-height:200px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.1);display:none;list-style:none;padding:0;margin:0;';
+    wrap.appendChild(drop);
+    let timer;
+    input.addEventListener('input', () => {
+      clearTimeout(timer);
+      timer = setTimeout(async () => {
+        const q = input.value.trim();
+        if (q.length < 2) { drop.style.display = 'none'; return; }
+        const tour = document.getElementById('tour-select').value;
+        const res = await fetch('/api/players/search?q=' + encodeURIComponent(q) + '&tour=' + tour);
+        const list = await res.json();
+        drop.innerHTML = '';
+        if (!list.length) { drop.style.display = 'none'; return; }
+        list.forEach(name => {
+          const li = document.createElement('li');
+          li.style.cssText = 'padding:8px 16px;cursor:pointer;font-family:Lexend,sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;border-bottom:1px solid #f3f4f5;';
+          li.textContent = name;
+          li.onmouseenter = () => li.style.background = '#f8f9fa';
+          li.onmouseleave = () => li.style.background = '';
+          li.addEventListener('mousedown', e => {
+            e.preventDefault();
+            input.value = name;
+            if (nameEl) nameEl.textContent = name.split(' ').slice(-1)[0];
+            drop.style.display = 'none';
+          });
+          drop.appendChild(li);
+        });
+        drop.style.display = 'block';
+      }, 200);
+    });
+    input.addEventListener('blur', () => setTimeout(() => { drop.style.display = 'none'; }, 150));
+  }
+
+  function pct(v) { return v != null ? (v * 100).toFixed(1) + '%' : 'N/A'; }
+
+  function showResults(d) {
+    if (d.error) { alert(d.error); return; }
+    const pm1 = d.p1_match_pct, pm2 = 1 - pm1;
+    const winner = pm1 >= pm2 ? d.player1 : d.player2;
+    const winPct = Math.max(pm1, pm2);
+    document.getElementById('match-title').textContent = d.player1 + ' vs ' + d.player2 + ' — ' + d.surface;
+    document.getElementById('winner-name').textContent = winner.split(' ').slice(-1)[0];
+    document.getElementById('win-bar').style.width = (winPct * 100).toFixed(0) + '%';
+    document.getElementById('win-pct').textContent = (winPct * 100).toFixed(1) + '% Win Probability';
+    document.getElementById('stat-serve').textContent = pct(d.p1_raw_serve_win) + ' vs ' + pct(d.p2_raw_serve_win);
+    document.getElementById('stat-1st').textContent   = pct(d.p1_first_serve)   + ' vs ' + pct(d.p2_first_serve);
+    document.getElementById('stat-ace').textContent   = pct(d.p1_ace_rate)      + ' vs ' + pct(d.p2_ace_rate);
+    document.getElementById('stat-bp').textContent    = pct(d.p1_bp_save)       + ' vs ' + pct(d.p2_bp_save);
+  }
+
+  // Disable best-of-5 for WTA
+  document.getElementById('tour-select').addEventListener('change', function () {
+    const bo = document.getElementById('best-of-select');
+    bo.querySelector('option[value="5"]').disabled = (this.value === 'WTA');
+    if (this.value === 'WTA') bo.value = '3';
+  });
+
+  setupAutocomplete('p1-input', 'p1-name');
+  setupAutocomplete('p2-input', 'p2-name');
+
+  document.getElementById('simulate-btn').addEventListener('click', async () => {
+    const p1 = document.getElementById('p1-input').value.trim();
+    const p2 = document.getElementById('p2-input').value.trim();
+    if (!p1 || !p2) { alert('Enter both player names.'); return; }
+    const btn = document.getElementById('simulate-btn');
+    btn.disabled = true;
+    btn.innerHTML = 'SIMULATING… <span class="material-symbols-outlined">hourglass_top</span>';
+    try {
+      const res = await fetch('/api/simulate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          player1: p1, player2: p2,
+          surface: document.getElementById('surface-select').value,
+          best_of: parseInt(document.getElementById('best-of-select').value),
+          tour:    document.getElementById('tour-select').value
+        })
+      });
+      showResults(await res.json());
+    } catch (e) {
+      alert('Simulation failed. Is the server running?');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = 'SIMULATE MATCH <span class="material-symbols-outlined">analytics</span>';
+    }
+  });
+})();
+</script>
+<!-- Bottom Nav (mobile only) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 flex justify-around items-center bg-white dark:bg-slate-900 px-4 pb-safe border-t border-[#E9ECEF] dark:border-slate-800">
+<a class="bottom-nav-link bottom-nav-link-inactive" href="#"><span class="material-symbols-outlined">home</span><span>Home</span></a>
+<a class="bottom-nav-link bottom-nav-link-inactive" href="#"><span class="material-symbols-outlined">person</span><span>Players</span></a>
+<a class="bottom-nav-link bottom-nav-link-inactive" href="#"><span class="material-symbols-outlined">grid_view</span><span>Brackets</span></a>
+<a class="bottom-nav-link bottom-nav-link-active" href="#"><span class="material-symbols-outlined">analytics</span><span>Simulate</span></a>
+</nav>
+</body></html>
