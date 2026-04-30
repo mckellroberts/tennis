@@ -181,51 +181,6 @@ SIMULATE MATCH <span class="material-symbols-outlined">analytics</span>
 </main>
 <script>
 (function () {
-  function setupAutocomplete(inputId, nameId) {
-    const input = document.getElementById(inputId);
-    const nameEl = document.getElementById(nameId);
-    const wrap = input.parentElement;
-    wrap.style.position = 'relative';
-    const drop = document.createElement('ul');
-    drop.style.cssText = 'position:absolute;top:100%;left:0;right:0;z-index:200;background:#fff;border:1px solid #E9ECEF;max-height:200px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.1);display:none;list-style:none;padding:0;margin:0;';
-    wrap.appendChild(drop);
-    let timer;
-    input.addEventListener('input', () => {
-      clearTimeout(timer);
-      timer = setTimeout(async () => {
-        const q = input.value.trim();
-        if (q.length < 2) { drop.style.display = 'none'; return; }
-        const tour = document.getElementById('tour-select').value;
-        const res = await fetch('/api/players/search?q=' + encodeURIComponent(q) + '&tour=' + tour);
-        const list = await res.json();
-        drop.innerHTML = '';
-        if (!list.length) { drop.style.display = 'none'; return; }
-        list.forEach(name => {
-          const li = document.createElement('li');
-          li.style.cssText = 'padding:8px 16px;cursor:pointer;font-family:Lexend,sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;border-bottom:1px solid #f3f4f5;';
-          li.textContent = name;
-          li.onmouseenter = () => li.style.background = '#f8f9fa';
-          li.onmouseleave = () => li.style.background = '';
-          li.addEventListener('mousedown', e => {
-            e.preventDefault();
-            input.value = name;
-            if (nameEl) nameEl.textContent = name.split(' ').slice(-1)[0];
-            const imgId = inputId === 'p1-input' ? 'p1-img' : 'p2-img';
-            const imgEl = document.getElementById(imgId);
-            if (imgEl) imgEl.src = `https://api.dicebear.com/9.x/micah/svg?seed=${encodeURIComponent(name)}&backgroundColor=002366&radius=50`;
-            const metaId = inputId === 'p1-input' ? 'p1-meta' : 'p2-meta';
-            const metaEl = document.getElementById(metaId);
-            if (metaEl) metaEl.textContent = 'Selected';
-            drop.style.display = 'none';
-          });
-          drop.appendChild(li);
-        });
-        drop.style.display = 'block';
-      }, 200);
-    });
-    input.addEventListener('blur', () => setTimeout(() => { drop.style.display = 'none'; }, 150));
-  }
-
   function pct(v) { return v != null ? (v * 100).toFixed(1) + '%' : 'N/A'; }
 
   function showResults(d) {
@@ -275,8 +230,25 @@ SIMULATE MATCH <span class="material-symbols-outlined">analytics</span>
     if (this.value === 'WTA') bo.value = '3';
   });
 
-  setupAutocomplete('p1-input', 'p1-name');
-  setupAutocomplete('p2-input', 'p2-name');
+  if (window.setupPlayerAutocomplete) {
+      const tourGetter = () => document.getElementById('tour-select').value;
+      
+      window.setupPlayerAutocomplete('p1-input', tourGetter, (name, tour) => {
+          document.getElementById('p1-name').textContent = name.split(' ').slice(-1)[0];
+          const imgEl = document.getElementById('p1-img');
+          if (imgEl) imgEl.src = `https://api.dicebear.com/9.x/micah/svg?seed=${encodeURIComponent(name)}&backgroundColor=002366&radius=50`;
+          const metaEl = document.getElementById('p1-meta');
+          if (metaEl) metaEl.textContent = 'Selected';
+      });
+      
+      window.setupPlayerAutocomplete('p2-input', tourGetter, (name, tour) => {
+          document.getElementById('p2-name').textContent = name.split(' ').slice(-1)[0];
+          const imgEl = document.getElementById('p2-img');
+          if (imgEl) imgEl.src = `https://api.dicebear.com/9.x/micah/svg?seed=${encodeURIComponent(name)}&backgroundColor=002366&radius=50`;
+          const metaEl = document.getElementById('p2-meta');
+          if (metaEl) metaEl.textContent = 'Selected';
+      });
+  }
 
   const params = new URLSearchParams(window.location.search);
   const preP1 = params.get('p1');

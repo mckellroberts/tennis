@@ -412,7 +412,19 @@
 
   document.getElementById('search-input').addEventListener('input', doSearch);
   const analyzeBtn = document.getElementById('analyze-btn');
-  if(analyzeBtn) analyzeBtn.addEventListener('click', doSearch);
+  if(analyzeBtn) analyzeBtn.addEventListener('click', () => {
+      const q = document.getElementById('search-input').value.trim();
+      if (q) {
+          // Fallback: If they click analyze without picking from dropdown, we assume they want to view that profile if it exists.
+          window.location.href = 'player.html?name=' + encodeURIComponent(q) + '&tour=' + currentTour;
+      }
+  });
+  
+  if (window.setupPlayerAutocomplete) {
+      window.setupPlayerAutocomplete('search-input', () => currentTour, (name, tour) => {
+          window.location.href = 'player.html?name=' + encodeURIComponent(name) + '&tour=' + tour;
+      });
+  }
 
   // Pre-fill search from URL ?q= param
   const q = new URLSearchParams(window.location.search).get('q');

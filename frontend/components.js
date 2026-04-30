@@ -38,3 +38,49 @@ class AppBottomNav extends HTMLElement {
     }
 }
 customElements.define('app-bottom-nav', AppBottomNav);
+
+window.setupPlayerAutocomplete = function(inputId, tourGetter, onSelect) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    
+    let wrap = input.parentElement;
+    if (getComputedStyle(wrap).position === 'static') {
+        wrap.style.position = 'relative';
+    }
+    
+    const drop = document.createElement('ul');
+    drop.style.cssText = 'position:absolute;top:100%;left:0;right:0;z-index:200;background:#fff;border:1px solid #E9ECEF;max-height:200px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.1);display:none;list-style:none;padding:0;margin:0; text-align:left;';
+    wrap.appendChild(drop);
+    
+    let timer;
+    input.addEventListener('input', () => {
+        clearTimeout(timer);
+        timer = setTimeout(async () => {
+            const q = input.value.trim();
+            if (q.length < 2) { drop.style.display = 'none'; return; }
+            const tour = typeof tourGetter === 'function' ? tourGetter() : (tourGetter || 'ATP');
+            try {
+                const res = await fetch('/api/players/search?q=' + encodeURIComponent(q) + '&tour=' + tour);
+                const list = await res.json();
+                drop.innerHTML = '';
+                if (!list.length) { drop.style.display = 'none'; return; }
+                list.forEach(name => {
+                    const li = document.createElement('li');
+                    li.style.cssText = 'padding:8px 16px;cursor:pointer;font-family:Lexend,sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;border-bottom:1px solid #f3f4f5;color:#00113a;';
+                    li.textContent = name;
+                    li.onmouseenter = () => li.style.background = '#f8f9fa';
+                    li.onmouseleave = () => li.style.background = '';
+                    li.addEventListener('mousedown', e => {
+                        e.preventDefault();
+                        input.value = name;
+                        drop.style.display = 'none';
+                        if (onSelect) onSelect(name, tour);
+                    });
+                    drop.appendChild(li);
+                });
+                drop.style.display = 'block';
+            } catch(e) { console.error(e); }
+        }, 200);
+    });
+    input.addEventListener('blur', () => setTimeout(() => { drop.style.display = 'none'; }, 150));
+};

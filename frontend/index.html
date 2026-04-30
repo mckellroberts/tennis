@@ -210,6 +210,12 @@
 
   searchBtn.addEventListener('click', goSearch);
   searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') goSearch(); });
+  
+  if (window.setupPlayerAutocomplete) {
+      window.setupPlayerAutocomplete('hero-search', 'ATP', (name, tour) => {
+          window.location.href = 'player.html?name=' + encodeURIComponent(name) + '&tour=' + tour;
+      });
+  }
 </script>
 </body>
 </html>
