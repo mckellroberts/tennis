@@ -208,35 +208,78 @@ def player_fun(name):
     row = cur.fetchone()
     result["best_win"] = dict(row) if row else None
 
-    # ── 2. Career Nemesis ──────────────────────────────────────────────────────
-    # The player who has beaten them the most times, plus their win rate
-    # in those head-to-head meetings.
+    # ── 2. Heated Rival ───────────────────────────────────────────────────────
+    # The opponent they have the most history with, weighted by:
+    #   0.50 — total matches (most-played gets the base score)
+    #   0.35 — closeness: fraction of each match's sets that went the distance
+    #            proxy = sets_played / best_of, averaged over all meetings.
+    #            A 7-6 6-7 7-6 three-setter scores 1.0; a 6-1 6-0 scores 0.33.
+    #            Sets played = number of space characters in score + 1.
+    #   0.15 — recency: average julianday of their meetings, normalised so
+    #            older matchups don't dominate over active rivalries.
+    #
+    # Minimum 10 matches; returns NULL if no opponent clears the threshold.
+    # The three weights are normalised inside the CTE so the rival_score
+    # is always 0–1 regardless of career length.
     cur = conn.execute("""
-        WITH losses AS (
-            SELECT m.winner_id, COUNT(*) AS losses
+        WITH all_matches AS (
+            SELECT
+                CASE WHEN m.winner_id = ? THEN m.loser_id
+                     ELSE m.winner_id END                               AS opp_id,
+                CASE WHEN m.winner_id = ? THEN 1 ELSE 0 END            AS player_won,
+                (length(m.score) - length(replace(m.score, ' ', '')) + 1) AS sets_played,
+                COALESCE(m.best_of, 3)                                  AS best_of,
+                julianday(
+                    substr(t.date,1,4) || '-' ||
+                    substr(t.date,5,2) || '-' ||
+                    substr(t.date,7,2)
+                )                                                       AS jday
             FROM Match m
-            WHERE m.loser_id   = ?
+            JOIN Tournament t ON t.id = m.tournament_id
+            WHERE (m.winner_id = ? OR m.loser_id = ?)
               AND m.match_type = 'main'
-            GROUP BY m.winner_id
-            ORDER BY losses DESC
-            LIMIT 1
+              AND m.score IS NOT NULL
         ),
-        total_h2h AS (
-            SELECT COUNT(*) AS total
-            FROM Match m
-            CROSS JOIN losses l
-            WHERE m.match_type = 'main'
-              AND ((m.winner_id = l.winner_id AND m.loser_id  = ?)
-                OR (m.loser_id  = l.winner_id AND m.winner_id = ?))
+        h2h_stats AS (
+            SELECT
+                opp_id,
+                COUNT(*)                                      AS total_matches,
+                SUM(player_won)                               AS player_wins,
+                AVG(CAST(sets_played AS REAL) / best_of)     AS avg_closeness,
+                AVG(jday)                                     AS avg_jday
+            FROM all_matches
+            GROUP BY opp_id
+            HAVING total_matches >= 10
+        ),
+        normalised AS (
+            SELECT
+                opp_id,
+                total_matches,
+                player_wins,
+                avg_closeness,
+                avg_jday,
+                (0.50 * CASE WHEN MAX(total_matches) OVER () > MIN(total_matches) OVER ()
+                              THEN (total_matches - MIN(total_matches) OVER ()) * 1.0
+                                   / (MAX(total_matches) OVER () - MIN(total_matches) OVER ())
+                              ELSE 1.0 END)
+                + (0.35 * avg_closeness)
+                + (0.15 * CASE WHEN MAX(avg_jday) OVER () > MIN(avg_jday) OVER ()
+                                THEN (avg_jday - MIN(avg_jday) OVER ()) * 1.0
+                                     / (MAX(avg_jday) OVER () - MIN(avg_jday) OVER ())
+                                ELSE 1.0 END)               AS rival_score
+            FROM h2h_stats
         )
         SELECT
             p.name                              AS name,
-            l.losses                            AS losses,
-            ROUND(l.losses * 1.0 / h.total, 2) AS win_pct
-        FROM losses l
-        JOIN Player       p ON p.id = l.winner_id
-        CROSS JOIN total_h2h h
-    """, (player_id, player_id, player_id))
+            n.total_matches                     AS matches,
+            n.player_wins                       AS player_wins,
+            ROUND(n.avg_closeness, 2)           AS closeness,
+            ROUND(n.rival_score,   3)           AS rival_score
+        FROM normalised n
+        JOIN Player p ON p.id = n.opp_id
+        ORDER BY rival_score DESC
+        LIMIT 1
+    """, (player_id, player_id, player_id, player_id))
     row = cur.fetchone()
     result["nemesis"] = dict(row) if row else None
 

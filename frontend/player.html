@@ -247,16 +247,16 @@
               <div class="bg-primary p-lg flex flex-col gap-md">
                 <div class="flex items-center gap-sm">
                   <span class="material-symbols-outlined text-secondary-container text-2xl">mood_bad</span>
-                  <h4 class="font-label-bold text-on-primary-container uppercase text-sm">Career Nemesis</h4>
+                  <h4 class="font-label-bold text-on-primary-container uppercase text-sm">Heated Rival</h4>
                 </div>
                 <p class="font-body-md text-on-primary-container/70 text-xs">
-                  Player who has beaten them the most times.
+                  Most-played opponent with the closest, most recent battles.
                 </p>
                 <div class="mt-auto">
                   <p id="fun-nemesis-name" class="font-headline-md text-white uppercase leading-tight">—</p>
-                  <p id="fun-nemesis-losses" class="font-label-bold text-secondary-container text-sm uppercase mt-xs">—
+                  <p id="fun-nemesis-total" class="font-label-bold text-secondary-container text-sm uppercase mt-sm">—
                   </p>
-                  <p id="fun-nemesis-pct" class="font-body-md text-on-primary-container/60 text-xs mt-xs">—</p>
+                  <p id="fun-nemesis-winpct" class="font-body-md text-on-primary-container/60 text-xs mt-xs">—</p>
                 </div>
               </div>
 
@@ -281,10 +281,10 @@
               <div class="bg-secondary p-lg flex flex-col gap-md">
                 <div class="flex items-center gap-sm">
                   <span class="material-symbols-outlined text-primary text-2xl">stadium</span>
-                  <h4 class="font-label-bold text-primary uppercase text-sm">Happy Hunting Ground</h4>
+                  <h4 class="font-label-bold text-primary uppercase text-sm">Best Tournament Performance</h4>
                 </div>
                 <p class="font-body-md text-primary/70 text-xs">
-                  Tournament with the best career win rate (min. 5 matches).
+                  Tournament where they have performed the best (min. 5 matches).
                 </p>
                 <div class="mt-auto">
                   <p id="fun-ground-name" class="font-headline-md text-primary uppercase leading-tight">—</p>
@@ -422,12 +422,13 @@
                 }
                 if (fun.nemesis) {
                   document.getElementById('fun-nemesis-name').textContent = fun.nemesis.name || '—';
-                  document.getElementById('fun-nemesis-losses').textContent =
-                    fun.nemesis.losses != null ? `${fun.nemesis.losses} losses` : '—';
-                  document.getElementById('fun-nemesis-pct').textContent =
-                    fun.nemesis.win_pct != null
-                      ? `${(fun.nemesis.win_pct * 100).toFixed(0)}% win rate for them`
-                      : '—';
+                  document.getElementById('fun-nemesis-total').textContent =
+                    fun.nemesis.matches != null ? `${fun.nemesis.matches} matches played` : '—';
+                  const winPct = fun.nemesis.matches
+                    ? ((fun.nemesis.player_wins / fun.nemesis.matches) * 100).toFixed(0)
+                    : null;
+                  document.getElementById('fun-nemesis-winpct').textContent =
+                    winPct != null ? `${winPct}% win rate` : '—';
                 }
                 if (fun.marathon) {
                   const hrs = Math.floor((fun.marathon.minutes || 0) / 60);
