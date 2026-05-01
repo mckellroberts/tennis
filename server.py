@@ -115,7 +115,7 @@ def rankings():
     conn.close()
     return jsonify(rows)
 
-# ── API: rankings/extended (adds archetype label) ──────────────────────────────
+# ── API: rankings/extended ────────────────────────────────────────────────────────
 @app.route("/api/rankings/extended")
 def rankings_extended():
     tour   = request.args.get("tour",  "ATP").upper()
@@ -146,15 +146,7 @@ def rankings_extended():
             player_id, player, total_matches,
             ROUND(power   * 100, 1) AS serve_win_pct,
             ROUND(danger  * 100, 2) AS ace_rate,
-            ROUND(clutch  * 100, 1) AS bp_save_pct,
-            CASE
-                WHEN danger    > 0.08  AND first_win  > 0.78 THEN 'Big Server'
-                WHEN clutch    > 0.65  AND power      > 0.64 THEN 'Iron Wall'
-                WHEN second_win > 0.56 AND clutch     > 0.60 THEN 'Tactician'
-                WHEN precision > 0.68  AND df_rate    < 0.02 THEN 'Precision Machine'
-                WHEN power     > 0.66                         THEN 'All-Court Athlete'
-                ELSE 'Grinder'
-            END AS archetype
+            ROUND(clutch  * 100, 1) AS bp_save_pct
         FROM base
     """, (gender, limit))
     rows = [dict(r) for r in cur.fetchall()]
@@ -369,7 +361,7 @@ def player_card(name):
     gender = TOUR_GENDER.get(tour, "M")
     conn   = get_conn()
 
-    # ── Attribute ratings + archetype ─────────────────────────────────────────
+    # ── Attribute ratings ────────────────────────────────────────────────────────
     cur = conn.execute("""
         WITH stats AS (
             SELECT pss.player_id, pss.match_count,
@@ -403,15 +395,7 @@ def player_card(name):
             ROUND(
                 (power*40) + (precision*20) + (clutch*25) +
                 (danger*100) + (consistency*15)
-            , 1) AS overall_rating,
-            CASE
-                WHEN danger    > 0.08  AND first_win > 0.78 THEN 'Big Server'
-                WHEN clutch    > 0.65  AND power     > 0.64 THEN 'Iron Wall'
-                WHEN second_win > 0.56 AND clutch    > 0.60 THEN 'Tactician'
-                WHEN precision > 0.68  AND df_r      < 0.02 THEN 'Precision Machine'
-                WHEN power     > 0.66                        THEN 'All-Court Athlete'
-                ELSE 'Grinder'
-            END AS archetype
+            , 1) AS overall_rating
         FROM totals
     """, (name, gender))
     row = cur.fetchone()

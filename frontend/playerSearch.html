@@ -1,215 +1,191 @@
 <!DOCTYPE html>
 <html class="light" lang="en">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Work+Sans:wght@100..900&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="style.css"/>
-<script src="tailwind.config.js"></script>
-<script src="components.js"></script>
-</head>
-<body class="bg-background text-on-background font-body-md">
-<app-header></app-header>
-<main class="min-h-screen">
 
-  <!-- Hero Search Section -->
-  <section class="relative h-[400px] flex flex-col justify-center items-center overflow-hidden bg-primary-container">
-    <div class="absolute inset-0 opacity-40">
-      <img alt="Arena Background" class="w-full h-full object-cover"
-           src="https://lh3.googleusercontent.com/aida-public/AB6AXuAau0nzypBovwToMjpRQ4hdQpXqwu1hYpaozYOD_Ul9zBI-zUFALY_GO8g4XZp6lot53kcyOfZhKXU_C-L9lxqROna9VlAKIczmZsxwBRgbL7QSnxRg3oDVGSvP15wVU8Bl9yW4q0TS0wU1uSDu_0lNm2sAayJPpccALZU46SoskLyylOaVwdfW1_gI21SM9w8tbWlOo9UghE39vhZlS5GJ3rJpvdYDRURRqEBpaOAh40kjej0azSSi2NlNSZAIXWmG5wSc321FcBL9"/>
-      <div class="absolute inset-0 bg-gradient-to-t from-primary-container via-primary-container/60 to-transparent"></div>
-    </div>
-    <div class="relative z-10 w-full max-w-4xl px-gutter text-center">
-      <span class="font-label-bold text-secondary-container uppercase tracking-widest mb-4 block">Global Database</span>
-      <h1 class="font-display-xl text-white mb-8">Player Intelligence</h1>
-      <div class="bg-white p-2 rounded-lg flex items-center shadow-xl border border-outline-variant/20">
-        <span class="material-symbols-outlined text-outline px-4">person_search</span>
-        <input id="search-input"
-               class="flex-1 border-none focus:ring-0 text-lg py-4 font-body-md text-on-surface"
-               placeholder="Search by name, rank, or archetype…" type="text"/>
-        <button id="analyze-btn"
-                class="bg-secondary text-on-secondary px-8 py-4 font-label-bold uppercase rounded-sm hover:opacity-90 transition-opacity active:scale-95">
-          Analyze
-        </button>
-      </div>
-    </div>
-  </section>
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Work+Sans:wght@100..900&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="tailwind.config.js"></script>
+    <script src="components.js"></script>
+  </head>
 
-  <!-- Filters & Table Section -->
-  <section class="max-w-container-max mx-auto px-gutter py-xl">
-    <div class="flex flex-col md:flex-row justify-between items-end mb-lg gap-md">
-      <div>
-        <h2 class="font-headline-md text-primary mb-2 uppercase tracking-tight">Global Rankings</h2>
-        <p class="font-body-md text-on-surface-variant">
-          Live performance metrics — ranked by career match volume.
-        </p>
-      </div>
-      <div class="flex gap-sm items-center">
-        <!-- Archetype filter -->
-        <select id="archetype-filter"
-                class="border border-[#E9ECEF] px-4 py-2 font-label-bold text-xs bg-white outline-none uppercase focus:ring-2 focus:ring-secondary">
-          <option value="">All Archetypes</option>
-          <option value="Big Server">💣 Big Server</option>
-          <option value="Iron Wall">🛡️ Iron Wall</option>
-          <option value="Tactician">🧠 Tactician</option>
-          <option value="Precision Machine">🎯 Precision Machine</option>
-          <option value="All-Court Athlete">⚡ All-Court Athlete</option>
-          <option value="Grinder">🏃 Grinder</option>
-        </select>
-        <select id="tour-select"
-                class="border border-[#E9ECEF] px-4 py-2 font-label-bold text-xs bg-white outline-none uppercase focus:ring-2 focus:ring-secondary">
-          <option value="ATP">ATP (Men)</option>
-          <option value="WTA">WTA (Women)</option>
-        </select>
-      </div>
-    </div>
+  <body class="bg-background text-on-background font-body-md">
+    <app-header></app-header>
+    <main class="min-h-screen">
 
-    <!-- Rankings Table -->
-    <div class="bg-white border border-[#E9ECEF] overflow-hidden">
-      <table class="w-full text-left border-collapse">
-        <thead class="bg-surface-container-low border-b border-[#E9ECEF]">
-          <tr>
-            <th class="px-6 py-4 font-label-bold text-xs uppercase text-outline tracking-wider w-16">Rank</th>
-            <th class="px-6 py-4 font-label-bold text-xs uppercase text-outline tracking-wider">Player</th>
-            <th class="px-6 py-4 font-label-bold text-xs uppercase text-outline tracking-wider">Matches</th>
-            <th class="px-6 py-4 font-label-bold text-xs uppercase text-outline tracking-wider text-center">Serve Win%</th>
-            <th class="px-6 py-4 font-label-bold text-xs uppercase text-outline tracking-wider text-right">Ace Rate</th>
-            <th class="px-6 py-4 font-label-bold text-xs uppercase text-outline tracking-wider text-center hidden md:table-cell">Archetype</th>
-            <th class="px-6 py-4"></th>
-          </tr>
-        </thead>
-        <tbody id="rankings-tbody" class="divide-y divide-[#E9ECEF]">
-          <tr>
-            <td colspan="7" class="px-6 py-12 text-center text-on-surface-variant font-body-md">Loading rankings…</td>
-          </tr>
-        </tbody>
-      </table>
+      <!-- Hero Search Section -->
+      <section
+        class="relative h-[400px] flex flex-col justify-center items-center overflow-hidden bg-primary-container">
+        <div class="absolute inset-0 opacity-40">
+          <img alt="Arena Background" class="w-full h-full object-cover"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAau0nzypBovwToMjpRQ4hdQpXqwu1hYpaozYOD_Ul9zBI-zUFALY_GO8g4XZp6lot53kcyOfZhKXU_C-L9lxqROna9VlAKIczmZsxwBRgbL7QSnxRg3oDVGSvP15wVU8Bl9yW4q0TS0wU1uSDu_0lNm2sAayJPpccALZU46SoskLyylOaVwdfW1_gI21SM9w8tbWlOo9UghE39vhZlS5GJ3rJpvdYDRURRqEBpaOAh40kjej0azSSi2NlNSZAIXWmG5wSc321FcBL9" />
+          <div class="absolute inset-0 bg-gradient-to-t from-primary-container via-primary-container/60 to-transparent">
+          </div>
+        </div>
+        <div class="relative z-10 w-full max-w-4xl px-gutter text-center">
+          <span class="font-label-bold text-secondary-container uppercase tracking-widest mb-4 block">Global
+            Database</span>
+          <h1 class="font-display-xl text-white mb-8">Player Intelligence</h1>
+          <div class="bg-white p-2 rounded-lg flex items-center shadow-xl border border-outline-variant/20">
+            <span class="material-symbols-outlined text-outline px-4">person_search</span>
+            <input id="search-input" class="flex-1 border-none focus:ring-0 text-lg py-4 font-body-md text-on-surface"
+              placeholder="Search by player name…" type="text" />
+            <button id="analyze-btn"
+              class="bg-secondary text-on-secondary px-8 py-4 font-label-bold uppercase rounded-sm hover:opacity-90 transition-opacity active:scale-95">
+              Analyze
+            </button>
+          </div>
+        </div>
+      </section>
 
-      <!-- Pagination -->
-      <div class="px-6 py-4 bg-surface-container-low flex justify-between items-center border-t border-[#E9ECEF]">
-        <span id="player-count" class="text-xs font-body-md text-on-surface-variant">Loading…</span>
-        <div class="flex gap-1" id="pagination-controls"></div>
-      </div>
-    </div>
+      <!-- Filters & Table Section -->
+      <section class="max-w-container-max mx-auto px-gutter py-xl">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-lg gap-md">
+          <div>
+            <h2 class="font-headline-md text-primary mb-2 uppercase tracking-tight">Global Rankings</h2>
+            <p class="font-body-md text-on-surface-variant">
+              Live performance metrics — ranked by career match volume.
+            </p>
+          </div>
+          <div class="flex gap-sm items-center">
 
-    <!-- Bento Info Cards -->
-    <div class="mt-xl grid grid-cols-1 md:grid-cols-3 gap-lg">
-      <div class="bg-primary text-white p-lg flex flex-col justify-between min-h-[200px]">
-        <span class="material-symbols-outlined text-secondary-container text-4xl">psychology</span>
-        <div>
-          <h3 class="font-headline-md uppercase mb-2">Predictive Logic</h3>
-          <p class="text-sm opacity-80 font-body-md">
-            Real-time simulation engine predicts player performance based on historical serve statistics.
-          </p>
+            <select id="tour-select"
+              class="border border-[#E9ECEF] px-4 py-2 font-label-bold text-xs bg-white outline-none uppercase focus:ring-2 focus:ring-secondary">
+              <option value="ATP">ATP (Men)</option>
+              <option value="WTA">WTA (Women)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Rankings Table -->
+        <div class="bg-white border border-[#E9ECEF] overflow-hidden">
+          <table class="w-full text-left border-collapse">
+            <thead class="bg-surface-container-low border-b border-[#E9ECEF]">
+              <tr>
+                <th class="px-6 py-4 font-label-bold text-xs uppercase text-outline tracking-wider w-16">Rank</th>
+                <th class="px-6 py-4 font-label-bold text-xs uppercase text-outline tracking-wider">Player</th>
+                <th class="px-6 py-4 font-label-bold text-xs uppercase text-outline tracking-wider">Matches</th>
+                <th class="px-6 py-4 font-label-bold text-xs uppercase text-outline tracking-wider text-center">Serve
+                  Win%</th>
+                <th class="px-6 py-4 font-label-bold text-xs uppercase text-outline tracking-wider text-right">Ace Rate
+                </th>
+                <th class="px-6 py-4"></th>
+              </tr>
+            </thead>
+            <tbody id="rankings-tbody" class="divide-y divide-[#E9ECEF]">
+              <tr>
+                <td colspan="7" class="px-6 py-12 text-center text-on-surface-variant font-body-md">Loading rankings…
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Pagination -->
+          <div class="px-6 py-4 bg-surface-container-low flex justify-between items-center border-t border-[#E9ECEF]">
+            <span id="player-count" class="text-xs font-body-md text-on-surface-variant">Loading…</span>
+            <div class="flex gap-1" id="pagination-controls"></div>
+          </div>
+        </div>
+
+        <!-- Bento Info Cards -->
+        <div class="mt-xl grid grid-cols-1 md:grid-cols-3 gap-lg">
+          <div class="bg-primary text-white p-lg flex flex-col justify-between min-h-[200px]">
+            <span class="material-symbols-outlined text-secondary-container text-4xl">psychology</span>
+            <div>
+              <h3 class="font-headline-md uppercase mb-2">Predictive Logic</h3>
+              <p class="text-sm opacity-80 font-body-md">
+                Real-time simulation engine predicts player performance based on historical serve statistics.
+              </p>
+            </div>
+          </div>
+          <div class="bg-white border border-[#E9ECEF] p-lg flex flex-col justify-between min-h-[200px]">
+            <span class="material-symbols-outlined text-primary text-4xl">monitoring</span>
+            <div>
+              <h3 class="font-headline-md text-primary uppercase mb-2">Elite Scouting</h3>
+              <p class="text-sm text-on-surface-variant font-body-md">
+                Advanced filtering to identify players across international circuits and satellite tournaments.
+              </p>
+            </div>
+          </div>
+          <div class="bg-secondary text-primary p-lg flex flex-col justify-between min-h-[200px]">
+            <span class="material-symbols-outlined text-primary text-4xl">rocket_launch</span>
+            <div>
+              <h3 class="font-headline-md uppercase mb-2">Power Search</h3>
+              <p class="text-sm opacity-80 font-body-md font-medium">
+                Use AI-driven prompts to find players with specific match-up histories.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-surface-container-lowest border-t border-[#E9ECEF] py-lg px-8 mt-xxl">
+      <div class="max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-center gap-md">
+        <span class="text-xs font-label-bold text-outline uppercase">© 2024 COURT ANALYTICS — Performance Lab</span>
+        <div class="flex gap-8 text-xs font-label-bold text-outline uppercase tracking-wider">
+          <a class="hover:text-primary" href="#">Data Integrity</a>
+          <a class="hover:text-primary" href="#">API Access</a>
+          <a class="hover:text-primary" href="#">Privacy Protocol</a>
         </div>
       </div>
-      <div class="bg-white border border-[#E9ECEF] p-lg flex flex-col justify-between min-h-[200px]">
-        <span class="material-symbols-outlined text-primary text-4xl">monitoring</span>
-        <div>
-          <h3 class="font-headline-md text-primary uppercase mb-2">Elite Scouting</h3>
-          <p class="text-sm text-on-surface-variant font-body-md">
-            Filter by archetype to identify players that match a specific tactical profile.
-          </p>
-        </div>
-      </div>
-      <div class="bg-secondary text-primary p-lg flex flex-col justify-between min-h-[200px]">
-        <span class="material-symbols-outlined text-primary text-4xl">rocket_launch</span>
-        <div>
-          <h3 class="font-headline-md uppercase mb-2">Power Search</h3>
-          <p class="text-sm opacity-80 font-body-md font-medium">
-            Search by name and filter by archetype to find players with specific tactical profiles.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-</main>
+    </footer>
 
-<footer class="bg-surface-container-lowest border-t border-[#E9ECEF] py-lg px-8 mt-xxl">
-  <div class="max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-center gap-md">
-    <span class="text-xs font-label-bold text-outline uppercase">© 2024 COURT ANALYTICS — Performance Lab</span>
-    <div class="flex gap-8 text-xs font-label-bold text-outline uppercase tracking-wider">
-      <a class="hover:text-primary" href="#">Data Integrity</a>
-      <a class="hover:text-primary" href="#">API Access</a>
-      <a class="hover:text-primary" href="#">Privacy Protocol</a>
-    </div>
-  </div>
-</footer>
+    <script>
+      (function () {
 
-<script>
-(function () {
-  const ARCHETYPE_EMOJI = {
-    'Big Server':        '💣',
-    'Iron Wall':         '🛡️',
-    'Tactician':         '🧠',
-    'Precision Machine': '🎯',
-    'All-Court Athlete': '⚡',
-    'Grinder':           '🏃',
-  };
-  // Tailwind-compatible colour pairs per archetype
-  const ARCHETYPE_STYLE = {
-    'Big Server':        'bg-red-100 text-red-800',
-    'Iron Wall':         'bg-blue-100 text-blue-800',
-    'Tactician':         'bg-purple-100 text-purple-800',
-    'Precision Machine': 'bg-amber-100 text-amber-800',
-    'All-Court Athlete': 'bg-green-100 text-green-800',
-    'Grinder':           'bg-slate-100 text-slate-600',
-  };
 
-  let allPlayers     = [];
-  let currentTour    = 'ATP';
-  let currentPage    = 1;
-  const itemsPerPage = 10;
-  let currentFiltered = [];
+        let allPlayers = [];
+        let currentTour = 'ATP';
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let currentFiltered = [];
 
-  /* ── Fetch rankings (extended endpoint) ───────────────────────────────── */
-  async function loadRankings(tour) {
-    const tbody = document.getElementById('rankings-tbody');
-    tbody.innerHTML = `<tr><td colspan="7" class="px-6 py-12 text-center text-on-surface-variant font-body-md">Loading…</td></tr>`;
+        /* ── Fetch rankings (extended endpoint) ───────────────────────────────── */
+        async function loadRankings(tour) {
+          const tbody = document.getElementById('rankings-tbody');
+          tbody.innerHTML = `<tr><td colspan="7" class="px-6 py-12 text-center text-on-surface-variant font-body-md">Loading…</td></tr>`;
 
-    // Use the extended endpoint so we get archetype labels
-    const res   = await fetch('/api/rankings/extended?tour=' + tour + '&limit=200');
-    allPlayers  = await res.json();
-    applyFilters();
-  }
+          const res = await fetch('/api/rankings?tour=' + tour + '&limit=200');
+          allPlayers = await res.json();
+          applyFilters();
+        }
 
-  /* ── Apply search + archetype filter ─────────────────────────────────── */
-  function applyFilters() {
-    const q         = document.getElementById('search-input').value.trim().toLowerCase();
-    const archetype = document.getElementById('archetype-filter').value;
+        /* ── Apply search filter ────────────────────────────────────────────────── */
+        function applyFilters() {
+          const q = document.getElementById('search-input').value.trim().toLowerCase();
+          currentFiltered = allPlayers.filter(p => {
+            return !q || p.player.toLowerCase().includes(q);
+          });
 
-    currentFiltered = allPlayers.filter(p => {
-      const nameMatch      = !q         || p.player.toLowerCase().includes(q);
-      const archetypeMatch = !archetype || p.archetype === archetype;
-      return nameMatch && archetypeMatch;
-    });
+          currentPage = 1;
+          renderTable();
+          renderPagination();
+        }
 
-    currentPage = 1;
-    renderTable();
-    renderPagination();
-  }
+        /* ── Render table rows ────────────────────────────────────────────────── */
+        function renderTable() {
+          const tbody = document.getElementById('rankings-tbody');
+          const countEl = document.getElementById('player-count');
+          const start = (currentPage - 1) * itemsPerPage;
+          const shown = currentFiltered.slice(start, start + itemsPerPage);
 
-  /* ── Render table rows ────────────────────────────────────────────────── */
-  function renderTable() {
-    const tbody   = document.getElementById('rankings-tbody');
-    const countEl = document.getElementById('player-count');
-    const start   = (currentPage - 1) * itemsPerPage;
-    const shown   = currentFiltered.slice(start, start + itemsPerPage);
+          if (!shown.length) {
+            tbody.innerHTML = `<tr><td colspan="7" class="px-6 py-12 text-center text-on-surface-variant font-body-md">No players found.</td></tr>`;
+            if (countEl) countEl.textContent = 'Showing 0 of 0 players';
+            return;
+          }
 
-    if (!shown.length) {
-      tbody.innerHTML = `<tr><td colspan="7" class="px-6 py-12 text-center text-on-surface-variant font-body-md">No players found.</td></tr>`;
-      if (countEl) countEl.textContent = 'Showing 0 of 0 players';
-      return;
-    }
+          tbody.innerHTML = shown.map((p, i) => {
+            const rank = String(start + i + 1).padStart(2, '0');
 
-    tbody.innerHTML = shown.map((p, i) => {
-      const archEmoji = ARCHETYPE_EMOJI[p.archetype]  || '';
-      const archStyle = ARCHETYPE_STYLE[p.archetype]  || 'bg-slate-100 text-slate-500';
-      const rank      = String(start + i + 1).padStart(2, '0');
-
-      return `
+            return `
         <tr class="hover:bg-slate-50 transition-colors cursor-pointer group"
             onclick="location.href='player.html?name=${encodeURIComponent(p.player)}&tour=${currentTour}'">
           <td class="px-6 py-5">
@@ -229,103 +205,97 @@
           <td class="px-6 py-5 font-body-md text-on-surface text-sm">${Number(p.total_matches).toLocaleString()}</td>
           <td class="px-6 py-5">
             <div style="max-width:120px">
-              <div class="text-[10px] font-label-bold uppercase mb-1">${p.serve_win_pct.toFixed(0)}%</div>
+              <div class="text-[10px] font-label-bold uppercase mb-1">${(p.serve_win_pct * 100).toFixed(0)}%</div>
               <div class="h-1 bg-surface-container-highest rounded-full overflow-hidden">
-                <div class="h-full bg-secondary" style="width:${p.serve_win_pct.toFixed(0)}%"></div>
+                <div class="h-full bg-secondary" style="width:${(p.serve_win_pct * 100).toFixed(0)}%"></div>
               </div>
             </div>
           </td>
-          <td class="px-6 py-5 text-right font-label-bold text-primary text-sm">${p.ace_rate.toFixed(2)}%</td>
-          <td class="px-6 py-5 text-center hidden md:table-cell">
-            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-label-bold uppercase ${archStyle}">
-              ${archEmoji} ${p.archetype || '—'}
-            </span>
-          </td>
-          <td class="px-6 py-5 text-right">
+          <td class="px-6 py-5 text-right font-label-bold text-primary text-sm">${(p.ace_rate * 100).toFixed(2)}%</td><td class="px-6 py-5 text-right">
             <button class="material-symbols-outlined text-outline hover:text-primary transition-colors group-hover:text-primary">
               analytics
             </button>
           </td>
         </tr>`;
-    }).join('');
+          }).join('');
 
-    if (countEl) countEl.textContent =
-      `Showing ${start + 1}–${Math.min(start + itemsPerPage, currentFiltered.length)} of ${currentFiltered.length} players`;
-  }
+          if (countEl) countEl.textContent =
+            `Showing ${start + 1}–${Math.min(start + itemsPerPage, currentFiltered.length)} of ${currentFiltered.length} players`;
+        }
 
-  /* ── Pagination ───────────────────────────────────────────────────────── */
-  function renderPagination() {
-    const totalPages = Math.ceil(currentFiltered.length / itemsPerPage);
-    const container  = document.getElementById('pagination-controls');
-    if (!container) return;
+        /* ── Pagination ───────────────────────────────────────────────────────── */
+        function renderPagination() {
+          const totalPages = Math.ceil(currentFiltered.length / itemsPerPage);
+          const container = document.getElementById('pagination-controls');
+          if (!container) return;
 
-    // Show up to 5 page buttons around the current page
-    const pages = [];
-    const range = 2;
-    for (let i = Math.max(1, currentPage - range); i <= Math.min(totalPages, currentPage + range); i++) {
-      pages.push(i);
-    }
+          // Show up to 5 page buttons around the current page
+          const pages = [];
+          const range = 2;
+          for (let i = Math.max(1, currentPage - range); i <= Math.min(totalPages, currentPage + range); i++) {
+            pages.push(i);
+          }
 
-    let html = '';
-    if (currentPage > 1) {
-      html += `<button onclick="window.goToPage(${currentPage - 1})"
+          let html = '';
+          if (currentPage > 1) {
+            html += `<button onclick="window.goToPage(${currentPage - 1})"
                        class="w-8 h-8 flex items-center justify-center border border-[#E9ECEF] bg-white text-outline hover:bg-secondary-container hover:text-primary transition-colors">
                  <span class="material-symbols-outlined text-sm">chevron_left</span>
                </button>`;
-    }
-    pages.forEach(p => {
-      html += `<button onclick="window.goToPage(${p})"
+          }
+          pages.forEach(p => {
+            html += `<button onclick="window.goToPage(${p})"
                        class="w-8 h-8 flex items-center justify-center border border-[#E9ECEF] font-label-bold text-xs transition-colors
                               ${currentPage === p ? 'bg-secondary-container text-primary' : 'bg-white text-outline hover:bg-secondary-container hover:text-primary'}">
                  ${p}
                </button>`;
-    });
-    if (currentPage < totalPages) {
-      html += `<button onclick="window.goToPage(${currentPage + 1})"
+          });
+          if (currentPage < totalPages) {
+            html += `<button onclick="window.goToPage(${currentPage + 1})"
                        class="w-8 h-8 flex items-center justify-center border border-[#E9ECEF] bg-white text-outline hover:bg-secondary-container hover:text-primary transition-colors">
                  <span class="material-symbols-outlined text-sm">chevron_right</span>
                </button>`;
-    }
-    container.innerHTML = html;
-  }
+          }
+          container.innerHTML = html;
+        }
 
-  window.goToPage = function (page) {
-    currentPage = page;
-    renderTable();
-    renderPagination();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+        window.goToPage = function (page) {
+          currentPage = page;
+          renderTable();
+          renderPagination();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
 
-  /* ── Event listeners ──────────────────────────────────────────────────── */
-  document.getElementById('tour-select').addEventListener('change', function () {
-    currentTour = this.value;
-    loadRankings(currentTour);
-  });
+        /* ── Event listeners ──────────────────────────────────────────────────── */
+        document.getElementById('tour-select').addEventListener('change', function () {
+          currentTour = this.value;
+          loadRankings(currentTour);
+        });
 
-  document.getElementById('search-input').addEventListener('input', applyFilters);
-  document.getElementById('archetype-filter').addEventListener('change', applyFilters);
+        document.getElementById('search-input').addEventListener('input', applyFilters);
 
-  document.getElementById('analyze-btn').addEventListener('click', () => {
-    const q = document.getElementById('search-input').value.trim();
-    if (q) window.location.href = 'player.html?name=' + encodeURIComponent(q) + '&tour=' + currentTour;
-  });
+        document.getElementById('analyze-btn').addEventListener('click', () => {
+          const q = document.getElementById('search-input').value.trim();
+          if (q) window.location.href = 'player.html?name=' + encodeURIComponent(q) + '&tour=' + currentTour;
+        });
 
-  // Autocomplete — navigates directly to player page on selection
-  if (window.setupPlayerAutocomplete) {
-    window.setupPlayerAutocomplete('search-input', () => currentTour, (name) => {
-      window.location.href = 'player.html?name=' + encodeURIComponent(name) + '&tour=' + currentTour;
-    });
-  }
+        // Autocomplete — navigates directly to player page on selection
+        if (window.setupPlayerAutocomplete) {
+          window.setupPlayerAutocomplete('search-input', () => currentTour, (name) => {
+            window.location.href = 'player.html?name=' + encodeURIComponent(name) + '&tour=' + currentTour;
+          });
+        }
 
-  /* ── Pre-fill search from URL ?q= param ──────────────────────────────── */
-  const urlQ = new URLSearchParams(window.location.search).get('q');
-  if (urlQ) document.getElementById('search-input').value = urlQ;
+        /* ── Pre-fill search from URL ?q= param ──────────────────────────────── */
+        const urlQ = new URLSearchParams(window.location.search).get('q');
+        if (urlQ) document.getElementById('search-input').value = urlQ;
 
-  /* ── Boot ─────────────────────────────────────────────────────────────── */
-  loadRankings('ATP').then(() => { if (urlQ) applyFilters(); });
-})();
-</script>
+        /* ── Boot ─────────────────────────────────────────────────────────────── */
+        loadRankings('ATP').then(() => { if (urlQ) applyFilters(); });
+      })();
+    </script>
 
-<app-bottom-nav></app-bottom-nav>
-</body>
+    <app-bottom-nav></app-bottom-nav>
+  </body>
+
 </html>
