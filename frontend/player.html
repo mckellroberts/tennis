@@ -32,17 +32,11 @@
         <div class="relative z-10 h-full max-w-container-max mx-auto px-gutter flex flex-col justify-end pb-xl">
           <!-- Badges row -->
           <div class="flex flex-wrap items-baseline gap-sm mb-xs">
-            <span id="player-rank"
-              class="bg-secondary-container text-on-secondary-container px-md py-xs font-label-bold text-label-bold uppercase rounded-lg">
-              ATP Player
-            </span>
-            <!-- NEW: archetype badge (hidden until data loads) -->
-            <span id="player-archetype"
-              class="hidden px-md py-xs font-label-bold text-label-bold uppercase rounded-lg bg-secondary text-primary">
-              —
-            </span>
-            <!-- NEW: form badge (hidden until data loads) -->
-            <span id="player-form-badge"
+          ATP Player
+        </span>
+
+        <!-- NEW: form badge (hidden until data loads) -->
+        <span id="player-form-badge"
               class="hidden px-md py-xs font-label-bold text-label-bold uppercase rounded-lg">
               —
             </span>
@@ -371,37 +365,30 @@
 
         document.title = name + ' | Court Analytics';
 
-        /* ── Helpers ─────────────────────────────────────────────────────────── */
-        const archetypeEmoji = {
-          'Big Server': '💣',
-          'Iron Wall': '🛡️',
-          'Tactician': '🧠',
-          'Precision Machine': '🎯',
-          'All-Court Athlete': '⚡',
-          'Grinder': '🏃',
-        };
-        const formColors = {
-          'On Fire': 'bg-error text-white',
-          'In Form': 'bg-secondary text-primary',
-          'Neutral': 'bg-surface-container text-on-surface border border-outline-variant',
-          'Cold Streak': 'bg-outline-variant text-on-surface-variant',
-        };
-        const attrDefs = [
-          { label: 'Power', key: 'power_pct', color: 'bg-red-400', tip: 'Overall serve point win %' },
-          { label: 'Precision', key: 'precision_pct', color: 'bg-secondary', tip: '1st serve in %' },
-          { label: 'Clutch', key: 'clutch_pct', color: 'bg-primary-container', tip: 'Break points saved %' },
-          { label: 'Danger', key: 'danger_pct', color: 'bg-amber-400', tip: 'Ace rate (×10 for scale)', scale: 10 },
-          { label: 'Consistency', key: 'consistency_pct', color: 'bg-secondary-container', tip: 'Inverse double-fault rate' },
-        ];
+  /* ── Helpers ─────────────────────────────────────────────────────────── */
 
-        /* ── Fetch profile ────────────────────────────────────────────────────── */
-        async function load() {
-          try {
-            const [profileRes, cardRes] = await Promise.all([
-              fetch('/api/player/' + encodeURIComponent(name) + '?tour=' + tour),
-              fetch('/api/player/' + encodeURIComponent(name) + '/card?tour=' + tour),
-            ]);
-            if (!profileRes.ok) { document.getElementById('player-name').textContent = 'Player not found'; return; }
+  const formColors = {
+    'On Fire':     'bg-error text-white',
+    'In Form':     'bg-secondary text-primary',
+    'Neutral':     'bg-surface-container text-on-surface border border-outline-variant',
+    'Cold Streak': 'bg-outline-variant text-on-surface-variant',
+  };
+  const attrDefs = [
+    { label: 'Power',       key: 'power_pct',       color: 'bg-red-400',      tip: 'Overall serve point win %' },
+    { label: 'Precision',   key: 'precision_pct',   color: 'bg-secondary',    tip: '1st serve in %' },
+    { label: 'Clutch',      key: 'clutch_pct',      color: 'bg-primary-container', tip: 'Break points saved %' },
+    { label: 'Danger',      key: 'danger_pct',      color: 'bg-amber-400',    tip: 'Ace rate (×10 for scale)', scale: 10 },
+    { label: 'Consistency', key: 'consistency_pct', color: 'bg-secondary-container', tip: 'Inverse double-fault rate' },
+  ];
+
+  /* ── Fetch profile ────────────────────────────────────────────────────── */
+  async function load() {
+    try {
+      const [profileRes, cardRes] = await Promise.all([
+        fetch('/api/player/' + encodeURIComponent(name) + '?tour=' + tour),
+        fetch('/api/player/' + encodeURIComponent(name) + '/card?tour=' + tour),
+      ]);
+      if (!profileRes.ok) { document.getElementById('player-name').textContent = 'Player not found'; return; }
 
             const d = await profileRes.json();
             const card = cardRes.ok ? await cardRes.json() : null;
@@ -525,18 +512,9 @@
           document.getElementById('compare-btn').addEventListener('click', () => {
             window.location.href = `simulator.html?p1=${encodeURIComponent(d.name)}&tour=${tour}`;
           });
-
         }
-
-        /* ── Apply /api/player/:name/card ────────────────────────────────────── */
-        function applyCard(card) {
-          // Archetype badge
-          if (card.archetype) {
-            const el = document.getElementById('player-archetype');
-            el.textContent = (archetypeEmoji[card.archetype] || '') + ' ' + card.archetype;
-            el.classList.remove('hidden');
-          }
-
+  /* ── Apply /api/player/:name/card ────────────────────────────────────── */
+  function applyCard(card) {
           // Form badge
           if (card.form) {
             const el = document.getElementById('player-form-badge');
