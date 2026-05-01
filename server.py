@@ -161,6 +161,137 @@ def rankings_extended():
     conn.close()
     return jsonify(rows)
 
+
+# ── API: fun queries ───────────────────────────────────────────────────────────
+@app.route("/api/player/<path:name>/fun")
+def player_fun(name):
+    """
+    Four interesting queries that reveal unusual things about a player's career.
+    Registered before /api/player/<name> so Flask matches the longer path first.
+    """
+    tour   = request.args.get("tour", "ATP").upper()
+    gender = TOUR_GENDER.get(tour, "M")
+    conn   = get_conn()
+
+    cur = conn.execute(
+        "SELECT id FROM Player WHERE name = ? AND gender = ?", (name, gender)
+    )
+    player_row = cur.fetchone()
+    if not player_row:
+        conn.close()
+        abort(404)
+    player_id = player_row["id"]
+
+    result = {}
+
+    # ── 1. Best Career Win ─────────────────────────────────────────────────────
+    # The single highest-ranked (lowest rank number) opponent ever beaten
+    # in a main-draw match, identified via PlayerTournamentStats.
+    cur = conn.execute("""
+        SELECT
+            opp.name                  AS opponent,
+            pts.rank                  AS opponent_rank,
+            t.name                    AS tournament,
+            t.date                    AS match_date
+        FROM Match m
+        JOIN Player     opp ON opp.id          = m.loser_id
+        JOIN Tournament t   ON t.id            = m.tournament_id
+        JOIN PlayerTournamentStats pts
+                            ON pts.tournament_id = m.tournament_id
+                           AND pts.player_id     = m.loser_id
+        WHERE m.winner_id  = ?
+          AND m.match_type = 'main'
+          AND pts.rank     IS NOT NULL
+        ORDER BY pts.rank ASC
+        LIMIT 1
+    """, (player_id,))
+    row = cur.fetchone()
+    result["best_win"] = dict(row) if row else None
+
+    # ── 2. Career Nemesis ──────────────────────────────────────────────────────
+    # The player who has beaten them the most times, plus their win rate
+    # in those head-to-head meetings.
+    cur = conn.execute("""
+        WITH losses AS (
+            SELECT m.winner_id, COUNT(*) AS losses
+            FROM Match m
+            WHERE m.loser_id   = ?
+              AND m.match_type = 'main'
+            GROUP BY m.winner_id
+            ORDER BY losses DESC
+            LIMIT 1
+        ),
+        total_h2h AS (
+            SELECT COUNT(*) AS total
+            FROM Match m
+            CROSS JOIN losses l
+            WHERE m.match_type = 'main'
+              AND ((m.winner_id = l.winner_id AND m.loser_id  = ?)
+                OR (m.loser_id  = l.winner_id AND m.winner_id = ?))
+        )
+        SELECT
+            p.name                              AS name,
+            l.losses                            AS losses,
+            ROUND(l.losses * 1.0 / h.total, 2) AS win_pct
+        FROM losses l
+        JOIN Player       p ON p.id = l.winner_id
+        CROSS JOIN total_h2h h
+    """, (player_id, player_id, player_id))
+    row = cur.fetchone()
+    result["nemesis"] = dict(row) if row else None
+
+    # ── 3. Longest Marathon ────────────────────────────────────────────────────
+    # Their single longest main-draw match by recorded minutes.
+    cur = conn.execute("""
+        SELECT
+            m.minutes,
+            t.name                                              AS tournament,
+            opp.name                                            AS opponent,
+            m.score,
+            t.surface,
+            CASE WHEN m.winner_id = ? THEN 'W' ELSE 'L' END    AS result
+        FROM Match m
+        JOIN Tournament t   ON t.id   = m.tournament_id
+        JOIN Player     opp ON opp.id = CASE
+                                          WHEN m.winner_id = ? THEN m.loser_id
+                                          ELSE m.winner_id
+                                        END
+        WHERE (m.winner_id = ? OR m.loser_id = ?)
+          AND m.match_type = 'main'
+          AND m.minutes    IS NOT NULL
+        ORDER BY m.minutes DESC
+        LIMIT 1
+    """, (player_id, player_id, player_id, player_id))
+    row = cur.fetchone()
+    result["marathon"] = dict(row) if row else None
+
+    # ── 4. Happy Hunting Ground ────────────────────────────────────────────────
+    # The tournament where they have the highest win rate (min 5 appearances).
+    cur = conn.execute("""
+        WITH records AS (
+            SELECT
+                t.name                                            AS tournament,
+                SUM(CASE WHEN m.winner_id = ? THEN 1 ELSE 0 END) AS wins,
+                COUNT(*)                                          AS total
+            FROM Match m
+            JOIN Tournament t ON t.id = m.tournament_id
+            WHERE (m.winner_id = ? OR m.loser_id = ?)
+              AND m.match_type = 'main'
+            GROUP BY t.name
+            HAVING total >= 5
+        )
+        SELECT tournament, wins, total,
+               ROUND(wins * 100.0 / total, 0) AS win_pct
+        FROM records
+        ORDER BY win_pct DESC, wins DESC
+        LIMIT 1
+    """, (player_id, player_id, player_id))
+    row = cur.fetchone()
+    result["hunting_ground"] = dict(row) if row else None
+
+    conn.close()
+    return jsonify(result)
+
 # ── API: player card ───────────────────────────────────────────────────────────
 # Registered BEFORE /api/player/<name> so Flask matches the longer path first.
 @app.route("/api/player/<path:name>/card")

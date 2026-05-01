@@ -1,426 +1,556 @@
 <!DOCTYPE html>
 <html class="light" lang="en">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Work+Sans:wght@100..900&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="style.css"/>
-<script src="tailwind.config.js"></script>
-<script src="components.js"></script>
-</head>
-<body class="bg-background text-on-background font-body-md overflow-x-hidden">
-<app-header></app-header>
-<main class="w-full">
 
-  <!-- ── Hero Section ─────────────────────────────────────────────────────── -->
-  <section class="relative h-[600px] overflow-hidden">
-    <div class="absolute inset-0 z-0">
-      <img id="player-avatar"
-           class="w-full h-full object-cover object-top"
-           src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-la2-hHbbhTb0j3DAvfbk48j7pOg04d8x7Ge4hVI6owCxowhzvzUSw7XK4e415j9vTkLV8Nac_Ia3XQ-HFYU7VOLbYU-lBllebIrJ3tWoascmnbcalevo8RZNAWUSBU2KIiDhkHjGiXwdeJ8gsxZu8I_NHOt34JCOrsOEPMBz_RCpR5uTCuzP5_YJgQ-uqie_CIK0I4J-6KfaRxGilJ6uVy07aJQVVNRWL6VuZnJpCY2NhwW9CBw5KxHl6iJzWbenQt9kuWXtdoi_"
-           alt="Player background"/>
-      <div class="absolute inset-0 bg-gradient-to-t from-primary-container via-transparent to-transparent opacity-90"></div>
-    </div>
-    <div class="relative z-10 h-full max-w-container-max mx-auto px-gutter flex flex-col justify-end pb-xl">
-      <!-- Badges row -->
-      <div class="flex flex-wrap items-baseline gap-sm mb-xs">
-        <span id="player-rank"
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Work+Sans:wght@100..900&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="tailwind.config.js"></script>
+    <script src="components.js"></script>
+  </head>
+
+  <body class="bg-background text-on-background font-body-md overflow-x-hidden">
+    <app-header></app-header>
+    <main class="w-full">
+
+      <!-- ── Hero Section ─────────────────────────────────────────────────────── -->
+      <section class="relative h-[600px] overflow-hidden">
+        <div class="absolute inset-0 z-0">
+          <img id="player-avatar" class="w-full h-full object-cover object-top"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-la2-hHbbhTb0j3DAvfbk48j7pOg04d8x7Ge4hVI6owCxowhzvzUSw7XK4e415j9vTkLV8Nac_Ia3XQ-HFYU7VOLbYU-lBllebIrJ3tWoascmnbcalevo8RZNAWUSBU2KIiDhkHjGiXwdeJ8gsxZu8I_NHOt34JCOrsOEPMBz_RCpR5uTCuzP5_YJgQ-uqie_CIK0I4J-6KfaRxGilJ6uVy07aJQVVNRWL6VuZnJpCY2NhwW9CBw5KxHl6iJzWbenQt9kuWXtdoi_"
+            alt="Player background" />
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-primary-container via-transparent to-transparent opacity-90">
+          </div>
+        </div>
+        <div class="relative z-10 h-full max-w-container-max mx-auto px-gutter flex flex-col justify-end pb-xl">
+          <!-- Badges row -->
+          <div class="flex flex-wrap items-baseline gap-sm mb-xs">
+            <span id="player-rank"
               class="bg-secondary-container text-on-secondary-container px-md py-xs font-label-bold text-label-bold uppercase rounded-lg">
-          ATP Player
-        </span>
-        <!-- NEW: archetype badge (hidden until data loads) -->
-        <span id="player-archetype"
+              ATP Player
+            </span>
+            <!-- NEW: archetype badge (hidden until data loads) -->
+            <span id="player-archetype"
               class="hidden px-md py-xs font-label-bold text-label-bold uppercase rounded-lg bg-secondary text-primary">
-          —
-        </span>
-        <!-- NEW: form badge (hidden until data loads) -->
-        <span id="player-form-badge"
+              —
+            </span>
+            <!-- NEW: form badge (hidden until data loads) -->
+            <span id="player-form-badge"
               class="hidden px-md py-xs font-label-bold text-label-bold uppercase rounded-lg">
-          —
-        </span>
-        <span id="player-tour"
-              class="text-surface-bright/80 font-label-bold text-label-bold uppercase">
-          ATP Tour
-        </span>
-      </div>
-
-      <h1 id="player-name"
-          class="text-white font-display-xl text-display-xl uppercase tracking-tighter mb-sm">
-        Loading…
-      </h1>
-      <div class="flex gap-lg items-center text-surface-bright/90">
-        <div class="flex items-center gap-xs">
-          <span class="material-symbols-outlined text-sm">flag</span>
-          <span id="player-country" class="font-label-bold text-label-bold uppercase">—</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── Bento Grid ────────────────────────────────────────────────────────── -->
-  <section class="max-w-container-max mx-auto px-gutter -mt-xl relative z-20 pb-xxl">
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-lg">
-
-      <!-- Bio Card (8 cols) -->
-      <div class="md:col-span-8 bg-white border border-[#E9ECEF] p-lg">
-        <h2 class="font-headline-md text-headline-md mb-md uppercase text-primary">Player Bio</h2>
-        <p id="player-bio" class="text-on-surface-variant font-body-lg text-body-lg leading-relaxed mb-lg">
-          Loading player profile…
-        </p>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-md">
-          <div class="border-l-2 border-primary-container pl-md py-xs">
-            <p class="text-slate-400 font-label-sm text-label-sm uppercase">Serve Win%</p>
-            <p id="stat-serve-win" class="text-primary font-stats-num text-stats-num">—</p>
+              —
+            </span>
+            <span id="player-tour" class="text-surface-bright/80 font-label-bold text-label-bold uppercase">
+              ATP Tour
+            </span>
           </div>
-          <div class="border-l-2 border-primary-container pl-md py-xs">
-            <p class="text-slate-400 font-label-sm text-label-sm uppercase">Ace Rate</p>
-            <p id="stat-ace-rate" class="text-primary font-stats-num text-stats-num">—</p>
-          </div>
-          <div class="border-l-2 border-primary-container pl-md py-xs">
-            <p class="text-slate-400 font-label-sm text-label-sm uppercase">BP Save%</p>
-            <p id="stat-bp-save" class="text-primary font-stats-num text-stats-num">—</p>
-          </div>
-          <div class="border-l-2 border-primary-container pl-md py-xs">
-            <p class="text-slate-400 font-label-sm text-label-sm uppercase">Matches</p>
-            <p id="stat-matches" class="text-primary font-label-bold text-headline-md mt-sm">—</p>
-          </div>
-        </div>
-      </div>
 
-      <!-- Surface Mastery (4 cols) -->
-      <div class="md:col-span-4 bg-primary-container text-white p-lg flex flex-col justify-between">
-        <div>
-          <h3 class="font-headline-md text-headline-md mb-md uppercase text-on-primary-container">Surface Mastery</h3>
-          <div class="space-y-md">
-            <div>
-              <div class="flex justify-between font-label-bold text-label-sm uppercase mb-xs">
-                <span>Clay</span><span id="pct-clay">—</span>
-              </div>
-              <div class="h-2 bg-primary w-full overflow-hidden">
-                <div id="bar-clay" class="h-full bg-secondary-container" style="width:0%"></div>
-              </div>
-            </div>
-            <div>
-              <div class="flex justify-between font-label-bold text-label-sm uppercase mb-xs">
-                <span>Hard Court</span><span id="pct-hard">—</span>
-              </div>
-              <div class="h-2 bg-primary w-full overflow-hidden">
-                <div id="bar-hard" class="h-full bg-secondary-container" style="width:0%"></div>
-              </div>
-            </div>
-            <div>
-              <div class="flex justify-between font-label-bold text-label-sm uppercase mb-xs">
-                <span>Grass</span><span id="pct-grass">—</span>
-              </div>
-              <div class="h-2 bg-primary w-full overflow-hidden">
-                <div id="bar-grass" class="h-full bg-secondary-container" style="width:0%"></div>
-              </div>
+          <h1 id="player-name" class="text-white font-display-xl text-display-xl uppercase tracking-tighter mb-sm">
+            Loading…
+          </h1>
+          <div class="flex gap-lg items-center text-surface-bright/90">
+            <div class="flex items-center gap-xs">
+              <span class="material-symbols-outlined text-sm">flag</span>
+              <span id="player-country" class="font-label-bold text-label-bold uppercase">—</span>
             </div>
           </div>
         </div>
-        <button id="compare-btn"
-                class="mt-xl bg-secondary-container text-on-secondary-container py-md font-label-bold text-label-bold uppercase w-full hover:opacity-90 transition-opacity">
-          Simulate a Match
-        </button>
-      </div>
+      </section>
 
-      <!-- NEW: RPG Attribute Ratings (4 cols) -->
-      <div class="md:col-span-4 bg-white border border-[#E9ECEF] p-lg">
-        <h2 class="font-headline-md text-headline-md mb-md uppercase text-primary">Attribute Ratings</h2>
-        <div class="space-y-md" id="attr-bars">
-          <!-- populated by JS -->
-          <p class="text-on-surface-variant font-body-md">Loading…</p>
-        </div>
-        <div class="mt-lg pt-lg border-t border-outline-variant flex justify-between items-center">
-          <span class="font-label-sm text-on-surface-variant uppercase">Overall Rating</span>
-          <span id="overall-rating" class="font-stats-num text-primary text-3xl">—</span>
-        </div>
-      </div>
+      <!-- ── Bento Grid ────────────────────────────────────────────────────────── -->
+      <section class="max-w-container-max mx-auto px-gutter -mt-xl relative z-20 pb-xxl">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-lg">
 
-      <!-- Match History + Advanced Analytics (8 cols) -->
-      <div class="md:col-span-8 grid grid-cols-1 lg:grid-cols-12 gap-lg">
-
-        <!-- Match History -->
-        <div class="lg:col-span-6 bg-white border border-[#E9ECEF] p-lg">
-          <h3 class="font-headline-md text-headline-md mb-lg uppercase text-primary">Recent History</h3>
-          <div class="overflow-hidden">
-            <table class="w-full text-left">
-              <thead>
-                <tr class="font-label-bold text-label-sm uppercase text-slate-400 border-b border-[#E9ECEF]">
-                  <th class="pb-sm font-normal">Tournament</th>
-                  <th class="pb-sm font-normal">Opponent</th>
-                  <th class="pb-sm font-normal">Result</th>
-                  <th class="pb-sm font-normal text-right">Score</th>
-                </tr>
-              </thead>
-              <tbody id="match-tbody" class="font-body-md text-sm">
-                <tr>
-                  <td colspan="4" class="py-lg text-center text-on-surface-variant">Loading…</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Advanced Analytics -->
-        <div class="lg:col-span-6 flex flex-col gap-lg">
-          <div class="bg-white p-lg border border-[#E9ECEF] flex-1">
-            <div class="flex items-center gap-md mb-md">
-              <span class="material-symbols-outlined text-on-primary-container text-2xl">sports_tennis</span>
-              <h4 class="font-headline-md text-headline-md uppercase text-primary">Return Dominance</h4>
-            </div>
-            <p class="text-on-surface-variant font-body-md text-body-md mb-md">
-              Percentage of return points won. Higher = stronger baseline return game.
+          <!-- Bio Card (8 cols) -->
+          <div class="md:col-span-8 bg-white border border-[#E9ECEF] p-lg">
+            <h2 class="font-headline-md text-headline-md mb-md uppercase text-primary">Player Bio</h2>
+            <p id="player-bio" class="text-on-surface-variant font-body-lg text-body-lg leading-relaxed mb-lg">
+              Loading player profile…
             </p>
-            <div class="flex items-center gap-sm">
-              <span id="shot-qual" class="font-stats-num text-primary text-2xl">—</span>
-              <span class="text-slate-400 font-label-sm uppercase">Win %</span>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-md">
+              <div class="border-l-2 border-primary-container pl-md py-xs">
+                <p class="text-slate-400 font-label-sm text-label-sm uppercase">Serve Win%</p>
+                <p id="stat-serve-win" class="text-primary font-stats-num text-stats-num">—</p>
+              </div>
+              <div class="border-l-2 border-primary-container pl-md py-xs">
+                <p class="text-slate-400 font-label-sm text-label-sm uppercase">Ace Rate</p>
+                <p id="stat-ace-rate" class="text-primary font-stats-num text-stats-num">—</p>
+              </div>
+              <div class="border-l-2 border-primary-container pl-md py-xs">
+                <p class="text-slate-400 font-label-sm text-label-sm uppercase">BP Save%</p>
+                <p id="stat-bp-save" class="text-primary font-stats-num text-stats-num">—</p>
+              </div>
+              <div class="border-l-2 border-primary-container pl-md py-xs">
+                <p class="text-slate-400 font-label-sm text-label-sm uppercase">Matches</p>
+                <p id="stat-matches" class="text-primary font-label-bold text-headline-md mt-sm">—</p>
+              </div>
             </div>
           </div>
-          <div class="bg-white p-lg border border-[#E9ECEF] flex-1">
-            <div class="flex items-center gap-md mb-md">
-              <span class="material-symbols-outlined text-on-primary-container text-2xl">speed</span>
-              <h4 class="font-headline-md text-headline-md uppercase text-primary">Grind Factor</h4>
-            </div>
-            <p class="text-on-surface-variant font-body-md text-body-md mb-md">
-              Average minutes per game. Higher values indicate a grueling baseline playstyle.
-            </p>
-            <div class="flex items-center gap-sm">
-              <span id="court-cov" class="font-stats-num text-primary text-2xl">—</span>
-              <span class="text-slate-400 font-label-sm uppercase">Min / Game</span>
-            </div>
-          </div>
-          <div class="bg-white p-lg border border-[#E9ECEF] flex-1">
-            <div class="flex items-center gap-md mb-md">
-              <span class="material-symbols-outlined text-on-primary-container text-2xl">psychology</span>
-              <h4 class="font-headline-md text-headline-md uppercase text-primary">Clutch Rating</h4>
-            </div>
-            <p id="desc-clutch" class="text-on-surface-variant font-body-md text-body-md mb-md">
-              Break points saved across all recorded matches.
-            </p>
-            <div class="flex items-center gap-sm">
-              <span id="clutch-rat" class="font-stats-num text-primary text-2xl">—</span>
-              <span class="text-slate-400 font-label-sm uppercase">BP Saved</span>
-            </div>
-          </div>
-        </div>
 
-      </div><!-- end 8-col block -->
-
-      <!-- NEW: Giant Killer / Slam Prestige / Form — full width row -->
-      <div class="md:col-span-12 grid grid-cols-1 md:grid-cols-3 gap-lg">
-
-        <!-- Giant Killer -->
-        <div class="bg-primary p-lg text-white">
-          <div class="flex items-center gap-md mb-md">
-            <span class="material-symbols-outlined text-secondary-container text-3xl">bolt</span>
-            <h4 class="font-headline-md uppercase">Giant Killer</h4>
-          </div>
-          <p class="text-on-primary-container font-body-md mb-lg text-sm">
-            Wins against players ranked 20+ spots above them.
-          </p>
-          <div class="grid grid-cols-3 gap-md text-center">
+          <!-- Surface Mastery (4 cols) -->
+          <div class="md:col-span-4 bg-primary-container text-white p-lg flex flex-col justify-between">
             <div>
-              <p id="upset-count" class="font-stats-num text-secondary-container text-2xl">—</p>
-              <p class="font-label-sm text-on-primary-container uppercase">Upsets</p>
+              <h3 class="font-headline-md text-headline-md mb-md uppercase text-on-primary-container">Surface Mastery
+              </h3>
+              <div class="space-y-md">
+                <div>
+                  <div class="flex justify-between font-label-bold text-label-sm uppercase mb-xs">
+                    <span>Clay</span><span id="pct-clay">—</span>
+                  </div>
+                  <div class="h-2 bg-primary w-full overflow-hidden">
+                    <div id="bar-clay" class="h-full bg-secondary-container" style="width:0%"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between font-label-bold text-label-sm uppercase mb-xs">
+                    <span>Hard Court</span><span id="pct-hard">—</span>
+                  </div>
+                  <div class="h-2 bg-primary w-full overflow-hidden">
+                    <div id="bar-hard" class="h-full bg-secondary-container" style="width:0%"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between font-label-bold text-label-sm uppercase mb-xs">
+                    <span>Grass</span><span id="pct-grass">—</span>
+                  </div>
+                  <div class="h-2 bg-primary w-full overflow-hidden">
+                    <div id="bar-grass" class="h-full bg-secondary-container" style="width:0%"></div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div>
-              <p id="upset-gap" class="font-stats-num text-secondary-container text-2xl">—</p>
-              <p class="font-label-sm text-on-primary-container uppercase">Avg Gap</p>
+            <button id="compare-btn"
+              class="mt-xl bg-secondary-container text-on-secondary-container py-md font-label-bold text-label-bold uppercase w-full hover:opacity-90 transition-opacity">
+              Simulate a Match
+            </button>
+          </div>
+
+          <!-- NEW: RPG Attribute Ratings (4 cols) -->
+          <div class="md:col-span-4 bg-white border border-[#E9ECEF] p-lg">
+            <h2 class="font-headline-md text-headline-md mb-md uppercase text-primary">Attribute Ratings</h2>
+            <div class="space-y-md" id="attr-bars">
+              <!-- populated by JS -->
+              <p class="text-on-surface-variant font-body-md">Loading…</p>
             </div>
-            <div>
-              <p id="upset-score" class="font-stats-num text-secondary-container text-2xl">—</p>
-              <p class="font-label-sm text-on-primary-container uppercase">Score</p>
+            <div class="mt-lg pt-lg border-t border-outline-variant flex justify-between items-center">
+              <span class="font-label-sm text-on-surface-variant uppercase">Overall Rating</span>
+              <span id="overall-rating" class="font-stats-num text-primary text-3xl">—</span>
             </div>
           </div>
-        </div>
 
-        <!-- Grand Slam Prestige -->
-        <div class="bg-secondary p-lg text-primary">
-          <div class="flex items-center gap-md mb-md">
-            <span class="material-symbols-outlined text-primary text-3xl"
+          <!-- Match History + Advanced Analytics (8 cols) -->
+          <div class="md:col-span-8 grid grid-cols-1 lg:grid-cols-12 gap-lg">
+
+            <!-- Match History -->
+            <div class="lg:col-span-6 bg-white border border-[#E9ECEF] p-lg">
+              <h3 class="font-headline-md text-headline-md mb-lg uppercase text-primary">Recent History</h3>
+              <div class="overflow-hidden">
+                <table class="w-full text-left">
+                  <thead>
+                    <tr class="font-label-bold text-label-sm uppercase text-slate-400 border-b border-[#E9ECEF]">
+                      <th class="pb-sm font-normal">Tournament</th>
+                      <th class="pb-sm font-normal">Opponent</th>
+                      <th class="pb-sm font-normal">Result</th>
+                      <th class="pb-sm font-normal text-right">Score</th>
+                    </tr>
+                  </thead>
+                  <tbody id="match-tbody" class="font-body-md text-sm">
+                    <tr>
+                      <td colspan="4" class="py-lg text-center text-on-surface-variant">Loading…</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Advanced Analytics -->
+            <div class="lg:col-span-6 flex flex-col gap-lg">
+              <div class="bg-white p-lg border border-[#E9ECEF] flex-1">
+                <div class="flex items-center gap-md mb-md">
+                  <span class="material-symbols-outlined text-on-primary-container text-2xl">sports_tennis</span>
+                  <h4 class="font-headline-md text-headline-md uppercase text-primary">Return Dominance</h4>
+                </div>
+                <p class="text-on-surface-variant font-body-md text-body-md mb-md">
+                  Percentage of return points won. Higher = stronger baseline return game.
+                </p>
+                <div class="flex items-center gap-sm">
+                  <span id="shot-qual" class="font-stats-num text-primary text-2xl">—</span>
+                  <span class="text-slate-400 font-label-sm uppercase">Win %</span>
+                </div>
+              </div>
+              <div class="bg-white p-lg border border-[#E9ECEF] flex-1">
+                <div class="flex items-center gap-md mb-md">
+                  <span class="material-symbols-outlined text-on-primary-container text-2xl">speed</span>
+                  <h4 class="font-headline-md text-headline-md uppercase text-primary">Grind Factor</h4>
+                </div>
+                <p class="text-on-surface-variant font-body-md text-body-md mb-md">
+                  Average minutes per game. Higher values indicate a grueling baseline playstyle.
+                </p>
+                <div class="flex items-center gap-sm">
+                  <span id="court-cov" class="font-stats-num text-primary text-2xl">—</span>
+                  <span class="text-slate-400 font-label-sm uppercase">Min / Game</span>
+                </div>
+              </div>
+              <div class="bg-white p-lg border border-[#E9ECEF] flex-1">
+                <div class="flex items-center gap-md mb-md">
+                  <span class="material-symbols-outlined text-on-primary-container text-2xl">psychology</span>
+                  <h4 class="font-headline-md text-headline-md uppercase text-primary">Clutch Rating</h4>
+                </div>
+                <p id="desc-clutch" class="text-on-surface-variant font-body-md text-body-md mb-md">
+                  Break points saved across all recorded matches.
+                </p>
+                <div class="flex items-center gap-sm">
+                  <span id="clutch-rat" class="font-stats-num text-primary text-2xl">—</span>
+                  <span class="text-slate-400 font-label-sm uppercase">BP Saved</span>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- end 8-col block -->
+
+
+          <!-- ── Fun Queries ─────────────────────────────────────────────────────── -->
+          <div class="md:col-span-12">
+            <div class="flex items-center gap-md mb-lg">
+              <span class="material-symbols-outlined text-primary text-3xl">auto_awesome</span>
+              <h2 class="font-headline-md text-headline-md uppercase text-primary">Fun Queries</h2>
+              <span class="font-label-sm text-on-surface-variant uppercase ml-sm">Interesting things the data
+                reveals</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-lg">
+
+              <!-- Best Career Win -->
+              <div class="bg-primary-container p-lg flex flex-col gap-md">
+                <div class="flex items-center gap-sm">
+                  <span class="material-symbols-outlined text-secondary-container text-2xl"
+                    style="font-variation-settings:'FILL' 1">emoji_events</span>
+                  <h4 class="font-label-bold text-on-primary-container uppercase text-sm">Best Career Win</h4>
+                </div>
+                <p class="font-body-md text-on-primary-container/70 text-xs">
+                  Highest-ranked opponent beaten in main draw.
+                </p>
+                <div class="mt-auto">
+                  <p id="fun-best-win-name" class="font-headline-md text-white uppercase leading-tight">—</p>
+                  <p id="fun-best-win-rank" class="font-label-bold text-secondary-container text-sm uppercase mt-xs">—
+                  </p>
+                  <p id="fun-best-win-tourn" class="font-body-md text-on-primary-container/60 text-xs mt-xs">—</p>
+                </div>
+              </div>
+
+              <!-- Career Nemesis -->
+              <div class="bg-primary p-lg flex flex-col gap-md">
+                <div class="flex items-center gap-sm">
+                  <span class="material-symbols-outlined text-secondary-container text-2xl">mood_bad</span>
+                  <h4 class="font-label-bold text-on-primary-container uppercase text-sm">Career Nemesis</h4>
+                </div>
+                <p class="font-body-md text-on-primary-container/70 text-xs">
+                  Player who has beaten them the most times.
+                </p>
+                <div class="mt-auto">
+                  <p id="fun-nemesis-name" class="font-headline-md text-white uppercase leading-tight">—</p>
+                  <p id="fun-nemesis-losses" class="font-label-bold text-secondary-container text-sm uppercase mt-xs">—
+                  </p>
+                  <p id="fun-nemesis-pct" class="font-body-md text-on-primary-container/60 text-xs mt-xs">—</p>
+                </div>
+              </div>
+
+              <!-- Longest Match -->
+              <div class="bg-white border border-[#E9ECEF] p-lg flex flex-col gap-md">
+                <div class="flex items-center gap-sm">
+                  <span class="material-symbols-outlined text-primary text-2xl">timer</span>
+                  <h4 class="font-label-bold text-primary uppercase text-sm">Longest Marathon</h4>
+                </div>
+                <p class="font-body-md text-on-surface-variant text-xs">
+                  Their longest recorded match by duration.
+                </p>
+                <div class="mt-auto">
+                  <p id="fun-marathon-time" class="font-stats-num text-primary text-3xl">—</p>
+                  <p id="fun-marathon-label" class="font-label-sm text-on-surface-variant uppercase text-xs mt-xs">
+                    Minutes</p>
+                  <p id="fun-marathon-detail" class="font-body-md text-on-surface-variant text-xs mt-xs">—</p>
+                </div>
+              </div>
+
+              <!-- Happy Hunting Ground -->
+              <div class="bg-secondary p-lg flex flex-col gap-md">
+                <div class="flex items-center gap-sm">
+                  <span class="material-symbols-outlined text-primary text-2xl">stadium</span>
+                  <h4 class="font-label-bold text-primary uppercase text-sm">Happy Hunting Ground</h4>
+                </div>
+                <p class="font-body-md text-primary/70 text-xs">
+                  Tournament with the best career win rate (min. 5 matches).
+                </p>
+                <div class="mt-auto">
+                  <p id="fun-ground-name" class="font-headline-md text-primary uppercase leading-tight">—</p>
+                  <p id="fun-ground-pct" class="font-stats-num text-primary text-3xl mt-sm">—</p>
+                  <p id="fun-ground-record" class="font-body-md text-primary/60 text-xs mt-xs">—</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- NEW: Giant Killer / Slam Prestige / Form — full width row -->
+          <div class="md:col-span-12 grid grid-cols-1 md:grid-cols-3 gap-lg">
+
+            <!-- Giant Killer -->
+            <div class="bg-primary p-lg text-white">
+              <div class="flex items-center gap-md mb-md">
+                <span class="material-symbols-outlined text-secondary-container text-3xl">bolt</span>
+                <h4 class="font-headline-md uppercase">Giant Killer</h4>
+              </div>
+              <p class="text-on-primary-container font-body-md mb-lg text-sm">
+                Wins against players ranked 20+ spots above them.
+              </p>
+              <div class="grid grid-cols-3 gap-md text-center">
+                <div>
+                  <p id="upset-count" class="font-stats-num text-secondary-container text-2xl">—</p>
+                  <p class="font-label-sm text-on-primary-container uppercase">Upsets</p>
+                </div>
+                <div>
+                  <p id="upset-gap" class="font-stats-num text-secondary-container text-2xl">—</p>
+                  <p class="font-label-sm text-on-primary-container uppercase">Avg Gap</p>
+                </div>
+                <div>
+                  <p id="upset-score" class="font-stats-num text-secondary-container text-2xl">—</p>
+                  <p class="font-label-sm text-on-primary-container uppercase">Score</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Grand Slam Prestige -->
+            <div class="bg-secondary p-lg text-primary">
+              <div class="flex items-center gap-md mb-md">
+                <span class="material-symbols-outlined text-primary text-3xl"
                   style="font-variation-settings:'FILL' 1">emoji_events</span>
-            <h4 class="font-headline-md uppercase">Grand Slam Record</h4>
-          </div>
-          <div class="grid grid-cols-2 gap-md text-center mt-lg">
-            <div>
-              <p id="slam-wins" class="font-stats-num text-primary text-4xl">—</p>
-              <p class="font-label-sm uppercase opacity-70">Slam Match Wins</p>
+                <h4 class="font-headline-md uppercase">Grand Slam Record</h4>
+              </div>
+              <div class="grid grid-cols-2 gap-md text-center mt-lg">
+                <div>
+                  <p id="slam-wins" class="font-stats-num text-primary text-4xl">—</p>
+                  <p class="font-label-sm uppercase opacity-70">Slam Match Wins</p>
+                </div>
+                <div>
+                  <p id="slam-clutch" class="font-stats-num text-primary text-4xl">—</p>
+                  <p class="font-label-sm uppercase opacity-70">BP Save % (Slams)</p>
+                </div>
+              </div>
             </div>
-            <div>
-              <p id="slam-clutch" class="font-stats-num text-primary text-4xl">—</p>
-              <p class="font-label-sm uppercase opacity-70">BP Save % (Slams)</p>
+
+            <!-- Recent Form -->
+            <div class="bg-surface-container p-lg border border-outline-variant">
+              <div class="flex items-center gap-md mb-md">
+                <span class="material-symbols-outlined text-primary text-3xl">trending_up</span>
+                <h4 class="font-headline-md uppercase text-primary">Recent Form</h4>
+              </div>
+              <p class="font-body-md text-on-surface-variant text-sm mb-md">Last 10 main-draw matches</p>
+              <div class="flex gap-sm flex-wrap" id="form-dots">
+                <!-- W/L dots inserted by JS -->
+              </div>
+              <p id="form-label" class="font-label-bold text-primary uppercase mt-md text-sm">—</p>
             </div>
-          </div>
-        </div>
 
-        <!-- Recent Form -->
-        <div class="bg-surface-container p-lg border border-outline-variant">
-          <div class="flex items-center gap-md mb-md">
-            <span class="material-symbols-outlined text-primary text-3xl">trending_up</span>
-            <h4 class="font-headline-md uppercase text-primary">Recent Form</h4>
-          </div>
-          <p class="font-body-md text-on-surface-variant text-sm mb-md">Last 10 main-draw matches</p>
-          <div class="flex gap-sm flex-wrap" id="form-dots">
-            <!-- W/L dots inserted by JS -->
-          </div>
-          <p id="form-label" class="font-label-bold text-primary uppercase mt-md text-sm">—</p>
-        </div>
+          </div><!-- end full-width row -->
 
-      </div><!-- end full-width row -->
+        </div><!-- end grid -->
+      </section>
+    </main>
 
-    </div><!-- end grid -->
-  </section>
-</main>
+    <script>
+      (function () {
+        const params = new URLSearchParams(window.location.search);
+        const name = params.get('name');
+        const tour = (params.get('tour') || 'ATP').toUpperCase();
+        if (!name) return;
 
-<script>
-(function () {
-  const params = new URLSearchParams(window.location.search);
-  const name   = params.get('name');
-  const tour   = (params.get('tour') || 'ATP').toUpperCase();
-  if (!name) return;
+        document.title = name + ' | Court Analytics';
 
-  document.title = name + ' | Court Analytics';
+        /* ── Helpers ─────────────────────────────────────────────────────────── */
+        const archetypeEmoji = {
+          'Big Server': '💣',
+          'Iron Wall': '🛡️',
+          'Tactician': '🧠',
+          'Precision Machine': '🎯',
+          'All-Court Athlete': '⚡',
+          'Grinder': '🏃',
+        };
+        const formColors = {
+          'On Fire': 'bg-error text-white',
+          'In Form': 'bg-secondary text-primary',
+          'Neutral': 'bg-surface-container text-on-surface border border-outline-variant',
+          'Cold Streak': 'bg-outline-variant text-on-surface-variant',
+        };
+        const attrDefs = [
+          { label: 'Power', key: 'power_pct', color: 'bg-red-400', tip: 'Overall serve point win %' },
+          { label: 'Precision', key: 'precision_pct', color: 'bg-secondary', tip: '1st serve in %' },
+          { label: 'Clutch', key: 'clutch_pct', color: 'bg-primary-container', tip: 'Break points saved %' },
+          { label: 'Danger', key: 'danger_pct', color: 'bg-amber-400', tip: 'Ace rate (×10 for scale)', scale: 10 },
+          { label: 'Consistency', key: 'consistency_pct', color: 'bg-secondary-container', tip: 'Inverse double-fault rate' },
+        ];
 
-  /* ── Helpers ─────────────────────────────────────────────────────────── */
-  const archetypeEmoji = {
-    'Big Server':        '💣',
-    'Iron Wall':         '🛡️',
-    'Tactician':         '🧠',
-    'Precision Machine': '🎯',
-    'All-Court Athlete': '⚡',
-    'Grinder':           '🏃',
-  };
-  const formColors = {
-    'On Fire':     'bg-error text-white',
-    'In Form':     'bg-secondary text-primary',
-    'Neutral':     'bg-surface-container text-on-surface border border-outline-variant',
-    'Cold Streak': 'bg-outline-variant text-on-surface-variant',
-  };
-  const attrDefs = [
-    { label: 'Power',       key: 'power_pct',       color: 'bg-red-400',      tip: 'Overall serve point win %' },
-    { label: 'Precision',   key: 'precision_pct',   color: 'bg-secondary',    tip: '1st serve in %' },
-    { label: 'Clutch',      key: 'clutch_pct',      color: 'bg-primary-container', tip: 'Break points saved %' },
-    { label: 'Danger',      key: 'danger_pct',      color: 'bg-amber-400',    tip: 'Ace rate (×10 for scale)', scale: 10 },
-    { label: 'Consistency', key: 'consistency_pct', color: 'bg-secondary-container', tip: 'Inverse double-fault rate' },
-  ];
+        /* ── Fetch profile ────────────────────────────────────────────────────── */
+        async function load() {
+          try {
+            const [profileRes, cardRes] = await Promise.all([
+              fetch('/api/player/' + encodeURIComponent(name) + '?tour=' + tour),
+              fetch('/api/player/' + encodeURIComponent(name) + '/card?tour=' + tour),
+            ]);
+            if (!profileRes.ok) { document.getElementById('player-name').textContent = 'Player not found'; return; }
 
-  /* ── Fetch profile ────────────────────────────────────────────────────── */
-  async function load() {
-    try {
-      const [profileRes, cardRes] = await Promise.all([
-        fetch('/api/player/' + encodeURIComponent(name) + '?tour=' + tour),
-        fetch('/api/player/' + encodeURIComponent(name) + '/card?tour=' + tour),
-      ]);
-      if (!profileRes.ok) { document.getElementById('player-name').textContent = 'Player not found'; return; }
+            const d = await profileRes.json();
+            const card = cardRes.ok ? await cardRes.json() : null;
 
-      const d    = await profileRes.json();
-      const card = cardRes.ok ? await cardRes.json() : null;
+            applyProfile(d);
+            if (card) applyCard(card);
 
-      applyProfile(d);
-      if (card) applyCard(card);
+            // ── Fun Queries — runs in load() so await is valid ───────────────────
+            try {
+              const funRes = await fetch('/api/player/' + encodeURIComponent(name) + '/fun?tour=' + tour);
+              const fun = funRes.ok ? await funRes.json() : null;
+              if (fun) {
+                if (fun.best_win) {
+                  document.getElementById('fun-best-win-name').textContent = fun.best_win.opponent || '—';
+                  document.getElementById('fun-best-win-rank').textContent =
+                    fun.best_win.opponent_rank ? `World #${fun.best_win.opponent_rank}` : '—';
+                  document.getElementById('fun-best-win-tourn').textContent = fun.best_win.tournament || '—';
+                }
+                if (fun.nemesis) {
+                  document.getElementById('fun-nemesis-name').textContent = fun.nemesis.name || '—';
+                  document.getElementById('fun-nemesis-losses').textContent =
+                    fun.nemesis.losses != null ? `${fun.nemesis.losses} losses` : '—';
+                  document.getElementById('fun-nemesis-pct').textContent =
+                    fun.nemesis.win_pct != null
+                      ? `${(fun.nemesis.win_pct * 100).toFixed(0)}% win rate for them`
+                      : '—';
+                }
+                if (fun.marathon) {
+                  const hrs = Math.floor((fun.marathon.minutes || 0) / 60);
+                  const min = Math.round((fun.marathon.minutes || 0) % 60);
+                  document.getElementById('fun-marathon-time').textContent =
+                    fun.marathon.minutes ? `${hrs}h ${min}m` : '—';
+                  document.getElementById('fun-marathon-label').textContent = 'Duration';
+                  document.getElementById('fun-marathon-detail').textContent =
+                    [fun.marathon.result, fun.marathon.opponent, fun.marathon.tournament]
+                      .filter(Boolean).join(' · ') || '—';
+                }
+                if (fun.hunting_ground) {
+                  document.getElementById('fun-ground-name').textContent = fun.hunting_ground.tournament || '—';
+                  document.getElementById('fun-ground-pct').textContent =
+                    fun.hunting_ground.win_pct != null ? `${fun.hunting_ground.win_pct}%` : '—';
+                  document.getElementById('fun-ground-record').textContent =
+                    fun.hunting_ground.wins != null
+                      ? `${fun.hunting_ground.wins}W – ${fun.hunting_ground.total - fun.hunting_ground.wins}L`
+                      : '—';
+                }
+              }
+            } catch (e) { console.error('Fun queries failed:', e); }
 
-    } catch (e) { console.error(e); }
-  }
+          } catch (e) { console.error(e); }
+        }
 
-  /* ── Apply /api/player/:name ──────────────────────────────────────────── */
-  function applyProfile(d) {
-    document.getElementById('player-name').textContent  = d.name.toUpperCase();
-    document.getElementById('player-tour').textContent  = tour + ' Tour';
-    document.getElementById('player-rank').textContent  = tour + ' Player';
-    document.getElementById('player-avatar').src =
-      `https://api.dicebear.com/9.x/micah/svg?seed=${encodeURIComponent(d.name)}&backgroundColor=002366&radius=50`;
+        /* ── Apply /api/player/:name ──────────────────────────────────────────── */
+        function applyProfile(d) {
+          document.getElementById('player-name').textContent = d.name.toUpperCase();
+          document.getElementById('player-tour').textContent = tour + ' Tour';
+          document.getElementById('player-rank').textContent = tour + ' Player';
+          document.getElementById('player-avatar').src =
+            `https://api.dicebear.com/9.x/micah/svg?seed=${encodeURIComponent(d.name)}&backgroundColor=002366&radius=50`;
 
-    // Surface bars
-    const byS = {};
-    d.surfaces.forEach(s => { byS[s.surface] = s; });
-    [['Clay','bar-clay','pct-clay'], ['Hard','bar-hard','pct-hard'], ['Grass','bar-grass','pct-grass']]
-      .forEach(([surf, barId, pctId]) => {
-        const s = byS[surf];
-        const p = s ? Math.round(s.serve_win_pct * 100) : 0;
-        document.getElementById(barId).style.width  = p + '%';
-        document.getElementById(pctId).textContent  = s ? p + '%' : 'N/A';
-      });
+          // Surface bars
+          const byS = {};
+          d.surfaces.forEach(s => { byS[s.surface] = s; });
+          [['Clay', 'bar-clay', 'pct-clay'], ['Hard', 'bar-hard', 'pct-hard'], ['Grass', 'bar-grass', 'pct-grass']]
+            .forEach(([surf, barId, pctId]) => {
+              const s = byS[surf];
+              const p = s ? Math.round(s.serve_win_pct * 100) : 0;
+              document.getElementById(barId).style.width = p + '%';
+              document.getElementById(pctId).textContent = s ? p + '%' : 'N/A';
+            });
 
-    // Top-line stats
-    if (d.surfaces.length) {
-      const total    = d.surfaces.reduce((n, s) => n + s.match_count, 0);
-      const avgServe = d.surfaces.reduce((n, s) => n + s.serve_win_pct * s.match_count, 0) / total;
-      const avgAce   = d.surfaces.reduce((n, s) => n + (s.ace_rate  || 0) * s.match_count, 0) / total;
-      const avgBp    = d.surfaces.reduce((n, s) => n + (s.bp_save_pct || 0) * s.match_count, 0) / total;
-      document.getElementById('stat-serve-win').textContent = (avgServe * 100).toFixed(0) + '%';
-      document.getElementById('stat-ace-rate').textContent  = (avgAce   * 100).toFixed(1) + '%';
-      document.getElementById('stat-bp-save').textContent   = (avgBp    * 100).toFixed(0) + '%';
-      document.getElementById('stat-matches').textContent   = total.toLocaleString();
+          // Top-line stats
+          if (d.surfaces.length) {
+            const total = d.surfaces.reduce((n, s) => n + s.match_count, 0);
+            const avgServe = d.surfaces.reduce((n, s) => n + s.serve_win_pct * s.match_count, 0) / total;
+            const avgAce = d.surfaces.reduce((n, s) => n + (s.ace_rate || 0) * s.match_count, 0) / total;
+            const avgBp = d.surfaces.reduce((n, s) => n + (s.bp_save_pct || 0) * s.match_count, 0) / total;
+            document.getElementById('stat-serve-win').textContent = (avgServe * 100).toFixed(0) + '%';
+            document.getElementById('stat-ace-rate').textContent = (avgAce * 100).toFixed(1) + '%';
+            document.getElementById('stat-bp-save').textContent = (avgBp * 100).toFixed(0) + '%';
+            document.getElementById('stat-matches').textContent = total.toLocaleString();
 
-      // Clutch rating
-      const avgClutch = avgBp;
-      document.getElementById('clutch-rat').textContent  = (avgClutch * 100).toFixed(0) + '%';
-      document.getElementById('desc-clutch').textContent =
-        `Winning ${(avgClutch * 100).toFixed(0)}% of break points saved across all recorded matches.`;
-    }
+            // Clutch rating
+            const avgClutch = avgBp;
+            document.getElementById('clutch-rat').textContent = (avgClutch * 100).toFixed(0) + '%';
+            document.getElementById('desc-clutch').textContent =
+              `Winning ${(avgClutch * 100).toFixed(0)}% of break points saved across all recorded matches.`;
+          }
 
-    // Recent matches table
-    const tbody = document.getElementById('match-tbody');
-    tbody.innerHTML = d.recent_matches.length
-      ? d.recent_matches.map(m => `
+          // Recent matches table
+          const tbody = document.getElementById('match-tbody');
+          tbody.innerHTML = d.recent_matches.length
+            ? d.recent_matches.map(m => `
           <tr class="border-b border-surface-container hover:bg-surface-dim/20">
             <td class="py-md font-bold text-primary">${m.tourney_name}</td>
             <td class="py-md">${m.opponent}</td>
             <td class="py-md">${m.result === 'W'
-              ? '<span class="text-secondary-container bg-primary-container px-sm inline-block text-[10px] font-bold uppercase rounded-sm">Win</span>'
-              : '<span class="text-error px-sm inline-block text-[10px] font-bold uppercase border border-error">Loss</span>'}</td>
+                ? '<span class="text-secondary-container bg-primary-container px-sm inline-block text-[10px] font-bold uppercase rounded-sm">Win</span>'
+                : '<span class="text-error px-sm inline-block text-[10px] font-bold uppercase border border-error">Loss</span>'}</td>
             <td class="py-md text-right font-stats-num text-xs tracking-widest">${m.score || '—'}</td>
           </tr>`).join('')
-      : '<tr><td colspan="4" class="py-lg text-center text-on-surface-variant">No recent matches found.</td></tr>';
+            : '<tr><td colspan="4" class="py-lg text-center text-on-surface-variant">No recent matches found.</td></tr>';
 
-    // Advanced analytics
-    const retDom = d.advanced?.return_dominance != null
-      ? (d.advanced.return_dominance * 100).toFixed(1) + '%' : 'N/A';
-    const grind  = d.advanced?.grind_factor != null
-      ? d.advanced.grind_factor.toFixed(1) : 'N/A';
-    document.getElementById('shot-qual').textContent = retDom;
-    document.getElementById('court-cov').textContent = grind;
+          // Advanced analytics
+          const retDom = d.advanced?.return_dominance != null
+            ? (d.advanced.return_dominance * 100).toFixed(1) + '%' : 'N/A';
+          const grind = d.advanced?.grind_factor != null
+            ? d.advanced.grind_factor.toFixed(1) : 'N/A';
+          document.getElementById('shot-qual').textContent = retDom;
+          document.getElementById('court-cov').textContent = grind;
 
-    // Bio
-    const total = d.surfaces.reduce((n, s) => n + s.match_count, 0);
-    document.getElementById('player-bio').textContent =
-      `${d.name} is a professional tennis player competing on the ${tour} tour. ` +
-      `With ${total.toLocaleString()} recorded matches in the database, ` +
-      `they have maintained a strong career trajectory based on their serve proficiency.`;
+          // Bio
+          const total = d.surfaces.reduce((n, s) => n + s.match_count, 0);
+          document.getElementById('player-bio').textContent =
+            `${d.name} is a professional tennis player competing on the ${tour} tour. ` +
+            `With ${total.toLocaleString()} recorded matches in the database, ` +
+            `they have maintained a strong career trajectory based on their serve proficiency.`;
 
-    // Compare button
-    document.getElementById('compare-btn').addEventListener('click', () => {
-      window.location.href = `simulator.html?p1=${encodeURIComponent(d.name)}&tour=${tour}`;
-    });
-  }
+          // Compare button
+          document.getElementById('compare-btn').addEventListener('click', () => {
+            window.location.href = `simulator.html?p1=${encodeURIComponent(d.name)}&tour=${tour}`;
+          });
 
-  /* ── Apply /api/player/:name/card ────────────────────────────────────── */
-  function applyCard(card) {
-    // Archetype badge
-    if (card.archetype) {
-      const el  = document.getElementById('player-archetype');
-      el.textContent = (archetypeEmoji[card.archetype] || '') + ' ' + card.archetype;
-      el.classList.remove('hidden');
-    }
+        }
 
-    // Form badge
-    if (card.form) {
-      const el = document.getElementById('player-form-badge');
-      el.textContent = card.form.label;
-      // clear any previous colour classes then apply
-      el.className = `px-md py-xs font-label-bold text-label-bold uppercase rounded-lg ${formColors[card.form.label] || ''}`;
-      el.classList.remove('hidden');
-    }
+        /* ── Apply /api/player/:name/card ────────────────────────────────────── */
+        function applyCard(card) {
+          // Archetype badge
+          if (card.archetype) {
+            const el = document.getElementById('player-archetype');
+            el.textContent = (archetypeEmoji[card.archetype] || '') + ' ' + card.archetype;
+            el.classList.remove('hidden');
+          }
 
-    // Attribute bars
-    document.getElementById('attr-bars').innerHTML = attrDefs.map(a => {
-      const raw  = card[a.key] ?? 0;
-      // danger_pct is already scaled *100 in the SQL; scale bar by ×10 so it reads visually
-      const barW = a.scale ? Math.min(raw * a.scale, 100) : Math.min(raw, 100);
-      return `
+          // Form badge
+          if (card.form) {
+            const el = document.getElementById('player-form-badge');
+            el.textContent = card.form.label;
+            // clear any previous colour classes then apply
+            el.className = `px-md py-xs font-label-bold text-label-bold uppercase rounded-lg ${formColors[card.form.label] || ''}`;
+            el.classList.remove('hidden');
+          }
+
+          // Attribute bars
+          document.getElementById('attr-bars').innerHTML = attrDefs.map(a => {
+            const raw = card[a.key] ?? 0;
+            // danger_pct is already scaled *100 in the SQL; scale bar by ×10 so it reads visually
+            const barW = a.scale ? Math.min(raw * a.scale, 100) : Math.min(raw, 100);
+            return `
         <div title="${a.tip}">
           <div class="flex justify-between font-label-bold text-label-sm uppercase mb-xs">
             <span>${a.label}</span>
@@ -431,39 +561,40 @@
                  style="width:${barW}%"></div>
           </div>
         </div>`;
-    }).join('');
-    document.getElementById('overall-rating').textContent =
-      card.overall_rating != null ? card.overall_rating : '—';
+          }).join('');
+          document.getElementById('overall-rating').textContent =
+            card.overall_rating != null ? card.overall_rating : '—';
 
-    // Giant Killer
-    if (card.upsets) {
-      document.getElementById('upset-count').textContent = card.upsets.total_upsets ?? 0;
-      document.getElementById('upset-gap').textContent   = card.upsets.avg_rank_gap  ?? '—';
-      document.getElementById('upset-score').textContent = card.upsets.giant_killer_score ?? '—';
-    }
+          // Giant Killer
+          if (card.upsets) {
+            document.getElementById('upset-count').textContent = card.upsets.total_upsets ?? 0;
+            document.getElementById('upset-gap').textContent = card.upsets.avg_rank_gap ?? '—';
+            document.getElementById('upset-score').textContent = card.upsets.giant_killer_score ?? '—';
+          }
 
-    // Slam prestige
-    if (card.slams) {
-      document.getElementById('slam-wins').textContent   = card.slams.slam_wins   ?? 0;
-      document.getElementById('slam-clutch').textContent =
-        card.slams.slam_clutch != null ? card.slams.slam_clutch + '%' : '—';
-    }
+          // Slam prestige
+          if (card.slams) {
+            document.getElementById('slam-wins').textContent = card.slams.slam_wins ?? 0;
+            document.getElementById('slam-clutch').textContent =
+              card.slams.slam_clutch != null ? card.slams.slam_clutch + '%' : '—';
+          }
 
-    // Form dots
-    if (card.form) {
-      const winDot  = '<span class="w-5 h-5 rounded-full bg-secondary inline-block" title="Win"></span>';
-      const lossDot = '<span class="w-5 h-5 rounded-full bg-error/40 inline-block" title="Loss"></span>';
-      const dots    = Array(card.form.wins).fill(winDot).concat(Array(card.form.losses).fill(lossDot));
-      document.getElementById('form-dots').innerHTML = dots.join('');
-      document.getElementById('form-label').textContent =
-        `${card.form.wins}W – ${card.form.losses}L · ${card.form.label}`;
-    }
-  }
+          // Form dots
+          if (card.form) {
+            const winDot = '<span class="w-5 h-5 rounded-full bg-secondary inline-block" title="Win"></span>';
+            const lossDot = '<span class="w-5 h-5 rounded-full bg-error/40 inline-block" title="Loss"></span>';
+            const dots = Array(card.form.wins).fill(winDot).concat(Array(card.form.losses).fill(lossDot));
+            document.getElementById('form-dots').innerHTML = dots.join('');
+            document.getElementById('form-label').textContent =
+              `${card.form.wins}W – ${card.form.losses}L · ${card.form.label}`;
+          }
+        }
 
-  load();
-})();
-</script>
+        load();
+      })();
+    </script>
 
-<app-bottom-nav></app-bottom-nav>
-</body>
+    <app-bottom-nav></app-bottom-nav>
+  </body>
+
 </html>

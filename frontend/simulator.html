@@ -1,750 +1,920 @@
-<html lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Work+Sans:wght@100..900&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="style.css"/>
-<script src="tailwind.config.js"></script>
-<script src="components.js"></script>
-<style>
-  #tennis-court { display:block; width:100%; }
-  .ball { transition: cx 0.28s cubic-bezier(.4,0,.2,1), cy 0.28s cubic-bezier(.4,0,.2,1); }
-  .action-btn { font-family:'Lexend',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.04em; transition:transform .1s, opacity .15s; }
-  .action-btn:active  { transform:scale(.95); }
-  .action-btn:disabled { opacity:.4; cursor:not-allowed; }
-  .log-entry { animation:slideIn .2s ease; }
-  @keyframes slideIn { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:none} }
-  .score-cell { font-family:'Lexend',sans-serif; font-weight:800; }
-  .serve-dot  { display:inline-block; width:8px; height:8px; border-radius:50%; background:#c3f400; margin-right:6px; }
-</style>
-</head>
-<body class="bg-surface text-on-surface font-body-md min-h-screen">
-<app-header></app-header>
-<main class="max-w-[1280px] mx-auto px-6 py-12">
+<html lang="en">
 
-  <section class="mb-xl">
-    <h1 class="font-display-xl text-display-xl text-primary mb-md">Match Simulator</h1>
-    <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">Predict the outcome of any matchup using historical serve data — then step onto the court and play it out yourself.</p>
-  </section>
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Work+Sans:wght@100..900&display=swap"
+      rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="tailwind.config.js"></script>
+    <script src="components.js"></script>
+    <style>
+      #tennis-court {
+        display: block;
+        width: 100%;
+      }
 
-  <!-- Player Selection -->
-  <div class="grid grid-cols-1 md:grid-cols-12 gap-lg items-center mb-xxl">
-    <div class="md:col-span-5">
-      <div class="bg-white border border-[#E9ECEF] p-lg rounded-lg shadow-sm">
-        <label class="font-label-bold text-label-bold text-primary block mb-sm">PLAYER ONE</label>
-        <div class="relative">
-          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">person</span>
-          <input id="p1-input" class="w-full pl-10 pr-4 py-3 border-b-2 border-outline focus:border-secondary-container bg-surface-container-lowest font-body-md outline-none transition-all" placeholder="Search Player Name…" type="text"/>
-        </div>
-        <div class="mt-md flex items-center gap-md">
-          <img id="p1-img" class="w-16 h-16 rounded-full object-cover border-2 border-primary" src="https://api.dicebear.com/9.x/micah/svg?seed=p1&backgroundColor=002366&radius=50" alt="Player 1"/>
-          <div><p id="p1-name" class="font-headline-md text-headline-md text-primary">—</p><p id="p1-meta" class="font-label-sm text-label-sm text-on-surface-variant uppercase">Select a player</p></div>
-        </div>
-      </div>
-    </div>
-    <div class="md:col-span-2 flex flex-col items-center justify-center">
-      <div class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center font-display-xl text-2xl shadow-lg">VS</div>
-    </div>
-    <div class="md:col-span-5">
-      <div class="bg-white border border-[#E9ECEF] p-lg rounded-lg shadow-sm">
-        <label class="font-label-bold text-label-bold text-primary block mb-sm">PLAYER TWO</label>
-        <div class="relative">
-          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">person</span>
-          <input id="p2-input" class="w-full pl-10 pr-4 py-3 border-b-2 border-outline focus:border-secondary-container bg-surface-container-lowest font-body-md outline-none transition-all" placeholder="Search Player Name…" type="text"/>
-        </div>
-        <div class="mt-md flex items-center gap-md">
-          <img id="p2-img" class="w-16 h-16 rounded-full object-cover border-2 border-outline-variant" src="https://api.dicebear.com/9.x/micah/svg?seed=p2&backgroundColor=002366&radius=50" alt="Player 2"/>
-          <div><p id="p2-name" class="font-headline-md text-headline-md text-primary">—</p><p id="p2-meta" class="font-label-sm text-label-sm text-on-surface-variant uppercase">Select a player</p></div>
-        </div>
-      </div>
-    </div>
-    <div class="md:col-span-12 flex flex-wrap justify-center gap-lg mt-sm">
-      <div>
-        <label class="font-label-bold text-xs text-on-surface-variant uppercase block mb-xs">Tour</label>
-        <select id="tour-select" class="border border-[#E9ECEF] px-4 py-2 font-label-bold text-sm bg-white outline-none uppercase focus:ring-2 focus:ring-secondary">
-          <option value="ATP">ATP (Men)</option><option value="WTA">WTA (Women)</option>
-        </select>
-      </div>
-      <div>
-        <label class="font-label-bold text-xs text-on-surface-variant uppercase block mb-xs">Surface</label>
-        <select id="surface-select" class="border border-[#E9ECEF] px-4 py-2 font-label-bold text-sm bg-white outline-none uppercase focus:ring-2 focus:ring-secondary">
-          <option value="Hard">Hard Court</option><option value="Clay">Clay</option><option value="Grass">Grass</option><option value="Carpet">Carpet</option>
-        </select>
-      </div>
-      <div>
-        <label class="font-label-bold text-xs text-on-surface-variant uppercase block mb-xs">Format</label>
-        <select id="best-of-select" class="border border-[#E9ECEF] px-4 py-2 font-label-bold text-sm bg-white outline-none uppercase focus:ring-2 focus:ring-secondary">
-          <option value="3">Best of 3</option><option value="5">Best of 5</option>
-        </select>
-      </div>
-    </div>
-    <div class="md:col-span-12 flex justify-center mt-lg">
-      <button id="simulate-btn" class="bg-primary text-white font-label-bold text-lg px-xl py-4 rounded-lg flex items-center gap-md hover:opacity-90 active:scale-95 transition-all shadow-md">
-        SIMULATE MATCH <span class="material-symbols-outlined">analytics</span>
-      </button>
-    </div>
-  </div>
+      .ball {
+        transition: cx 0.28s cubic-bezier(.4, 0, .2, 1), cy 0.28s cubic-bezier(.4, 0, .2, 1);
+      }
 
-  <!-- Results -->
-  <div class="bg-primary-container p-xl rounded-xl text-white">
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-xl border-b border-on-primary-container pb-lg">
-      <div>
-        <h2 class="font-label-bold text-on-primary-container mb-xs uppercase">Match Result</h2>
-        <h3 id="match-title" class="font-headline-lg text-white">Run a simulation to see results</h3>
-      </div>
-      <div class="mt-md md:mt-0 flex items-center gap-sm bg-secondary text-primary px-4 py-2 rounded font-label-bold">
-        <span class="material-symbols-outlined">bolt</span>LIVE SIMULATION COMPLETE
-      </div>
-    </div>
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-xl">
-      <div class="lg:col-span-1 bg-primary p-lg border border-on-primary-container rounded-lg flex flex-col items-center text-center">
-        <div class="relative mb-md">
-          <img id="winner-img" class="w-32 h-32 rounded-full object-cover border-4 border-secondary" src="https://api.dicebear.com/9.x/micah/svg?seed=winner&backgroundColor=c3f400&radius=50" alt="Predicted winner"/>
-          <div class="absolute -bottom-2 right-0 bg-secondary text-primary p-2 rounded-full shadow-lg"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">emoji_events</span></div>
-        </div>
-        <h4 class="font-label-bold text-secondary mb-xs uppercase">Predicted Winner</h4>
-        <p id="winner-name" class="font-display-xl text-white mb-sm">—</p>
-        <div class="w-full bg-on-primary-container/20 h-2 rounded-full overflow-hidden mb-sm"><div id="win-bar" class="bg-secondary h-full" style="width:50%"></div></div>
-        <p id="win-pct" class="font-label-sm text-on-primary-container uppercase">—</p>
-      </div>
-      <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-lg">
-        <div class="bg-primary/50 p-lg rounded-lg border border-on-primary-container/30">
-          <h4 class="font-label-bold text-on-primary-container mb-md uppercase">Predicted Scoreline</h4>
-          <div id="scoreline-container" class="space-y-4"><div class="flex justify-between items-center text-white"><span class="font-body-md">Set 1</span><span class="font-stats-num text-2xl">— - —</span></div></div>
-        </div>
-        <div class="bg-primary/50 p-lg rounded-lg border border-on-primary-container/30">
-          <h4 class="font-label-bold text-on-primary-container mb-md uppercase">Analytical Briefing</h4>
-          <ul id="briefing-container" class="space-y-md text-on-primary-container font-body-md"><li class="flex gap-sm"><span class="material-symbols-outlined text-secondary">analytics</span><span>Run a simulation to see the breakdown.</span></li></ul>
-        </div>
-      </div>
-    </div>
-    <div class="mt-xl grid grid-cols-2 md:grid-cols-4 gap-md">
-      <div class="bg-white/5 p-md rounded flex flex-col items-center"><span class="font-label-sm text-on-primary-container uppercase">Serve Win%</span><span id="stat-serve" class="font-stats-num text-white">— vs —</span></div>
-      <div class="bg-white/5 p-md rounded flex flex-col items-center"><span class="font-label-sm text-on-primary-container uppercase">1st Serve%</span><span id="stat-1st" class="font-stats-num text-white">— vs —</span></div>
-      <div class="bg-white/5 p-md rounded flex flex-col items-center"><span class="font-label-sm text-on-primary-container uppercase">Ace Rate</span><span id="stat-ace" class="font-stats-num text-white">— vs —</span></div>
-      <div class="bg-white/5 p-md rounded flex flex-col items-center"><span class="font-label-sm text-on-primary-container uppercase">BP Save%</span><span id="stat-bp" class="font-stats-num text-white">— vs —</span></div>
-    </div>
+      .action-btn {
+        font-family: 'Lexend', sans-serif;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+        transition: transform .1s, opacity .15s;
+      }
 
-    <!-- H2H -->
-    <div id="h2h-section" class="hidden">
-      <div class="border-t border-on-primary-container/30 pt-xl mt-xl">
-        <h4 class="font-label-bold text-on-primary-container uppercase mb-md flex items-center gap-sm"><span class="material-symbols-outlined text-secondary">history</span>Head-to-Head History</h4>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-md mb-md">
-          <div class="bg-white/10 p-md rounded text-center"><p class="font-label-sm text-on-primary-container uppercase mb-xs">Total Matches</p><p id="h2h-total" class="font-stats-num text-white text-2xl">—</p></div>
-          <div class="bg-white/10 p-md rounded text-center"><p id="h2h-p1-label" class="font-label-sm text-on-primary-container uppercase mb-xs">P1 Wins</p><p id="h2h-p1-wins" class="font-stats-num text-secondary-container text-2xl">—</p></div>
-          <div class="bg-white/10 p-md rounded text-center"><p id="h2h-p2-label" class="font-label-sm text-on-primary-container uppercase mb-xs">P2 Wins</p><p id="h2h-p2-wins" class="font-stats-num text-white text-2xl">—</p></div>
-          <div class="bg-white/10 p-md rounded text-center"><p class="font-label-sm text-on-primary-container uppercase mb-xs">Last Played</p><p id="h2h-last" class="font-label-bold text-white text-sm mt-sm">—</p></div>
-        </div>
-        <div id="h2h-surface-breakdown" class="grid grid-cols-1 md:grid-cols-4 gap-md"></div>
-        <p id="h2h-none" class="hidden text-on-primary-container font-body-md text-sm mt-md">No recorded head-to-head matches found.</p>
-      </div>
-    </div>
+      .action-btn:active {
+        transform: scale(.95);
+      }
 
-    <!-- Play CTA -->
+      .action-btn:disabled {
+        opacity: .4;
+        cursor: not-allowed;
+      }
+
+      .log-entry {
+        animation: slideIn .2s ease;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(-6px)
+        }
+
+        to {
+          opacity: 1;
+          transform: none
+        }
+      }
+
+      .score-cell {
+        font-family: 'Lexend', sans-serif;
+        font-weight: 800;
+      }
+
+      .serve-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #c3f400;
+        margin-right: 6px;
+      }
+    </style>
+  </head>
+
+  <body class="bg-surface text-on-surface font-body-md min-h-screen">
+    <app-header></app-header>
+    <main class="max-w-[1280px] mx-auto px-6 py-12">
+
+      <section class="mb-xl">
+        <h1 class="font-display-xl text-display-xl text-primary mb-md">Match Simulator</h1>
+        <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">Predict the outcome of any matchup using
+          historical serve data — then step onto the court and play it out yourself.</p>
+      </section>
+
+      <!-- Player Selection -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-lg items-center mb-xxl">
+        <div class="md:col-span-5">
+          <div class="bg-white border border-[#E9ECEF] p-lg rounded-lg shadow-sm">
+            <label class="font-label-bold text-label-bold text-primary block mb-sm">PLAYER ONE</label>
+            <div class="relative">
+              <span
+                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">person</span>
+              <input id="p1-input"
+                class="w-full pl-10 pr-4 py-3 border-b-2 border-outline focus:border-secondary-container bg-surface-container-lowest font-body-md outline-none transition-all"
+                placeholder="Search Player Name…" type="text" />
+            </div>
+            <div class="mt-md flex items-center gap-md">
+              <img id="p1-img" class="w-16 h-16 rounded-full object-cover border-2 border-primary"
+                src="https://api.dicebear.com/9.x/micah/svg?seed=p1&backgroundColor=002366&radius=50" alt="Player 1" />
+              <div>
+                <p id="p1-name" class="font-headline-md text-headline-md text-primary">—</p>
+                <p id="p1-meta" class="font-label-sm text-label-sm text-on-surface-variant uppercase">Select a player
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="md:col-span-2 flex flex-col items-center justify-center">
+          <div
+            class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center font-display-xl text-2xl shadow-lg">
+            VS</div>
+        </div>
+        <div class="md:col-span-5">
+          <div class="bg-white border border-[#E9ECEF] p-lg rounded-lg shadow-sm">
+            <label class="font-label-bold text-label-bold text-primary block mb-sm">PLAYER TWO</label>
+            <div class="relative">
+              <span
+                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">person</span>
+              <input id="p2-input"
+                class="w-full pl-10 pr-4 py-3 border-b-2 border-outline focus:border-secondary-container bg-surface-container-lowest font-body-md outline-none transition-all"
+                placeholder="Search Player Name…" type="text" />
+            </div>
+            <div class="mt-md flex items-center gap-md">
+              <img id="p2-img" class="w-16 h-16 rounded-full object-cover border-2 border-outline-variant"
+                src="https://api.dicebear.com/9.x/micah/svg?seed=p2&backgroundColor=002366&radius=50" alt="Player 2" />
+              <div>
+                <p id="p2-name" class="font-headline-md text-headline-md text-primary">—</p>
+                <p id="p2-meta" class="font-label-sm text-label-sm text-on-surface-variant uppercase">Select a player
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="md:col-span-12 flex flex-wrap justify-center gap-lg mt-sm">
+          <div>
+            <label class="font-label-bold text-xs text-on-surface-variant uppercase block mb-xs">Tour</label>
+            <select id="tour-select"
+              class="border border-[#E9ECEF] px-4 py-2 font-label-bold text-sm bg-white outline-none uppercase focus:ring-2 focus:ring-secondary">
+              <option value="ATP">ATP (Men)</option>
+              <option value="WTA">WTA (Women)</option>
+            </select>
+          </div>
+          <div>
+            <label class="font-label-bold text-xs text-on-surface-variant uppercase block mb-xs">Surface</label>
+            <select id="surface-select"
+              class="border border-[#E9ECEF] px-4 py-2 font-label-bold text-sm bg-white outline-none uppercase focus:ring-2 focus:ring-secondary">
+              <option value="Hard">Hard Court</option>
+              <option value="Clay">Clay</option>
+              <option value="Grass">Grass</option>
+              <option value="Carpet">Carpet</option>
+            </select>
+          </div>
+          <div>
+            <label class="font-label-bold text-xs text-on-surface-variant uppercase block mb-xs">Format</label>
+            <select id="best-of-select"
+              class="border border-[#E9ECEF] px-4 py-2 font-label-bold text-sm bg-white outline-none uppercase focus:ring-2 focus:ring-secondary">
+              <option value="3">Best of 3</option>
+              <option value="5">Best of 5</option>
+            </select>
+          </div>
+        </div>
+        <div class="md:col-span-12 flex justify-center mt-lg">
+          <button id="simulate-btn"
+            class="bg-primary text-white font-label-bold text-lg px-xl py-4 rounded-lg flex items-center gap-md hover:opacity-90 active:scale-95 transition-all shadow-md">
+            SIMULATE MATCH <span class="material-symbols-outlined">analytics</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div class="bg-primary-container p-xl rounded-xl text-white">
+        <div
+          class="flex flex-col md:flex-row justify-between items-start md:items-center mb-xl border-b border-on-primary-container pb-lg">
+          <div>
+            <h2 class="font-label-bold text-on-primary-container mb-xs uppercase">Match Result</h2>
+            <h3 id="match-title" class="font-headline-lg text-white">Run a simulation to see results</h3>
+          </div>
+          <div
+            class="mt-md md:mt-0 flex items-center gap-sm bg-secondary text-primary px-4 py-2 rounded font-label-bold">
+            <span class="material-symbols-outlined">bolt</span>LIVE SIMULATION COMPLETE
+          </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-xl">
+          <div
+            class="lg:col-span-1 bg-primary p-lg border border-on-primary-container rounded-lg flex flex-col items-center text-center">
+            <div class="relative mb-md">
+              <img id="winner-img" class="w-32 h-32 rounded-full object-cover border-4 border-secondary"
+                src="https://api.dicebear.com/9.x/micah/svg?seed=winner&backgroundColor=c3f400&radius=50"
+                alt="Predicted winner" />
+              <div class="absolute -bottom-2 right-0 bg-secondary text-primary p-2 rounded-full shadow-lg"><span
+                  class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">emoji_events</span></div>
+            </div>
+            <h4 class="font-label-bold text-secondary mb-xs uppercase">Predicted Winner</h4>
+            <p id="winner-name" class="font-display-xl text-white mb-sm">—</p>
+            <div class="w-full bg-on-primary-container/20 h-2 rounded-full overflow-hidden mb-sm">
+              <div id="win-bar" class="bg-secondary h-full" style="width:50%"></div>
+            </div>
+            <p id="win-pct" class="font-label-sm text-on-primary-container uppercase">—</p>
+          </div>
+          <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-lg">
+            <div class="bg-primary/50 p-lg rounded-lg border border-on-primary-container/30">
+              <h4 class="font-label-bold text-on-primary-container mb-md uppercase">Predicted Scoreline</h4>
+              <div id="scoreline-container" class="space-y-4">
+                <div class="flex justify-between items-center text-white"><span class="font-body-md">Set 1</span><span
+                    class="font-stats-num text-2xl">— - —</span></div>
+              </div>
+            </div>
+            <div class="bg-primary/50 p-lg rounded-lg border border-on-primary-container/30">
+              <h4 class="font-label-bold text-on-primary-container mb-md uppercase">Analytical Briefing</h4>
+              <ul id="briefing-container" class="space-y-md text-on-primary-container font-body-md">
+                <li class="flex gap-sm"><span class="material-symbols-outlined text-secondary">analytics</span><span>Run
+                    a simulation to see the breakdown.</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="mt-xl grid grid-cols-2 md:grid-cols-4 gap-md">
+          <div class="bg-white/5 p-md rounded flex flex-col items-center"><span
+              class="font-label-sm text-on-primary-container uppercase">Serve Win%</span><span id="stat-serve"
+              class="font-stats-num text-white">— vs —</span></div>
+          <div class="bg-white/5 p-md rounded flex flex-col items-center"><span
+              class="font-label-sm text-on-primary-container uppercase">1st Serve%</span><span id="stat-1st"
+              class="font-stats-num text-white">— vs —</span></div>
+          <div class="bg-white/5 p-md rounded flex flex-col items-center"><span
+              class="font-label-sm text-on-primary-container uppercase">Ace Rate</span><span id="stat-ace"
+              class="font-stats-num text-white">— vs —</span></div>
+          <div class="bg-white/5 p-md rounded flex flex-col items-center"><span
+              class="font-label-sm text-on-primary-container uppercase">BP Save%</span><span id="stat-bp"
+              class="font-stats-num text-white">— vs —</span></div>
+        </div>
+
+        <!-- H2H -->
+        <div id="h2h-section" class="hidden">
+          <div class="border-t border-on-primary-container/30 pt-xl mt-xl">
+            <h4 class="font-label-bold text-on-primary-container uppercase mb-md flex items-center gap-sm"><span
+                class="material-symbols-outlined text-secondary">history</span>Head-to-Head History</h4>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-md mb-md">
+              <div class="bg-white/10 p-md rounded text-center">
+                <p class="font-label-sm text-on-primary-container uppercase mb-xs">Total Matches</p>
+                <p id="h2h-total" class="font-stats-num text-white text-2xl">—</p>
+              </div>
+              <div class="bg-white/10 p-md rounded text-center">
+                <p id="h2h-p1-label" class="font-label-sm text-on-primary-container uppercase mb-xs">P1 Wins</p>
+                <p id="h2h-p1-wins" class="font-stats-num text-secondary-container text-2xl">—</p>
+              </div>
+              <div class="bg-white/10 p-md rounded text-center">
+                <p id="h2h-p2-label" class="font-label-sm text-on-primary-container uppercase mb-xs">P2 Wins</p>
+                <p id="h2h-p2-wins" class="font-stats-num text-white text-2xl">—</p>
+              </div>
+              <div class="bg-white/10 p-md rounded text-center">
+                <p class="font-label-sm text-on-primary-container uppercase mb-xs">Last Played</p>
+                <p id="h2h-last" class="font-label-bold text-white text-sm mt-sm">—</p>
+              </div>
+            </div>
+            <div id="h2h-surface-breakdown" class="grid grid-cols-1 md:grid-cols-4 gap-md"></div>
+            <p id="h2h-none" class="hidden text-on-primary-container font-body-md text-sm mt-md">No recorded
+              head-to-head matches found.</p>
+          </div>
+        </div>
+
+        <!-- Play CTA (commented out — game section not yet active)
     <div id="play-cta" class="hidden border-t border-on-primary-container/30 pt-xl mt-xl text-center">
       <p class="font-body-md text-on-primary-container mb-md">Think you can do better than the model? Step onto the court.</p>
       <button id="play-btn" class="bg-secondary text-primary font-label-bold text-lg px-xl py-4 rounded-lg inline-flex items-center gap-md hover:opacity-90 active:scale-95 transition-all shadow-md">
         PLAY THIS MATCH <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">sports_tennis</span>
       </button>
     </div>
-  </div>
+    -->
+      </div>
 
-  <!-- ══ GAME SECTION ════════════════════════════════════════════════════════ -->
+      <!-- ══ GAME SECTION (commented out — not yet active) ════════════════════════
   <div id="game-section" class="hidden mt-xxl">
 
-    <!-- Choose player -->
-    <div id="game-choose">
-      <h2 class="font-headline-lg text-primary uppercase mb-sm">Choose Your Player</h2>
-      <p class="font-body-md text-on-surface-variant mb-lg">Your stats shape the odds — your shot choices decide each point.</p>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
-        <button id="choose-p1-btn" class="bg-primary text-white p-lg rounded-xl flex items-center gap-lg hover:opacity-90 active:scale-95 transition-all shadow-md text-left">
-          <img id="choose-p1-img" class="w-20 h-20 rounded-full border-4 border-secondary flex-shrink-0" src="" alt=""/>
-          <div><p class="font-label-bold text-secondary uppercase text-sm mb-xs">Play as</p><p id="choose-p1-name" class="font-headline-lg text-white">—</p><p id="choose-p1-stats" class="font-label-sm text-on-primary-container mt-xs">—</p></div>
-        </button>
-        <button id="choose-p2-btn" class="bg-surface-container border-2 border-primary text-primary p-lg rounded-xl flex items-center gap-lg hover:bg-primary hover:text-white active:scale-95 transition-all shadow-md text-left group">
-          <img id="choose-p2-img" class="w-20 h-20 rounded-full border-4 border-outline-variant flex-shrink-0" src="" alt=""/>
-          <div><p class="font-label-bold text-outline uppercase text-sm mb-xs group-hover:text-secondary">Play as</p><p id="choose-p2-name" class="font-headline-lg">—</p><p id="choose-p2-stats" class="font-label-sm text-on-surface-variant mt-xs group-hover:text-on-primary-container">—</p></div>
-        </button>
-      </div>
-    </div>
-
-    <!-- Active game -->
-    <div id="game-active" class="hidden mt-xl">
-      <!-- Scoreboard -->
-      <div class="bg-primary rounded-xl overflow-hidden mb-lg shadow-lg">
-        <div class="px-lg py-sm bg-black/20 flex items-center justify-between">
-          <span id="game-surface-label" class="font-label-bold text-secondary uppercase text-sm">Hard Court</span>
-          <span id="game-format-label" class="font-label-bold text-on-primary-container uppercase text-sm">Best of 3</span>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full" style="min-width:380px">
-            <thead>
-              <tr class="border-b border-white/10">
-                <th class="px-lg py-sm text-left font-label-bold text-on-primary-container uppercase text-xs">Player</th>
-                <th id="th-s1" class="px-sm py-sm text-center font-label-bold text-on-primary-container uppercase text-xs w-10 hidden">S1</th>
-                <th id="th-s2" class="px-sm py-sm text-center font-label-bold text-on-primary-container uppercase text-xs w-10 hidden">S2</th>
-                <th id="th-s3" class="px-sm py-sm text-center font-label-bold text-on-primary-container uppercase text-xs w-10 hidden">S3</th>
-                <th id="th-s4" class="px-sm py-sm text-center font-label-bold text-on-primary-container uppercase text-xs w-10 hidden">S4</th>
-                <th id="th-s5" class="px-sm py-sm text-center font-label-bold text-on-primary-container uppercase text-xs w-10 hidden">S5</th>
-                <th class="px-sm py-sm text-center font-label-bold text-on-primary-container uppercase text-xs w-14">Games</th>
-                <th class="px-sm py-sm text-center font-label-bold text-secondary uppercase text-xs w-16">Points</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="border-b border-white/5">
-                <td class="px-lg py-md"><div class="flex items-center gap-sm"><span id="serve-dot-0" class="serve-dot opacity-0"></span><img id="score-img-0" class="w-8 h-8 rounded-full" src="" alt=""/><span id="score-name-0" class="font-label-bold text-white text-sm uppercase">—</span></div></td>
-                <td id="sc-0-s1" class="px-sm py-md text-center score-cell text-white text-lg hidden">—</td>
-                <td id="sc-0-s2" class="px-sm py-md text-center score-cell text-white text-lg hidden">—</td>
-                <td id="sc-0-s3" class="px-sm py-md text-center score-cell text-white text-lg hidden">—</td>
-                <td id="sc-0-s4" class="px-sm py-md text-center score-cell text-white text-lg hidden">—</td>
-                <td id="sc-0-s5" class="px-sm py-md text-center score-cell text-white text-lg hidden">—</td>
-                <td id="games-0" class="px-sm py-md text-center score-cell text-white text-2xl">0</td>
-                <td id="points-0" class="px-sm py-md text-center score-cell text-secondary text-2xl">0</td>
-              </tr>
-              <tr>
-                <td class="px-lg py-md"><div class="flex items-center gap-sm"><span id="serve-dot-1" class="serve-dot opacity-0"></span><img id="score-img-1" class="w-8 h-8 rounded-full" src="" alt=""/><span id="score-name-1" class="font-label-bold text-white text-sm uppercase">—</span></div></td>
-                <td id="sc-1-s1" class="px-sm py-md text-center score-cell text-white text-lg hidden">—</td>
-                <td id="sc-1-s2" class="px-sm py-md text-center score-cell text-white text-lg hidden">—</td>
-                <td id="sc-1-s3" class="px-sm py-md text-center score-cell text-white text-lg hidden">—</td>
-                <td id="sc-1-s4" class="px-sm py-md text-center score-cell text-white text-lg hidden">—</td>
-                <td id="sc-1-s5" class="px-sm py-md text-center score-cell text-white text-lg hidden">—</td>
-                <td id="games-1" class="px-sm py-md text-center score-cell text-white text-2xl">0</td>
-                <td id="points-1" class="px-sm py-md text-center score-cell text-secondary text-2xl">0</td>
-              </tr>
-            </tbody>
-          </table>
+    <!-- Choose player
+      <div id="game-choose">
+        <h2 class="font-headline-lg text-primary uppercase mb-sm">Choose Your Player</h2>
+        <p class="font-body-md text-on-surface-variant mb-lg">Your stats shape the odds — your shot choices decide each
+          point.</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+          <button id="choose-p1-btn"
+            class="bg-primary text-white p-lg rounded-xl flex items-center gap-lg hover:opacity-90 active:scale-95 transition-all shadow-md text-left">
+            <img id="choose-p1-img" class="w-20 h-20 rounded-full border-4 border-secondary flex-shrink-0" src=""
+              alt="" />
+            <div>
+              <p class="font-label-bold text-secondary uppercase text-sm mb-xs">Play as</p>
+              <p id="choose-p1-name" class="font-headline-lg text-white">—</p>
+              <p id="choose-p1-stats" class="font-label-sm text-on-primary-container mt-xs">—</p>
+            </div>
+          </button>
+          <button id="choose-p2-btn"
+            class="bg-surface-container border-2 border-primary text-primary p-lg rounded-xl flex items-center gap-lg hover:bg-primary hover:text-white active:scale-95 transition-all shadow-md text-left group">
+            <img id="choose-p2-img" class="w-20 h-20 rounded-full border-4 border-outline-variant flex-shrink-0" src=""
+              alt="" />
+            <div>
+              <p class="font-label-bold text-outline uppercase text-sm mb-xs group-hover:text-secondary">Play as</p>
+              <p id="choose-p2-name" class="font-headline-lg">—</p>
+              <p id="choose-p2-stats"
+                class="font-label-sm text-on-surface-variant mt-xs group-hover:text-on-primary-container">—</p>
+            </div>
+          </button>
         </div>
       </div>
 
-      <!-- Court + Actions -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-lg">
-        <!-- Court -->
-        <div class="bg-primary rounded-xl p-lg">
-          <p id="court-situation" class="font-label-bold text-secondary uppercase text-sm mb-md text-center">—</p>
-          <svg id="tennis-court" viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
-            <rect x="0" y="0" width="300" height="180" rx="4" fill="#1a3a6b"/>
-            <rect id="court-surface" x="30" y="20" width="240" height="140" fill="#2a5298"/>
-            <rect x="30" y="20" width="240" height="140" fill="none" stroke="white" stroke-width="1.5"/>
-            <line x1="50" y1="20" x2="50" y2="160" stroke="white" stroke-width="1"/>
-            <line x1="250" y1="20" x2="250" y2="160" stroke="white" stroke-width="1"/>
-            <line x1="50" y1="57" x2="250" y2="57" stroke="white" stroke-width="1"/>
-            <line x1="50" y1="123" x2="250" y2="123" stroke="white" stroke-width="1"/>
-            <line x1="150" y1="57" x2="150" y2="123" stroke="white" stroke-width="1"/>
-            <line x1="150" y1="20" x2="150" y2="28" stroke="white" stroke-width="1.5"/>
-            <line x1="150" y1="152" x2="150" y2="160" stroke="white" stroke-width="1.5"/>
-            <line x1="30" y1="90" x2="270" y2="90" stroke="white" stroke-width="3" opacity="0.9"/>
-            <line x1="150" y1="86" x2="150" y2="94" stroke="white" stroke-width="2"/>
-            <circle cx="30" cy="90" r="3" fill="white"/>
-            <circle cx="270" cy="90" r="3" fill="white"/>
-            <!-- Player markers — positions set by JS -->
-            <circle id="pi-human" cx="150" cy="140" r="8" fill="#c3f400" opacity="0.9"/>
-            <text id="pi-human-lbl" x="150" y="144" text-anchor="middle" font-size="7" font-weight="bold" fill="#002366">YOU</text>
-            <circle id="pi-cpu" cx="150" cy="40" r="8" fill="#ff6b6b" opacity="0.9"/>
-            <text id="pi-cpu-lbl" x="150" y="44" text-anchor="middle" font-size="7" font-weight="bold" fill="white">CPU</text>
-            <!-- Ball -->
-            <circle id="court-ball" class="ball" cx="150" cy="90" r="5" fill="#c3f400" stroke="#777" stroke-width="0.5" opacity="0"/>
-          </svg>
-          <div class="flex justify-center gap-lg mt-md">
-            <div class="flex items-center gap-xs"><span class="w-3 h-3 rounded-full inline-block" style="background:#c3f400"></span><span class="font-label-sm text-on-primary-container text-xs uppercase">You</span></div>
-            <div class="flex items-center gap-xs"><span class="w-3 h-3 rounded-full bg-red-400 inline-block"></span><span class="font-label-sm text-on-primary-container text-xs uppercase">Opponent</span></div>
+      #Active game
+      <div id="game-active" class="hidden mt-xl">
+        #Scoreboard
+        <div class="bg-primary rounded-xl overflow-hidden mb-lg shadow-lg">
+          <div class="px-lg py-sm bg-black/20 flex items-center justify-between">
+            <span id="game-surface-label" class="font-label-bold text-secondary uppercase text-sm">Hard Court</span>
+            <span id="game-format-label" class="font-label-bold text-on-primary-container uppercase text-sm">Best of
+              3</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full" style="min-width:380px">
+              <thead>
+                <tr class="border-b border-white/10">
+                  <th class="px-lg py-sm text-left font-label-bold text-on-primary-container uppercase text-xs">Player
+                  </th>
+                  <th id="th-s1"
+                    class="px-sm py-sm text-center font-label-bold text-on-primary-container uppercase text-xs w-10 hidden">
+                    S1</th>
+                  <th id="th-s2"
+                    class="px-sm py-sm text-center font-label-bold text-on-primary-container uppercase text-xs w-10 hidden">
+                    S2</th>
+                  <th id="th-s3"
+                    class="px-sm py-sm text-center font-label-bold text-on-primary-container uppercase text-xs w-10 hidden">
+                    S3</th>
+                  <th id="th-s4"
+                    class="px-sm py-sm text-center font-label-bold text-on-primary-container uppercase text-xs w-10 hidden">
+                    S4</th>
+                  <th id="th-s5"
+                    class="px-sm py-sm text-center font-label-bold text-on-primary-container uppercase text-xs w-10 hidden">
+                    S5</th>
+                  <th class="px-sm py-sm text-center font-label-bold text-on-primary-container uppercase text-xs w-14">
+                    Games</th>
+                  <th class="px-sm py-sm text-center font-label-bold text-secondary uppercase text-xs w-16">Points</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="border-b border-white/5">
+                  <td class="px-lg py-md">
+                    <div class="flex items-center gap-sm"><span id="serve-dot-0" class="serve-dot opacity-0"></span><img
+                        id="score-img-0" class="w-8 h-8 rounded-full" src="" alt="" /><span id="score-name-0"
+                        class="font-label-bold text-white text-sm uppercase">—</span></div>
+                  </td>
+                  <td id="sc-0-s1" class="px-sm py-md text-center score-cell text-white text-lg hidden">—</td>
+                  <td id="sc-0-s2" class="px-sm py-md text-center score-cell text-white text-lg hidden">—</td>
+                  <td id="sc-0-s3" class="px-sm py-md text-center score-cell text-white text-lg hidden">—</td>
+                  <td id="sc-0-s4" class="px-sm py-md text-center score-cell text-white text-lg hidden">—</td>
+                  <td id="sc-0-s5" class="px-sm py-md text-center score-cell text-white text-lg hidden">—</td>
+                  <td id="games-0" class="px-sm py-md text-center score-cell text-white text-2xl">0</td>
+                  <td id="points-0" class="px-sm py-md text-center score-cell text-secondary text-2xl">0</td>
+                </tr>
+                <tr>
+                  <td class="px-lg py-md">
+                    <div class="flex items-center gap-sm"><span id="serve-dot-1" class="serve-dot opacity-0"></span><img
+                        id="score-img-1" class="w-8 h-8 rounded-full" src="" alt="" /><span id="score-name-1"
+                        class="font-label-bold text-white text-sm uppercase">—</span></div>
+                  </td>
+                  <td id="sc-1-s1" class="px-sm py-md text-center score-cell text-white text-lg hidden">—</td>
+                  <td id="sc-1-s2" class="px-sm py-md text-center score-cell text-white text-lg hidden">—</td>
+                  <td id="sc-1-s3" class="px-sm py-md text-center score-cell text-white text-lg hidden">—</td>
+                  <td id="sc-1-s4" class="px-sm py-md text-center score-cell text-white text-lg hidden">—</td>
+                  <td id="sc-1-s5" class="px-sm py-md text-center score-cell text-white text-lg hidden">—</td>
+                  <td id="games-1" class="px-sm py-md text-center score-cell text-white text-2xl">0</td>
+                  <td id="points-1" class="px-sm py-md text-center score-cell text-secondary text-2xl">0</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
-        <!-- Actions + Log -->
-        <div class="flex flex-col gap-lg">
-          <div class="bg-white border border-[#E9ECEF] p-lg rounded-xl">
-            <p id="action-label" class="font-label-bold text-primary uppercase text-sm mb-md">—</p>
-            <div id="action-buttons" class="grid grid-cols-3 gap-sm"></div>
+        #Court + Actions
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-lg">
+          #Court
+          <div class="bg-primary rounded-xl p-lg">
+            <p id="court-situation" class="font-label-bold text-secondary uppercase text-sm mb-md text-center">—</p>
+            <svg id="tennis-court" viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
+              <rect x="0" y="0" width="300" height="180" rx="4" fill="#1a3a6b" />
+              <rect id="court-surface" x="30" y="20" width="240" height="140" fill="#2a5298" />
+              <rect x="30" y="20" width="240" height="140" fill="none" stroke="white" stroke-width="1.5" />
+              <line x1="50" y1="20" x2="50" y2="160" stroke="white" stroke-width="1" />
+              <line x1="250" y1="20" x2="250" y2="160" stroke="white" stroke-width="1" />
+              <line x1="50" y1="57" x2="250" y2="57" stroke="white" stroke-width="1" />
+              <line x1="50" y1="123" x2="250" y2="123" stroke="white" stroke-width="1" />
+              <line x1="150" y1="57" x2="150" y2="123" stroke="white" stroke-width="1" />
+              <line x1="150" y1="20" x2="150" y2="28" stroke="white" stroke-width="1.5" />
+              <line x1="150" y1="152" x2="150" y2="160" stroke="white" stroke-width="1.5" />
+              <line x1="30" y1="90" x2="270" y2="90" stroke="white" stroke-width="3" opacity="0.9" />
+              <line x1="150" y1="86" x2="150" y2="94" stroke="white" stroke-width="2" />
+              <circle cx="30" cy="90" r="3" fill="white" />
+              <circle cx="270" cy="90" r="3" fill="white" />
+              #Player markers — positions set by JS
+              <circle id="pi-human" cx="150" cy="140" r="8" fill="#c3f400" opacity="0.9" />
+              <text id="pi-human-lbl" x="150" y="144" text-anchor="middle" font-size="7" font-weight="bold"
+                fill="#002366">YOU</text>
+              <circle id="pi-cpu" cx="150" cy="40" r="8" fill="#ff6b6b" opacity="0.9" />
+              <text id="pi-cpu-lbl" x="150" y="44" text-anchor="middle" font-size="7" font-weight="bold"
+                fill="white">CPU</text>
+              #Ball
+              <circle id="court-ball" class="ball" cx="150" cy="90" r="5" fill="#c3f400" stroke="#777"
+                stroke-width="0.5" opacity="0" />
+            </svg>
+            <div class="flex justify-center gap-lg mt-md">
+              <div class="flex items-center gap-xs"><span class="w-3 h-3 rounded-full inline-block"
+                  style="background:#c3f400"></span><span
+                  class="font-label-sm text-on-primary-container text-xs uppercase">You</span></div>
+              <div class="flex items-center gap-xs"><span
+                  class="w-3 h-3 rounded-full bg-red-400 inline-block"></span><span
+                  class="font-label-sm text-on-primary-container text-xs uppercase">Opponent</span></div>
+            </div>
           </div>
-          <div class="bg-primary rounded-xl p-lg flex-1">
-            <h4 class="font-label-bold text-on-primary-container uppercase text-sm mb-md flex items-center gap-sm">
-              <span class="material-symbols-outlined text-secondary text-base">format_list_bulleted</span>Commentary
-            </h4>
-            <div id="game-log" class="space-y-sm max-h-52 overflow-y-auto pr-sm">
-              <p class="font-body-md text-on-primary-container text-sm">Commentary will appear here…</p>
+
+          #Actions + Log
+          <div class="flex flex-col gap-lg">
+            <div class="bg-white border border-[#E9ECEF] p-lg rounded-xl">
+              <p id="action-label" class="font-label-bold text-primary uppercase text-sm mb-md">—</p>
+              <div id="action-buttons" class="grid grid-cols-3 gap-sm"></div>
+            </div>
+            <div class="bg-primary rounded-xl p-lg flex-1">
+              <h4 class="font-label-bold text-on-primary-container uppercase text-sm mb-md flex items-center gap-sm">
+                <span class="material-symbols-outlined text-secondary text-base">format_list_bulleted</span>Commentary
+              </h4>
+              <div id="game-log" class="space-y-sm max-h-52 overflow-y-auto pr-sm">
+                <p class="font-body-md text-on-primary-container text-sm">Commentary will appear here…</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Game Over -->
-    <div id="game-over" class="hidden mt-xl">
-      <div class="bg-primary-container rounded-xl p-xxl text-center">
-        <p class="font-label-bold text-on-primary-container uppercase mb-sm">Match Complete</p>
-        <h2 id="game-over-title" class="font-display-xl text-white mb-md">—</h2>
-        <p id="game-over-score" class="font-stats-num text-secondary text-2xl mb-xl">—</p>
-        <div class="flex justify-center gap-lg flex-wrap">
-          <button id="play-again-btn" class="bg-secondary text-primary font-label-bold uppercase px-xl py-md rounded-lg hover:opacity-90 active:scale-95 transition-all">Play Again</button>
-          <button id="switch-player-btn" class="bg-white/10 text-white font-label-bold uppercase px-xl py-md rounded-lg hover:bg-white/20 active:scale-95 transition-all">Switch Player</button>
+      #Game Over
+      <div id="game-over" class="hidden mt-xl">
+        <div class="bg-primary-container rounded-xl p-xxl text-center">
+          <p class="font-label-bold text-on-primary-container uppercase mb-sm">Match Complete</p>
+          <h2 id="game-over-title" class="font-display-xl text-white mb-md">—</h2>
+          <p id="game-over-score" class="font-stats-num text-secondary text-2xl mb-xl">—</p>
+          <div class="flex justify-center gap-lg flex-wrap">
+            <button id="play-again-btn"
+              class="bg-secondary text-primary font-label-bold uppercase px-xl py-md rounded-lg hover:opacity-90 active:scale-95 transition-all">Play
+              Again</button>
+            <button id="switch-player-btn"
+              class="bg-white/10 text-white font-label-bold uppercase px-xl py-md rounded-lg hover:bg-white/20 active:scale-95 transition-all">Switch
+              Player</button>
+          </div>
         </div>
       </div>
-    </div>
 
-  </div><!-- end game-section -->
+      </div> end game-section
+    -->
 
-</main>
+    </main>
 
-<script>
-(function () {
-  /* ══════════════════════════════════════════════════════════
-     HELPERS
-  ══════════════════════════════════════════════════════════ */
-  const SURFACE_EMOJI  = { Hard:'🔵', Clay:'🟠', Grass:'🟢', Carpet:'⬛' };
-  const SURFACE_COLORS = { Hard:'#2a5298', Clay:'#8b3a1a', Grass:'#2d5a27', Carpet:'#3d3060' };
-  const PT_LABELS = ['0','15','30','40'];
-  function pct(v){ return v!=null?(v*100).toFixed(1)+'%':'N/A'; }
+    <script>
+      (function () {
+        /* ══════════════════════════════════════════════════════════
+           HELPERS
+        ══════════════════════════════════════════════════════════ */
+        const SURFACE_EMOJI = { Hard: '🔵', Clay: '🟠', Grass: '🟢', Carpet: '⬛' };
+        const SURFACE_COLORS = { Hard: '#2a5298', Clay: '#8b3a1a', Grass: '#2d5a27', Carpet: '#3d3060' };
+        const PT_LABELS = ['0', '15', '30', '40'];
+        function pct(v) { return v != null ? (v * 100).toFixed(1) + '%' : 'N/A'; }
 
-  /* ══════════════════════════════════════════════════════════
-     SIMULATION
-  ══════════════════════════════════════════════════════════ */
-  let SIM = null;
+        /* ══════════════════════════════════════════════════════════
+           SIMULATION
+        ══════════════════════════════════════════════════════════ */
+        let SIM = null;
 
-  async function loadH2H(p1,p2,tour){
-    try{
-      const res=await fetch(`/api/h2h?p1=${encodeURIComponent(p1)}&p2=${encodeURIComponent(p2)}&tour=${tour}`);
-      const h2h=await res.json();
-      document.getElementById('h2h-section').classList.remove('hidden');
-      if(!h2h.totals||h2h.totals.matches===0){
-        document.getElementById('h2h-none').classList.remove('hidden');
-        ['h2h-total','h2h-p1-wins','h2h-p2-wins'].forEach(id=>document.getElementById(id).textContent='0');
-        return;
-      }
-      document.getElementById('h2h-none').classList.add('hidden');
-      document.getElementById('h2h-total').textContent   = h2h.totals.matches;
-      document.getElementById('h2h-p1-wins').textContent = h2h.totals.p1_wins;
-      document.getElementById('h2h-p2-wins').textContent = h2h.totals.p2_wins;
-      document.getElementById('h2h-p1-label').textContent = p1.split(' ').pop()+' Wins';
-      document.getElementById('h2h-p2-label').textContent = p2.split(' ').pop()+' Wins';
-      const lastDate=h2h.by_surface.reduce((m,r)=>r.last_match>m?r.last_match:m,'');
-      document.getElementById('h2h-last').textContent=lastDate?lastDate.slice(0,4)+'-'+lastDate.slice(4,6)+'-'+lastDate.slice(6,8):'—';
-      document.getElementById('h2h-surface-breakdown').innerHTML=h2h.by_surface.map(s=>`
+        async function loadH2H(p1, p2, tour) {
+          try {
+            const res = await fetch(`/api/h2h?p1=${encodeURIComponent(p1)}&p2=${encodeURIComponent(p2)}&tour=${tour}`);
+            const h2h = await res.json();
+            document.getElementById('h2h-section').classList.remove('hidden');
+            if (!h2h.totals || h2h.totals.matches === 0) {
+              document.getElementById('h2h-none').classList.remove('hidden');
+              ['h2h-total', 'h2h-p1-wins', 'h2h-p2-wins'].forEach(id => document.getElementById(id).textContent = '0');
+              return;
+            }
+            document.getElementById('h2h-none').classList.add('hidden');
+            document.getElementById('h2h-total').textContent = h2h.totals.matches;
+            document.getElementById('h2h-p1-wins').textContent = h2h.totals.p1_wins;
+            document.getElementById('h2h-p2-wins').textContent = h2h.totals.p2_wins;
+            document.getElementById('h2h-p1-label').textContent = p1.split(' ').pop() + ' Wins';
+            document.getElementById('h2h-p2-label').textContent = p2.split(' ').pop() + ' Wins';
+            const lastDate = h2h.by_surface.reduce((m, r) => r.last_match > m ? r.last_match : m, '');
+            document.getElementById('h2h-last').textContent = lastDate ? lastDate.slice(0, 4) + '-' + lastDate.slice(4, 6) + '-' + lastDate.slice(6, 8) : '—';
+            document.getElementById('h2h-surface-breakdown').innerHTML = h2h.by_surface.map(s => `
         <div class="bg-white/10 p-md rounded">
-          <p class="font-label-bold text-on-primary-container uppercase mb-sm text-sm">${SURFACE_EMOJI[s.surface]||'🎾'} ${s.surface}</p>
+          <p class="font-label-bold text-on-primary-container uppercase mb-sm text-sm">${SURFACE_EMOJI[s.surface] || '🎾'} ${s.surface}</p>
           <p class="font-stats-num text-white text-xl">${s.p1_wins} – ${s.p2_wins}</p>
-          <p class="font-label-sm text-on-primary-container mt-xs">${s.matches_played} match${s.matches_played!==1?'es':''}</p>
-          ${s.last_tourney?`<p class="font-label-sm text-on-primary-container/60 mt-xs truncate">${s.last_tourney}</p>`:''}
+          <p class="font-label-sm text-on-primary-container mt-xs">${s.matches_played} match${s.matches_played !== 1 ? 'es' : ''}</p>
+          ${s.last_tourney ? `<p class="font-label-sm text-on-primary-container/60 mt-xs truncate">${s.last_tourney}</p>` : ''}
         </div>`).join('');
-    }catch(e){console.error(e);}
-  }
+          } catch (e) { console.error(e); }
+        }
 
-  function showResults(d){
-    if(d.error){alert(d.error);return;}
-    SIM=d;
-    const pm1=d.p1_match_pct, pm2=1-pm1;
+        function showResults(d) {
+          if (d.error) { alert(d.error); return; }
+          SIM = d;
+          const pm1 = d.p1_match_pct, pm2 = 1 - pm1;
 
-    // Use the actual simulated winner, not just the probability-favourite
-    const winner  = d.winner || (pm1>=pm2 ? d.player1 : d.player2);
-    const winnerPm= winner===d.player1 ? pm1 : pm2;
+          // Use the actual simulated winner, not just the probability-favourite
+          const winner = d.winner || (pm1 >= pm2 ? d.player1 : d.player2);
+          const winnerPm = winner === d.player1 ? pm1 : pm2;
 
-    document.getElementById('match-title').textContent =
-      d.player1+' vs '+d.player2+' — '+d.surface+(d.score?' — '+d.score:'');
-    document.getElementById('winner-name').textContent = winner.split(' ').slice(-1)[0];
-    document.getElementById('win-bar').style.width     = (pm1*100).toFixed(0)+'%';
-    document.getElementById('win-pct').textContent     = (pm1*100).toFixed(1)+'% theoretical win probability';
-    document.getElementById('winner-img').src =
-      `https://api.dicebear.com/9.x/micah/svg?seed=${encodeURIComponent(winner)}&backgroundColor=c3f400&radius=50`;
+          document.getElementById('match-title').textContent =
+            d.player1 + ' vs ' + d.player2 + ' — ' + d.surface + (d.score ? ' — ' + d.score : '');
+          document.getElementById('winner-name').textContent = winner.split(' ').slice(-1)[0];
+          document.getElementById('win-bar').style.width = (pm1 * 100).toFixed(0) + '%';
+          document.getElementById('win-pct').textContent = (pm1 * 100).toFixed(1) + '% theoretical win probability';
+          document.getElementById('winner-img').src =
+            `https://api.dicebear.com/9.x/micah/svg?seed=${encodeURIComponent(winner)}&backgroundColor=c3f400&radius=50`;
 
-    // Stat bento: show actual simulated stats alongside historical
-    document.getElementById('stat-serve').textContent =
-      pct(d.p1_raw_serve_win)+' vs '+pct(d.p2_raw_serve_win);
-    // 1st serve %: actual match result if available, else historical
-    document.getElementById('stat-1st').textContent =
-      d.p1_first_in_pct!=null
-        ? pct(d.p1_first_in_pct)+' vs '+pct(d.p2_first_in_pct)
-        : pct(d.p1_first_serve)+' vs '+pct(d.p2_first_serve);
-    // Aces: raw count from simulation if available, else historical rate
-    document.getElementById('stat-ace').textContent =
-      d.p1_aces!=null
-        ? d.p1_aces+' vs '+d.p2_aces+' aces'
-        : pct(d.p1_ace_rate)+' vs '+pct(d.p2_ace_rate);
-    // Break points: conversion from simulation if available, else historical save %
-    document.getElementById('stat-bp').textContent =
-      d.p1_bp_converted!=null
-        ? `${d.p1_bp_converted}/${d.p1_bp_chances} vs ${d.p2_bp_converted}/${d.p2_bp_chances} BP`
-        : pct(d.p1_bp_save)+' vs '+pct(d.p2_bp_save);
+          // Stat bento: show actual simulated stats alongside historical
+          document.getElementById('stat-serve').textContent =
+            pct(d.p1_raw_serve_win) + ' vs ' + pct(d.p2_raw_serve_win);
+          // 1st serve %: actual match result if available, else historical
+          document.getElementById('stat-1st').textContent =
+            d.p1_first_in_pct != null
+              ? pct(d.p1_first_in_pct) + ' vs ' + pct(d.p2_first_in_pct)
+              : pct(d.p1_first_serve) + ' vs ' + pct(d.p2_first_serve);
+          // Aces: raw count from simulation if available, else historical rate
+          document.getElementById('stat-ace').textContent =
+            d.p1_aces != null
+              ? d.p1_aces + ' vs ' + d.p2_aces + ' aces'
+              : pct(d.p1_ace_rate) + ' vs ' + pct(d.p2_ace_rate);
+          // Break points: conversion from simulation if available, else historical save %
+          document.getElementById('stat-bp').textContent =
+            d.p1_bp_converted != null
+              ? `${d.p1_bp_converted}/${d.p1_bp_chances} vs ${d.p2_bp_converted}/${d.p2_bp_chances} BP`
+              : pct(d.p1_bp_save) + ' vs ' + pct(d.p2_bp_save);
 
-    // Actual simulated scoreline — fall back to nothing if sets not present
-    let scores='';
-    if(d.sets&&d.sets.length){
-      d.sets.forEach((s,i)=>{
-        const tb=s.tiebreak?` <span style="font-size:.7em;opacity:.7">(${s.tiebreak[0]}-${s.tiebreak[1]})</span>`:'';
-        scores+=`<div class="flex justify-between items-center text-white">
-          <span class="font-body-md">Set ${i+1}</span>
+          // Actual simulated scoreline — fall back to nothing if sets not present
+          let scores = '';
+          if (d.sets && d.sets.length) {
+            d.sets.forEach((s, i) => {
+              const tb = s.tiebreak ? ` <span style="font-size:.7em;opacity:.7">(${s.tiebreak[0]}-${s.tiebreak[1]})</span>` : '';
+              scores += `<div class="flex justify-between items-center text-white">
+          <span class="font-body-md">Set ${i + 1}</span>
           <span class="font-stats-num text-2xl">${s.p1} - ${s.p2}${tb}</span>
         </div>`;
-      });
-    }
-    document.getElementById('scoreline-container').innerHTML = scores||'<p class="text-on-primary-container">—</p>';
+            });
+          }
+          document.getElementById('scoreline-container').innerHTML = scores || '<p class="text-on-primary-container">—</p>';
 
-    // Data-driven briefing using actual simulated stats
-    const p1last=d.player1.split(' ').pop(), p2last=d.player2.split(' ').pop();
-    const fav=pm1>pm2?d.player1:d.player2;
-    const totalPts=(d.p1_points||0)+(d.p2_points||0);
-    const winPts=winner===d.player1?(d.p1_points||0):(d.p2_points||0);
-    const briefings=[
-      d.p1_points!=null
-        ? `<li class="flex gap-sm"><span class="material-symbols-outlined text-secondary">analytics</span>
-           <span>${winner.split(' ').pop()} won ${winPts} of ${totalPts} points (${totalPts?((winPts/totalPts)*100).toFixed(0):0}%).</span></li>`
-        : `<li class="flex gap-sm"><span class="material-symbols-outlined text-secondary">trending_up</span>
-           <span>${fav} carries a ${(Math.abs(pm1-pm2)*100).toFixed(1)}pp theoretical edge on ${d.surface}.</span></li>`,
-      d.p1_aces!=null
-        ? `<li class="flex gap-sm"><span class="material-symbols-outlined text-secondary">sports_tennis</span>
+          // Data-driven briefing using actual simulated stats
+          const p1last = d.player1.split(' ').pop(), p2last = d.player2.split(' ').pop();
+          const fav = pm1 > pm2 ? d.player1 : d.player2;
+          const totalPts = (d.p1_points || 0) + (d.p2_points || 0);
+          const winPts = winner === d.player1 ? (d.p1_points || 0) : (d.p2_points || 0);
+          const briefings = [
+            d.p1_points != null
+              ? `<li class="flex gap-sm"><span class="material-symbols-outlined text-secondary">analytics</span>
+           <span>${winner.split(' ').pop()} won ${winPts} of ${totalPts} points (${totalPts ? ((winPts / totalPts) * 100).toFixed(0) : 0}%).</span></li>`
+              : `<li class="flex gap-sm"><span class="material-symbols-outlined text-secondary">trending_up</span>
+           <span>${fav} carries a ${(Math.abs(pm1 - pm2) * 100).toFixed(1)}pp theoretical edge on ${d.surface}.</span></li>`,
+            d.p1_aces != null
+              ? `<li class="flex gap-sm"><span class="material-symbols-outlined text-secondary">sports_tennis</span>
            <span>Aces: ${p1last} ${d.p1_aces}, ${p2last} ${d.p2_aces}. Double faults: ${p1last} ${d.p1_dfs}, ${p2last} ${d.p2_dfs}.</span></li>`
-        : `<li class="flex gap-sm"><span class="material-symbols-outlined text-secondary">shield</span>
+              : `<li class="flex gap-sm"><span class="material-symbols-outlined text-secondary">shield</span>
            <span>Effective serve win: ${pct(d.p1_eff_serve_win)} vs ${pct(d.p2_eff_serve_win)} after return-quality adjustment.</span></li>`,
-      d.p1_bp_converted!=null
-        ? `<li class="flex gap-sm"><span class="material-symbols-outlined text-secondary">shield</span>
+            d.p1_bp_converted != null
+              ? `<li class="flex gap-sm"><span class="material-symbols-outlined text-secondary">shield</span>
            <span>Break points — ${p1last}: ${d.p1_bp_converted}/${d.p1_bp_chances} converted, ${d.p1_bp_saved}/${d.p1_bp_faced} saved. ${p2last}: ${d.p2_bp_converted}/${d.p2_bp_chances} converted, ${d.p2_bp_saved}/${d.p2_bp_faced} saved.</span></li>`
-        : `<li class="flex gap-sm"><span class="material-symbols-outlined text-secondary">psychology</span>
+              : `<li class="flex gap-sm"><span class="material-symbols-outlined text-secondary">psychology</span>
            <span>BP save: ${p1last} ${pct(d.p1_bp_save)} vs ${p2last} ${pct(d.p2_bp_save)}.</span></li>`,
-    ];
-    document.getElementById('briefing-container').innerHTML=briefings.join('');
+          ];
+          document.getElementById('briefing-container').innerHTML = briefings.join('');
 
-    document.getElementById('play-cta').classList.remove('hidden');
-    prepChooseScreen(d);
-    loadH2H(d.player1,d.player2,document.getElementById('tour-select').value);
-  }
+          // document.getElementById('play-cta').classList.remove('hidden');  // game section not yet active
+          // prepChooseScreen(d);
+          loadH2H(d.player1, d.player2, document.getElementById('tour-select').value);
+        }
 
-  /* ══════════════════════════════════════════════════════════
-     GAME ENGINE
-  ══════════════════════════════════════════════════════════ */
-  let G=null;
+        /* ══════════════════════════════════════════════════════════
+           GAME ENGINE — commented out, not yet active
+        ══════════════════════════════════════════════════════════
+        /*
+        let G=null;
+      
+        const SERVE_CHOICES=[
+          {id:'wide', label:'Wide', icon:'arrow_outward',         wMod:+0.010, aceMod:1.15, verbs:['fires wide','rips it out wide','opens the court']},
+          {id:'body', label:'Body', icon:'person',                wMod:-0.008, aceMod:0.45, verbs:['goes body','jams the body serve','cramps the returner']},
+          {id:'T',    label:'T',    icon:'vertical_align_center', wMod:+0.018, aceMod:1.40, verbs:['hits the T','drills up the T','nails the center line']},
+        ];
+        const RETURN_CHOICES=[
+          {id:'rip',   label:'Rip It',   icon:'bolt',          wMod:+0.035, verbs:['rips the return','attacks early','takes the ball on the rise']},
+          {id:'block', label:'Block',    icon:'shield',        wMod:-0.025, verbs:['blocks safely back','redirects in play','chips it back']},
+          {id:'cross', label:'Cross',    icon:'trending_flat', wMod:+0.010, verbs:['goes crosscourt','angles it crosscourt','sends a crosscourt reply']},
+        ];
+      
+        function sName(i){return SIM[i===0?'player1':'player2'].split(' ').pop();}
+        function swp(i)  {return i===0?SIM.p1_eff_serve_win:SIM.p2_eff_serve_win;}
+        function aceR(i) {return i===0?(SIM.p1_ace_rate||0.05):(SIM.p2_ace_rate||0.05);}
+        function bpSv(i) {return i===0?(SIM.p1_bp_save||0.60):(SIM.p2_bp_save||0.60);}
+        function rnd(arr){return arr[Math.floor(Math.random()*arr.length)];}
+      
+        function isBPagainstServer(){
+          if(G.tiebreak||G.deuce)return false;
+          return G.pts[1-G.server]===3&&G.pts[G.server]<3;
+        }
+      
+        function ptLabel(i){
+          if(G.tiebreak)return String(G.tbPts[i]);
+          if(G.deuce)   return G.adv===-1?'40':(G.adv===i?'Ad':'40');
+          return PT_LABELS[Math.min(G.pts[i],3)]||'0';
+        }
+      
+        function prepChooseScreen(d){
+          [{i:0,k:'p1'},{i:1,k:'p2'}].forEach(({i,k})=>{
+            const name=d[k==='p1'?'player1':'player2'];
+            document.getElementById(`choose-${k}-name`).textContent=name;
+            document.getElementById(`choose-${k}-img`).src=`https://api.dicebear.com/9.x/micah/svg?seed=${encodeURIComponent(name)}&backgroundColor=002366&radius=50`;
+            document.getElementById(`choose-${k}-stats`).textContent=
+              `Serve ${(d[k+'_raw_serve_win']*100).toFixed(0)}%  ·  Ace ${(d[k+'_ace_rate']*100).toFixed(1)}%  ·  BP Save ${(d[k+'_bp_save']*100).toFixed(0)}%`;
+          });
+        }
+      
+        function startGame(humanIdx){
+          document.getElementById('game-choose').classList.add('hidden');
+          document.getElementById('game-over').classList.add('hidden');
+          document.getElementById('game-active').classList.remove('hidden');
+          G={
+            human:humanIdx, server:0, firstSvrSet:0,
+            pts:[0,0], deuce:false, adv:-1,
+            games:[0,0], setHistory:[], setsWon:[0,0],
+            setsNeeded:SIM.best_of===5?3:2, bestOf:SIM.best_of,
+            tiebreak:false, tbPts:[0,0], log:[], over:false, winner:-1,
+          };
+          // Surface colour
+          const sf=SIM.surface;
+          document.getElementById('court-surface').setAttribute('fill',SURFACE_COLORS[sf]||'#2a5298');
+          document.getElementById('game-surface-label').textContent=(SURFACE_EMOJI[sf]||'')+' '+sf;
+          document.getElementById('game-format-label').textContent='Best of '+SIM.best_of;
+          // Scoreboard names
+          [0,1].forEach(i=>{
+            const n=SIM[i===0?'player1':'player2'];
+            document.getElementById(`score-name-${i}`).textContent=sName(i);
+            document.getElementById(`score-img-${i}`).src=`https://api.dicebear.com/9.x/micah/svg?seed=${encodeURIComponent(n)}&backgroundColor=002366&radius=50`;
+          });
+          // Orient court (human always at bottom)
+          const hBot=(humanIdx===0); // p1 = bottom by convention
+          const humanY=hBot?140:40, cpuY=hBot?40:140;
+          const humanLblY=hBot?144:44, cpuLblY=hBot?44:144;
+          document.getElementById('pi-human').setAttribute('cy',humanY);
+          document.getElementById('pi-human-lbl').setAttribute('y',humanLblY);
+          document.getElementById('pi-cpu').setAttribute('cy',cpuY);
+          document.getElementById('pi-cpu-lbl').setAttribute('y',cpuLblY);
+      
+          addLog(`🎾 Match starts! You're playing as ${sName(humanIdx)}.`);
+          renderGame();
+        }
+      
+        function handleChoice(choiceId){
+          if(!G||G.over)return;
+          const humanServing=(G.server===G.human);
+          const choices=humanServing?SERVE_CHOICES:RETURN_CHOICES;
+          const choice=choices.find(c=>c.id===choiceId);
+          if(!choice)return;
+      
+          let pWin=swp(G.server); // probability server wins the point
+      
+          if(humanServing){
+            pWin+=choice.wMod;
+            // Ace check
+            if(Math.random()<aceR(G.server)*choice.aceMod*2.6){
+              animateBall(G.server);
+              addLog(`🎯 ACE! ${sName(G.server)} ${rnd(choice.verbs)}.`);
+              resolvePoint(G.server);return;
+            }
+            // Double fault
+            if(Math.random()<(isBPagainstServer()?0.034:0.022)){
+              animateBall(1-G.server);
+              addLog(`😬 Double fault. ${sName(1-G.server)} takes the point.`);
+              resolvePoint(1-G.server);return;
+            }
+          }else{
+            // Human returning: aggressive choices reduce server's win probability
+            pWin-=choice.wMod;
+            // Opponent ace
+            if(Math.random()<aceR(G.server)*2.0){
+              animateBall(G.server);
+              addLog(`🎯 ACE! ${sName(G.server)} serves past ${sName(G.human)}.`);
+              resolvePoint(G.server);return;
+            }
+          }
+      
+          // BP clutch modifier
+          if(isBPagainstServer()){
+            pWin+=(bpSv(G.server)-0.60)*0.12;
+          }
+          pWin=Math.max(0.22,Math.min(0.82,pWin));
+      
+          const serverWins=Math.random()<pWin;
+          const ptWinner=serverWins?G.server:1-G.server;
+          animateBall(ptWinner);
+      
+          // Commentary
+          const verb=rnd(choice.verbs);
+          const humanWon=(ptWinner===G.human);
+          const bp=isBPagainstServer()&&!serverWins;
+          const pool=serverWins?[
+            `${sName(G.server)} wins the rally — ${verb}.`,
+            `${sName(G.server)} holds firm. ${sName(1-G.server)}'s ${verb} goes wrong.`,
+            `Powerful exchange — ${sName(G.server)} takes it with a winner.`,
+            `${sName(1-G.server)} ${verb} but it goes wide.`,
+          ]:[
+            `${sName(1-G.server)} ${verb} — clean winner!`,
+            `${sName(G.server)} can't handle the return. ${sName(1-G.server)} converts.`,
+            `Great rally ends with ${sName(G.server)} in the net.`,
+            `${sName(1-G.server)} dictates and ${sName(G.server)} has no answer.`,
+          ];
+          let msg=(humanWon?'✅ ':'')+(bp?'💥 BREAK! ':'')+rnd(pool);
+          addLog(msg);
+          resolvePoint(ptWinner);
+        }
+        window.GAME_choice=handleChoice;
+      
+        function animateBall(winnerIdx){
+          const ball=document.getElementById('court-ball');
+          if(!ball)return;
+          const humanBot=(G.human===0);
+          const winnerIsHuman=(winnerIdx===G.human);
+          const winnerAtBot=winnerIsHuman?humanBot:!humanBot;
+          ball.style.opacity='1';
+          // Start near net on server's side
+          const startY=((G.server===G.human)===humanBot)?'110':'70';
+          ball.setAttribute('cx','150'); ball.setAttribute('cy',startY);
+          setTimeout(()=>{
+            const endY=winnerAtBot?'148':'32';
+            const endX=70+Math.random()*160;
+            ball.setAttribute('cx',String(Math.round(endX)));
+            ball.setAttribute('cy',endY);
+          },30);
+          setTimeout(()=>{ball.style.opacity='0';},750);
+        }
+      
+        function resolvePoint(winnerIdx){
+          G.tiebreak?scoreTBPoint(winnerIdx):scorePoint(winnerIdx);
+          renderGame();
+        }
+      
+        function scorePoint(w){
+          if(G.deuce){
+            if(G.adv===-1)          {G.adv=w;}
+            else if(G.adv===w)      {winGame(w);}
+            else                    {G.adv=-1;addLog('Back to deuce.');}
+            return;
+          }
+          G.pts[w]++;
+          if(G.pts[0]===3&&G.pts[1]===3){G.deuce=true;addLog('Deuce!');return;}
+          if(G.pts[w]>=4) winGame(w);
+        }
+      
+        function scoreTBPoint(w){
+          G.tbPts[w]++;
+          const tot=G.tbPts[0]+G.tbPts[1];
+          if(tot===1||(tot>1&&tot%2===1)) G.server=1-G.server;
+          if(G.tbPts[w]>=7&&G.tbPts[w]-G.tbPts[1-w]>=2){winSet(w);G.tiebreak=false;G.tbPts=[0,0];}
+        }
+      
+        function winGame(w){
+          G.games[w]++;G.pts=[0,0];G.deuce=false;G.adv=-1;
+          addLog(`Game ${sName(w)}. ${G.games[0]}–${G.games[1]}.`);
+          if(G.games[0]===6&&G.games[1]===6){G.tiebreak=true;G.tbPts=[0,0];addLog(`🎾 Tiebreak!`);return;}
+          const wg=G.games[w],lg=G.games[1-w];
+          if((wg>=6&&wg-lg>=2)||wg===7){winSet(w);return;}
+          G.server=1-G.server;
+        }
+      
+        function winSet(w){
+          G.setHistory.push({p1:G.games[0],p2:G.games[1]});
+          G.setsWon[w]++;G.games=[0,0];
+          addLog(`🏆 Set ${G.setHistory.length} to ${sName(w)}! Sets: ${G.setsWon[0]}–${G.setsWon[1]}.`);
+          if(G.setsWon[w]>=G.setsNeeded){
+            G.over=true;G.winner=w;
+            addLog(w===G.human?`🎉 You win the match!`:`${sName(w)} wins the match.`);
+          }else{
+            G.firstSvrSet=1-G.firstSvrSet;G.server=G.firstSvrSet;
+          }
+        }
+      
+        function addLog(msg){G.log.unshift(msg);if(G.log.length>12)G.log.pop();}
+      
+        function renderGame(){
+          if(!G)return;
+          // Serve dots
+          [0,1].forEach(i=>document.getElementById(`serve-dot-${i}`).style.opacity=G.server===i?'1':'0');
+          // Points & games
+          [0,1].forEach(i=>{
+            document.getElementById(`points-${i}`).textContent=ptLabel(i);
+            document.getElementById(`games-${i}`).textContent=String(G.games[i]);
+          });
+          // Set history columns
+          G.setHistory.forEach((s,si)=>{
+            const c=si+1;
+            [`th-s${c}`,`sc-0-s${c}`,`sc-1-s${c}`].forEach(id=>document.getElementById(id)?.classList.remove('hidden'));
+            document.getElementById(`sc-0-s${c}`).textContent=String(s.p1);
+            document.getElementById(`sc-1-s${c}`).textContent=String(s.p2);
+          });
+          // Situation
+          const hs=(G.server===G.human);
+          let sit=hs?'🎾 Your serve':'🔄 Opponent serving';
+          if(G.tiebreak) sit+=' · Tiebreak';
+          if(G.deuce)    sit+=G.adv===-1?' · Deuce':` · Advantage ${sName(G.adv)}`;
+          if(isBPagainstServer()) sit+=hs?' · ⚠️ Break point against you!':(G.human!==G.server?' · 💥 Break point!':'');
+          document.getElementById('court-situation').textContent=sit;
+          // Log
+          document.getElementById('game-log').innerHTML=G.log.map((l,i)=>
+            `<p class="log-entry font-body-md text-sm ${i===0?'text-white':'text-on-primary-container/70'}">${l}</p>`).join('');
+          if(G.over){renderGameOver();return;}
+          // Action buttons
+          const choices=hs?SERVE_CHOICES:RETURN_CHOICES;
+          document.getElementById('action-label').textContent=hs?'Choose your serve:':'Choose your return:';
+          document.getElementById('action-buttons').innerHTML=choices.map(c=>`
+            <button class="action-btn bg-primary text-white px-sm py-md rounded-lg flex flex-col items-center gap-xs hover:bg-secondary hover:text-primary transition-all"
+                    onclick="window.GAME_choice('${c.id}')">
+              <span class="material-symbols-outlined text-2xl">${c.icon}</span>
+              <span class="text-xs">${c.label}</span>
+            </button>`).join('');
+        }
+      
+        function renderGameOver(){
+          document.getElementById('game-active').classList.add('hidden');
+          document.getElementById('game-over').classList.remove('hidden');
+          const hw=(G.winner===G.human);
+          document.getElementById('game-over-title').textContent=hw?`🏆 You Win, ${sName(G.human)}!`:`${sName(G.winner)} Wins`;
+          document.getElementById('game-over-score').textContent=G.setHistory.map(s=>`${s.p1}–${s.p2}`).join('  ')||'—';
+          document.getElementById('play-again-btn').onclick   =()=>startGame(G.human);
+          document.getElementById('switch-player-btn').onclick=()=>{
+            document.getElementById('game-over').classList.add('hidden');
+            document.getElementById('game-choose').classList.remove('hidden');
+          };
+        }
+      
+        document.getElementById('play-btn').addEventListener('click',()=>{
+          document.getElementById('game-section').classList.remove('hidden');
+          document.getElementById('game-section').scrollIntoView({behavior:'smooth',block:'start'});
+        });
+        document.getElementById('choose-p1-btn').addEventListener('click',()=>startGame(0));
+        document.getElementById('choose-p2-btn').addEventListener('click',()=>startGame(1));
+        */ // end game engine
 
-  const SERVE_CHOICES=[
-    {id:'wide', label:'Wide', icon:'arrow_outward',         wMod:+0.010, aceMod:1.15, verbs:['fires wide','rips it out wide','opens the court']},
-    {id:'body', label:'Body', icon:'person',                wMod:-0.008, aceMod:0.45, verbs:['goes body','jams the body serve','cramps the returner']},
-    {id:'T',    label:'T',    icon:'vertical_align_center', wMod:+0.018, aceMod:1.40, verbs:['hits the T','drills up the T','nails the center line']},
-  ];
-  const RETURN_CHOICES=[
-    {id:'rip',   label:'Rip It',   icon:'bolt',          wMod:+0.035, verbs:['rips the return','attacks early','takes the ball on the rise']},
-    {id:'block', label:'Block',    icon:'shield',        wMod:-0.025, verbs:['blocks safely back','redirects in play','chips it back']},
-    {id:'cross', label:'Cross',    icon:'trending_flat', wMod:+0.010, verbs:['goes crosscourt','angles it crosscourt','sends a crosscourt reply']},
-  ];
+        /* ══════════════════════════════════════════════════════════
+           FILTER / AUTOCOMPLETE
+        ══════════════════════════════════════════════════════════ */
+        const tourGetter = () => document.getElementById('tour-select').value;
+        const surfaceGetter = () => document.getElementById('surface-select').value;
 
-  function sName(i){return SIM[i===0?'player1':'player2'].split(' ').pop();}
-  function swp(i)  {return i===0?SIM.p1_eff_serve_win:SIM.p2_eff_serve_win;}
-  function aceR(i) {return i===0?(SIM.p1_ace_rate||0.05):(SIM.p2_ace_rate||0.05);}
-  function bpSv(i) {return i===0?(SIM.p1_bp_save||0.60):(SIM.p2_bp_save||0.60);}
-  function rnd(arr){return arr[Math.floor(Math.random()*arr.length)];}
+        function clearPlayer(n) {
+          document.getElementById(`p${n}-input`).value = '';
+          document.getElementById(`p${n}-name`).textContent = '—';
+          document.getElementById(`p${n}-meta`).textContent = 'Select a player';
+          document.getElementById(`p${n}-img`).src = `https://api.dicebear.com/9.x/micah/svg?seed=p${n}&backgroundColor=002366&radius=50`;
+        }
+        function flashBanner(msg) {
+          let b = document.getElementById('fcb');
+          if (!b) { b = document.createElement('div'); b.id = 'fcb'; b.style.cssText = 'position:fixed;top:72px;left:50%;transform:translateX(-50%);background:#002366;color:#fff;font-family:Lexend,sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:10px 24px;border-radius:4px;box-shadow:0 4px 12px rgba(0,0,0,.2);z-index:9999;transition:opacity .3s;'; document.body.appendChild(b); }
+          b.textContent = msg; b.style.opacity = '1';
+          clearTimeout(b._t); b._t = setTimeout(() => { b.style.opacity = '0'; }, 2200);
+        }
+        function onFilterChange() {
+          clearPlayer(1); clearPlayer(2);
+          flashBanner(`Now searching ${surfaceGetter()} · ${tourGetter()}`);
+          ['p1-input', 'p2-input'].forEach(id => { const el = document.getElementById(id); if (el._autocompleteRefresh) el._autocompleteRefresh(); });
+        }
+        document.getElementById('tour-select').addEventListener('change', function () {
+          const bo = document.getElementById('best-of-select');
+          bo.querySelector('option[value="5"]').disabled = (this.value === 'WTA');
+          if (this.value === 'WTA') bo.value = '3';
+          onFilterChange();
+        });
+        document.getElementById('surface-select').addEventListener('change', onFilterChange);
 
-  function isBPagainstServer(){
-    if(G.tiebreak||G.deuce)return false;
-    return G.pts[1-G.server]===3&&G.pts[G.server]<3;
-  }
+        if (window.setupPlayerAutocomplete) {
+          window.setupPlayerAutocomplete('p1-input', tourGetter, name => {
+            document.getElementById('p1-name').textContent = name.split(' ').slice(-1)[0];
+            document.getElementById('p1-img').src = `https://api.dicebear.com/9.x/micah/svg?seed=${encodeURIComponent(name)}&backgroundColor=002366&radius=50`;
+            document.getElementById('p1-meta').textContent = 'Selected';
+          }, surfaceGetter);
+          window.setupPlayerAutocomplete('p2-input', tourGetter, name => {
+            document.getElementById('p2-name').textContent = name.split(' ').slice(-1)[0];
+            document.getElementById('p2-img').src = `https://api.dicebear.com/9.x/micah/svg?seed=${encodeURIComponent(name)}&backgroundColor=002366&radius=50`;
+            document.getElementById('p2-meta').textContent = 'Selected';
+          }, surfaceGetter);
+        }
 
-  function ptLabel(i){
-    if(G.tiebreak)return String(G.tbPts[i]);
-    if(G.deuce)   return G.adv===-1?'40':(G.adv===i?'Ad':'40');
-    return PT_LABELS[Math.min(G.pts[i],3)]||'0';
-  }
+        const params = new URLSearchParams(window.location.search);
+        const preP1 = params.get('p1'), preTour = params.get('tour');
+        if (preTour) { const s = document.getElementById('tour-select'); s.value = preTour.toUpperCase(); s.dispatchEvent(new Event('change')); }
+        if (preP1) {
+          document.getElementById('p1-input').value = preP1;
+          document.getElementById('p1-name').textContent = preP1.split(' ').slice(-1)[0];
+          document.getElementById('p1-img').src = `https://api.dicebear.com/9.x/micah/svg?seed=${encodeURIComponent(preP1)}&backgroundColor=002366&radius=50`;
+          document.getElementById('p1-meta').textContent = 'Selected';
+        }
 
-  function prepChooseScreen(d){
-    [{i:0,k:'p1'},{i:1,k:'p2'}].forEach(({i,k})=>{
-      const name=d[k==='p1'?'player1':'player2'];
-      document.getElementById(`choose-${k}-name`).textContent=name;
-      document.getElementById(`choose-${k}-img`).src=`https://api.dicebear.com/9.x/micah/svg?seed=${encodeURIComponent(name)}&backgroundColor=002366&radius=50`;
-      document.getElementById(`choose-${k}-stats`).textContent=
-        `Serve ${(d[k+'_raw_serve_win']*100).toFixed(0)}%  ·  Ace ${(d[k+'_ace_rate']*100).toFixed(1)}%  ·  BP Save ${(d[k+'_bp_save']*100).toFixed(0)}%`;
-    });
-  }
+        /* ══════════════════════════════════════════════════════════
+           SIMULATE BUTTON
+        ══════════════════════════════════════════════════════════ */
+        document.getElementById('simulate-btn').addEventListener('click', async () => {
+          const p1 = document.getElementById('p1-input').value.trim();
+          const p2 = document.getElementById('p2-input').value.trim();
+          if (!p1 || !p2) { alert('Enter both player names.'); return; }
+          const btn = document.getElementById('simulate-btn');
+          btn.disabled = true; btn.innerHTML = 'SIMULATING… <span class="material-symbols-outlined">hourglass_top</span>';
+          try {
+            const res = await fetch('/api/simulate', {
+              method: 'POST', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ player1: p1, player2: p2, surface: document.getElementById('surface-select').value, best_of: parseInt(document.getElementById('best-of-select').value), tour: document.getElementById('tour-select').value })
+            });
+            showResults(await res.json());
+          } catch (e) { alert('Simulation failed. Is the server running?'); }
+          finally { btn.disabled = false; btn.innerHTML = 'SIMULATE MATCH <span class="material-symbols-outlined">analytics</span>'; }
+        });
+      })();
+    </script>
+    <app-bottom-nav></app-bottom-nav>
+  </body>
 
-  function startGame(humanIdx){
-    document.getElementById('game-choose').classList.add('hidden');
-    document.getElementById('game-over').classList.add('hidden');
-    document.getElementById('game-active').classList.remove('hidden');
-    G={
-      human:humanIdx, server:0, firstSvrSet:0,
-      pts:[0,0], deuce:false, adv:-1,
-      games:[0,0], setHistory:[], setsWon:[0,0],
-      setsNeeded:SIM.best_of===5?3:2, bestOf:SIM.best_of,
-      tiebreak:false, tbPts:[0,0], log:[], over:false, winner:-1,
-    };
-    // Surface colour
-    const sf=SIM.surface;
-    document.getElementById('court-surface').setAttribute('fill',SURFACE_COLORS[sf]||'#2a5298');
-    document.getElementById('game-surface-label').textContent=(SURFACE_EMOJI[sf]||'')+' '+sf;
-    document.getElementById('game-format-label').textContent='Best of '+SIM.best_of;
-    // Scoreboard names
-    [0,1].forEach(i=>{
-      const n=SIM[i===0?'player1':'player2'];
-      document.getElementById(`score-name-${i}`).textContent=sName(i);
-      document.getElementById(`score-img-${i}`).src=`https://api.dicebear.com/9.x/micah/svg?seed=${encodeURIComponent(n)}&backgroundColor=002366&radius=50`;
-    });
-    // Orient court (human always at bottom)
-    const hBot=(humanIdx===0); // p1 = bottom by convention
-    const humanY=hBot?140:40, cpuY=hBot?40:140;
-    const humanLblY=hBot?144:44, cpuLblY=hBot?44:144;
-    document.getElementById('pi-human').setAttribute('cy',humanY);
-    document.getElementById('pi-human-lbl').setAttribute('y',humanLblY);
-    document.getElementById('pi-cpu').setAttribute('cy',cpuY);
-    document.getElementById('pi-cpu-lbl').setAttribute('y',cpuLblY);
-
-    addLog(`🎾 Match starts! You're playing as ${sName(humanIdx)}.`);
-    renderGame();
-  }
-
-  function handleChoice(choiceId){
-    if(!G||G.over)return;
-    const humanServing=(G.server===G.human);
-    const choices=humanServing?SERVE_CHOICES:RETURN_CHOICES;
-    const choice=choices.find(c=>c.id===choiceId);
-    if(!choice)return;
-
-    let pWin=swp(G.server); // probability server wins the point
-
-    if(humanServing){
-      pWin+=choice.wMod;
-      // Ace check
-      if(Math.random()<aceR(G.server)*choice.aceMod*2.6){
-        animateBall(G.server);
-        addLog(`🎯 ACE! ${sName(G.server)} ${rnd(choice.verbs)}.`);
-        resolvePoint(G.server);return;
-      }
-      // Double fault
-      if(Math.random()<(isBPagainstServer()?0.034:0.022)){
-        animateBall(1-G.server);
-        addLog(`😬 Double fault. ${sName(1-G.server)} takes the point.`);
-        resolvePoint(1-G.server);return;
-      }
-    }else{
-      // Human returning: aggressive choices reduce server's win probability
-      pWin-=choice.wMod;
-      // Opponent ace
-      if(Math.random()<aceR(G.server)*2.0){
-        animateBall(G.server);
-        addLog(`🎯 ACE! ${sName(G.server)} serves past ${sName(G.human)}.`);
-        resolvePoint(G.server);return;
-      }
-    }
-
-    // BP clutch modifier
-    if(isBPagainstServer()){
-      pWin+=(bpSv(G.server)-0.60)*0.12;
-    }
-    pWin=Math.max(0.22,Math.min(0.82,pWin));
-
-    const serverWins=Math.random()<pWin;
-    const ptWinner=serverWins?G.server:1-G.server;
-    animateBall(ptWinner);
-
-    // Commentary
-    const verb=rnd(choice.verbs);
-    const humanWon=(ptWinner===G.human);
-    const bp=isBPagainstServer()&&!serverWins;
-    const pool=serverWins?[
-      `${sName(G.server)} wins the rally — ${verb}.`,
-      `${sName(G.server)} holds firm. ${sName(1-G.server)}'s ${verb} goes wrong.`,
-      `Powerful exchange — ${sName(G.server)} takes it with a winner.`,
-      `${sName(1-G.server)} ${verb} but it goes wide.`,
-    ]:[
-      `${sName(1-G.server)} ${verb} — clean winner!`,
-      `${sName(G.server)} can't handle the return. ${sName(1-G.server)} converts.`,
-      `Great rally ends with ${sName(G.server)} in the net.`,
-      `${sName(1-G.server)} dictates and ${sName(G.server)} has no answer.`,
-    ];
-    let msg=(humanWon?'✅ ':'')+(bp?'💥 BREAK! ':'')+rnd(pool);
-    addLog(msg);
-    resolvePoint(ptWinner);
-  }
-  window.GAME_choice=handleChoice;
-
-  function animateBall(winnerIdx){
-    const ball=document.getElementById('court-ball');
-    if(!ball)return;
-    const humanBot=(G.human===0);
-    const winnerIsHuman=(winnerIdx===G.human);
-    const winnerAtBot=winnerIsHuman?humanBot:!humanBot;
-    ball.style.opacity='1';
-    // Start near net on server's side
-    const startY=((G.server===G.human)===humanBot)?'110':'70';
-    ball.setAttribute('cx','150'); ball.setAttribute('cy',startY);
-    setTimeout(()=>{
-      const endY=winnerAtBot?'148':'32';
-      const endX=70+Math.random()*160;
-      ball.setAttribute('cx',String(Math.round(endX)));
-      ball.setAttribute('cy',endY);
-    },30);
-    setTimeout(()=>{ball.style.opacity='0';},750);
-  }
-
-  function resolvePoint(winnerIdx){
-    G.tiebreak?scoreTBPoint(winnerIdx):scorePoint(winnerIdx);
-    renderGame();
-  }
-
-  function scorePoint(w){
-    if(G.deuce){
-      if(G.adv===-1)          {G.adv=w;}
-      else if(G.adv===w)      {winGame(w);}
-      else                    {G.adv=-1;addLog('Back to deuce.');}
-      return;
-    }
-    G.pts[w]++;
-    if(G.pts[0]===3&&G.pts[1]===3){G.deuce=true;addLog('Deuce!');return;}
-    if(G.pts[w]>=4) winGame(w);
-  }
-
-  function scoreTBPoint(w){
-    G.tbPts[w]++;
-    const tot=G.tbPts[0]+G.tbPts[1];
-    if(tot===1||(tot>1&&tot%2===1)) G.server=1-G.server;
-    if(G.tbPts[w]>=7&&G.tbPts[w]-G.tbPts[1-w]>=2){winSet(w);G.tiebreak=false;G.tbPts=[0,0];}
-  }
-
-  function winGame(w){
-    G.games[w]++;G.pts=[0,0];G.deuce=false;G.adv=-1;
-    addLog(`Game ${sName(w)}. ${G.games[0]}–${G.games[1]}.`);
-    if(G.games[0]===6&&G.games[1]===6){G.tiebreak=true;G.tbPts=[0,0];addLog(`🎾 Tiebreak!`);return;}
-    const wg=G.games[w],lg=G.games[1-w];
-    if((wg>=6&&wg-lg>=2)||wg===7){winSet(w);return;}
-    G.server=1-G.server;
-  }
-
-  function winSet(w){
-    G.setHistory.push({p1:G.games[0],p2:G.games[1]});
-    G.setsWon[w]++;G.games=[0,0];
-    addLog(`🏆 Set ${G.setHistory.length} to ${sName(w)}! Sets: ${G.setsWon[0]}–${G.setsWon[1]}.`);
-    if(G.setsWon[w]>=G.setsNeeded){
-      G.over=true;G.winner=w;
-      addLog(w===G.human?`🎉 You win the match!`:`${sName(w)} wins the match.`);
-    }else{
-      G.firstSvrSet=1-G.firstSvrSet;G.server=G.firstSvrSet;
-    }
-  }
-
-  function addLog(msg){G.log.unshift(msg);if(G.log.length>12)G.log.pop();}
-
-  function renderGame(){
-    if(!G)return;
-    // Serve dots
-    [0,1].forEach(i=>document.getElementById(`serve-dot-${i}`).style.opacity=G.server===i?'1':'0');
-    // Points & games
-    [0,1].forEach(i=>{
-      document.getElementById(`points-${i}`).textContent=ptLabel(i);
-      document.getElementById(`games-${i}`).textContent=String(G.games[i]);
-    });
-    // Set history columns
-    G.setHistory.forEach((s,si)=>{
-      const c=si+1;
-      [`th-s${c}`,`sc-0-s${c}`,`sc-1-s${c}`].forEach(id=>document.getElementById(id)?.classList.remove('hidden'));
-      document.getElementById(`sc-0-s${c}`).textContent=String(s.p1);
-      document.getElementById(`sc-1-s${c}`).textContent=String(s.p2);
-    });
-    // Situation
-    const hs=(G.server===G.human);
-    let sit=hs?'🎾 Your serve':'🔄 Opponent serving';
-    if(G.tiebreak) sit+=' · Tiebreak';
-    if(G.deuce)    sit+=G.adv===-1?' · Deuce':` · Advantage ${sName(G.adv)}`;
-    if(isBPagainstServer()) sit+=hs?' · ⚠️ Break point against you!':(G.human!==G.server?' · 💥 Break point!':'');
-    document.getElementById('court-situation').textContent=sit;
-    // Log
-    document.getElementById('game-log').innerHTML=G.log.map((l,i)=>
-      `<p class="log-entry font-body-md text-sm ${i===0?'text-white':'text-on-primary-container/70'}">${l}</p>`).join('');
-    if(G.over){renderGameOver();return;}
-    // Action buttons
-    const choices=hs?SERVE_CHOICES:RETURN_CHOICES;
-    document.getElementById('action-label').textContent=hs?'Choose your serve:':'Choose your return:';
-    document.getElementById('action-buttons').innerHTML=choices.map(c=>`
-      <button class="action-btn bg-primary text-white px-sm py-md rounded-lg flex flex-col items-center gap-xs hover:bg-secondary hover:text-primary transition-all"
-              onclick="window.GAME_choice('${c.id}')">
-        <span class="material-symbols-outlined text-2xl">${c.icon}</span>
-        <span class="text-xs">${c.label}</span>
-      </button>`).join('');
-  }
-
-  function renderGameOver(){
-    document.getElementById('game-active').classList.add('hidden');
-    document.getElementById('game-over').classList.remove('hidden');
-    const hw=(G.winner===G.human);
-    document.getElementById('game-over-title').textContent=hw?`🏆 You Win, ${sName(G.human)}!`:`${sName(G.winner)} Wins`;
-    document.getElementById('game-over-score').textContent=G.setHistory.map(s=>`${s.p1}–${s.p2}`).join('  ')||'—';
-    document.getElementById('play-again-btn').onclick   =()=>startGame(G.human);
-    document.getElementById('switch-player-btn').onclick=()=>{
-      document.getElementById('game-over').classList.add('hidden');
-      document.getElementById('game-choose').classList.remove('hidden');
-    };
-  }
-
-  document.getElementById('play-btn').addEventListener('click',()=>{
-    document.getElementById('game-section').classList.remove('hidden');
-    document.getElementById('game-section').scrollIntoView({behavior:'smooth',block:'start'});
-  });
-  document.getElementById('choose-p1-btn').addEventListener('click',()=>startGame(0));
-  document.getElementById('choose-p2-btn').addEventListener('click',()=>startGame(1));
-
-  /* ══════════════════════════════════════════════════════════
-     FILTER / AUTOCOMPLETE
-  ══════════════════════════════════════════════════════════ */
-  const tourGetter   =()=>document.getElementById('tour-select').value;
-  const surfaceGetter=()=>document.getElementById('surface-select').value;
-
-  function clearPlayer(n){
-    document.getElementById(`p${n}-input`).value='';
-    document.getElementById(`p${n}-name`).textContent='—';
-    document.getElementById(`p${n}-meta`).textContent='Select a player';
-    document.getElementById(`p${n}-img`).src=`https://api.dicebear.com/9.x/micah/svg?seed=p${n}&backgroundColor=002366&radius=50`;
-  }
-  function flashBanner(msg){
-    let b=document.getElementById('fcb');
-    if(!b){b=document.createElement('div');b.id='fcb';b.style.cssText='position:fixed;top:72px;left:50%;transform:translateX(-50%);background:#002366;color:#fff;font-family:Lexend,sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:10px 24px;border-radius:4px;box-shadow:0 4px 12px rgba(0,0,0,.2);z-index:9999;transition:opacity .3s;';document.body.appendChild(b);}
-    b.textContent=msg;b.style.opacity='1';
-    clearTimeout(b._t);b._t=setTimeout(()=>{b.style.opacity='0';},2200);
-  }
-  function onFilterChange(){
-    clearPlayer(1);clearPlayer(2);
-    flashBanner(`Now searching ${surfaceGetter()} · ${tourGetter()}`);
-    ['p1-input','p2-input'].forEach(id=>{const el=document.getElementById(id);if(el._autocompleteRefresh)el._autocompleteRefresh();});
-  }
-  document.getElementById('tour-select').addEventListener('change',function(){
-    const bo=document.getElementById('best-of-select');
-    bo.querySelector('option[value="5"]').disabled=(this.value==='WTA');
-    if(this.value==='WTA')bo.value='3';
-    onFilterChange();
-  });
-  document.getElementById('surface-select').addEventListener('change',onFilterChange);
-
-  if(window.setupPlayerAutocomplete){
-    window.setupPlayerAutocomplete('p1-input',tourGetter,name=>{
-      document.getElementById('p1-name').textContent=name.split(' ').slice(-1)[0];
-      document.getElementById('p1-img').src=`https://api.dicebear.com/9.x/micah/svg?seed=${encodeURIComponent(name)}&backgroundColor=002366&radius=50`;
-      document.getElementById('p1-meta').textContent='Selected';
-    },surfaceGetter);
-    window.setupPlayerAutocomplete('p2-input',tourGetter,name=>{
-      document.getElementById('p2-name').textContent=name.split(' ').slice(-1)[0];
-      document.getElementById('p2-img').src=`https://api.dicebear.com/9.x/micah/svg?seed=${encodeURIComponent(name)}&backgroundColor=002366&radius=50`;
-      document.getElementById('p2-meta').textContent='Selected';
-    },surfaceGetter);
-  }
-
-  const params=new URLSearchParams(window.location.search);
-  const preP1=params.get('p1'),preTour=params.get('tour');
-  if(preTour){const s=document.getElementById('tour-select');s.value=preTour.toUpperCase();s.dispatchEvent(new Event('change'));}
-  if(preP1){
-    document.getElementById('p1-input').value=preP1;
-    document.getElementById('p1-name').textContent=preP1.split(' ').slice(-1)[0];
-    document.getElementById('p1-img').src=`https://api.dicebear.com/9.x/micah/svg?seed=${encodeURIComponent(preP1)}&backgroundColor=002366&radius=50`;
-    document.getElementById('p1-meta').textContent='Selected';
-  }
-
-  /* ══════════════════════════════════════════════════════════
-     SIMULATE BUTTON
-  ══════════════════════════════════════════════════════════ */
-  document.getElementById('simulate-btn').addEventListener('click',async()=>{
-    const p1=document.getElementById('p1-input').value.trim();
-    const p2=document.getElementById('p2-input').value.trim();
-    if(!p1||!p2){alert('Enter both player names.');return;}
-    const btn=document.getElementById('simulate-btn');
-    btn.disabled=true;btn.innerHTML='SIMULATING… <span class="material-symbols-outlined">hourglass_top</span>';
-    try{
-      const res=await fetch('/api/simulate',{method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({player1:p1,player2:p2,surface:document.getElementById('surface-select').value,best_of:parseInt(document.getElementById('best-of-select').value),tour:document.getElementById('tour-select').value})});
-      showResults(await res.json());
-    }catch(e){alert('Simulation failed. Is the server running?');}
-    finally{btn.disabled=false;btn.innerHTML='SIMULATE MATCH <span class="material-symbols-outlined">analytics</span>';}
-  });
-})();
-</script>
-<app-bottom-nav></app-bottom-nav>
-</body></html>
+</html>
