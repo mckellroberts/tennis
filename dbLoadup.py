@@ -379,7 +379,7 @@ DECAY_LAMBDA   = math.log(2) / HALF_LIFE_DAYS   # ≈ 0.00095
 
 
 
-def compute_weighted_surface_stats(conn, min_matches: int = 40):
+def compute_weighted_surface_stats(conn, min_matches: int = 60):
     """
     Populate player_surface_stats using a single SQL INSERT … SELECT.
 

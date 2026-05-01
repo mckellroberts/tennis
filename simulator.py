@@ -278,9 +278,9 @@ def fetch_simulation_context(
     # H2H and surface context — used for meta-nudge and result payload
     any_row  = next(iter(rows.values()), None)
     context  = {
-        "h2h_p1_wins":    int(any_row["p1_wins"]   or 0) if any_row else 0,
-        "h2h_p2_wins":    int(any_row["p2_wins"]   or 0) if any_row else 0,
-        "h2h_total":      int(any_row["h2h_total"] or 0) if any_row else 0,
+        "h2h_p1_wins":    int(any_row["p1_wins"])    if any_row else 0,
+        "h2h_p2_wins":    int(any_row["p2_wins"])    if any_row else 0,
+        "h2h_total":      int(any_row["h2h_total"])  if any_row else 0,
         "p1_surface_wins":  int(rows[p1_name]["surface_wins"])  if p1_name in rows else 0,
         "p1_surface_total": int(rows[p1_name]["surface_total"]) if p1_name in rows else 0,
         "p2_surface_wins":  int(rows[p2_name]["surface_wins"])  if p2_name in rows else 0,
