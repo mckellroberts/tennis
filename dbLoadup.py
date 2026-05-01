@@ -15,6 +15,7 @@ Usage:
 import sqlite3
 import csv
 import glob
+import math
 import os
 import sys
 import argparse
@@ -111,28 +112,25 @@ FROM PlayerTournamentStats pts
 JOIN Tournament t ON t.id = pts.tournament_id
 JOIN Player     p ON p.id = pts.player_id
 WHERE pts.rank IS NOT NULL;
+"""
 
-CREATE VIEW IF NOT EXISTS player_surface_stats AS
-SELECT
-    p.id      AS player_id,
-    p.name    AS player,
-    t.surface,
-    COUNT(*)  AS match_count,
-    NULL AS serve_win_pct,
-    NULL AS first_serve_pct,
-    NULL AS first_serve_win_pct,
-    NULL AS second_serve_win_pct,
-    NULL AS ace_rate,
-    NULL AS df_rate,
-    NULL AS bp_save_pct
-FROM PlayerMatchStats pms
-JOIN Match      m ON m.tournament_id = pms.tournament_id
-                 AND m.match_num     = pms.match_num
-JOIN Tournament t ON t.id           = m.tournament_id
-JOIN Player     p ON p.id           = pms.player_id
-WHERE pms.svpt > 0 AND pms.first_in IS NOT NULL
-GROUP BY p.id, t.surface
-HAVING match_count >= 60;
+# player_surface_stats is a TABLE, not a view, so we can store
+# pre-computed exponentially-weighted averages.
+SURFACE_STATS_TABLE = """
+CREATE TABLE IF NOT EXISTS player_surface_stats (
+    player_id            INTEGER,
+    player               TEXT,
+    surface              TEXT,
+    match_count          INTEGER,
+    serve_win_pct        REAL,
+    first_serve_pct      REAL,
+    first_serve_win_pct  REAL,
+    second_serve_win_pct REAL,
+    ace_rate             REAL,
+    df_rate              REAL,
+    bp_save_pct          REAL,
+    PRIMARY KEY (player_id, surface)
+);
 """
 
 INDEXES = """
@@ -163,9 +161,8 @@ def compute_age(dob: str, tourney_date: str):
     Returns None if either value is missing or malformed.
     """
     try:
-        from datetime import date
-        d = date(int(dob[:4]),         int(dob[4:6]),         int(dob[6:8]))
-        t = date(int(tourney_date[:4]), int(tourney_date[4:6]), int(tourney_date[6:8]))
+        d = date_type(int(dob[:4]),         int(dob[4:6]),         int(dob[6:8]))
+        t = date_type(int(tourney_date[:4]), int(tourney_date[4:6]), int(tourney_date[6:8]))
         return round((t - d).days / 365.25, 4)
     except Exception:
         return None
@@ -371,6 +368,131 @@ def _flush(conn, matches, stats, pts):
         """, pts)
 
 
+# ── Weighted surface stats ─────────────────────────────────────────────────────
+# Exponential decay: matches from HALF_LIFE_DAYS ago count half as much
+# as a match played today. ~730 days ≈ 2 years feels right for tennis —
+# recent form matters but a clay-court baseline built over many years
+# shouldn't evaporate after one bad season.
+HALF_LIFE_DAYS = 730
+DECAY_LAMBDA   = math.log(2) / HALF_LIFE_DAYS   # ≈ 0.00095
+
+
+
+
+def compute_weighted_surface_stats(conn, min_matches: int = 40):
+    """
+    Populate player_surface_stats using a single SQL INSERT … SELECT.
+
+    The core technique is exponential-decay weighting via SQLite's EXP() and
+    julianday() functions (available since SQLite 3.35, released March 2021).
+
+    For each player × surface bucket we compute:
+
+        weighted_avg(stat) = SUM(w_i * numerator_i) / SUM(w_i * denominator_i)
+
+    where  w_i = EXP(-λ * days_since_match).
+
+    Stats whose denominator can be zero on a given row (first_serve_win_pct
+    needs first_in > 0; bp_save_pct needs bp_faced > 0) use CASE guards so
+    those rows are silently excluded from just that ratio without being thrown
+    out of the bucket entirely.
+    """
+    print("  Computing exponentially-weighted surface stats (SQL)…")
+
+    lam = DECAY_LAMBDA   # embed as a plain float in the SQL string
+
+    conn.execute("DELETE FROM player_surface_stats;")
+    conn.execute(f"""
+        INSERT INTO player_surface_stats
+            (player_id, player, surface, match_count,
+             serve_win_pct, first_serve_pct, first_serve_win_pct,
+             second_serve_win_pct, ace_rate, df_rate, bp_save_pct)
+
+        -- ── CTE: attach a per-row exponential decay weight ──────────────────
+        WITH weighted AS (
+            SELECT
+                pms.player_id,
+                p.name    AS player,
+                t.surface,
+
+                -- Convert YYYYMMDD → ISO date, then measure days from today.
+                -- EXP() and julianday() require SQLite >= 3.35 (March 2021).
+                EXP(
+                    -{lam} * (
+                        julianday('now') -
+                        julianday(
+                            substr(t.date, 1, 4) || '-' ||
+                            substr(t.date, 5, 2) || '-' ||
+                            substr(t.date, 7, 2)
+                        )
+                    )
+                )         AS w,
+
+                pms.svpt,
+                pms.first_in,
+                pms.first_won,
+                pms.second_won,
+                pms.ace,
+                pms.df,
+                pms.bp_saved,
+                pms.bp_faced
+
+            FROM PlayerMatchStats pms
+            JOIN Match      m ON m.tournament_id = pms.tournament_id
+                             AND m.match_num     = pms.match_num
+            JOIN Tournament t ON t.id            = m.tournament_id
+            JOIN Player     p ON p.id            = pms.player_id
+            WHERE pms.svpt    >  0
+              AND pms.first_in IS NOT NULL
+        )
+        SELECT
+            player_id,
+            player,
+            surface,
+            COUNT(*)                                                AS match_count,
+
+            -- serve_win_pct: weighted (first_won + second_won) / svpt
+            SUM(w * (first_won + second_won))
+                / NULLIF(SUM(w * svpt), 0)                         AS serve_win_pct,
+
+            -- first_serve_pct: weighted first_in / svpt
+            SUM(w * first_in)
+                / NULLIF(SUM(w * svpt), 0)                         AS first_serve_pct,
+
+            -- first_serve_win_pct: only rows where first_in > 0 contribute
+            SUM(CASE WHEN first_in > 0 THEN w * first_won  ELSE 0 END)
+                / NULLIF(
+                    SUM(CASE WHEN first_in > 0 THEN w * first_in ELSE 0 END),
+                  0)                                                AS first_serve_win_pct,
+
+            -- second_serve_win_pct: denominator is (svpt - first_in)
+            SUM(CASE WHEN svpt - first_in > 0 THEN w * second_won        ELSE 0 END)
+                / NULLIF(
+                    SUM(CASE WHEN svpt - first_in > 0
+                             THEN w * (svpt - first_in) ELSE 0 END),
+                  0)                                                AS second_serve_win_pct,
+
+            -- ace_rate: weighted ace / svpt
+            SUM(w * ace)  / NULLIF(SUM(w * svpt), 0)               AS ace_rate,
+
+            -- df_rate: weighted df / svpt
+            SUM(w * df)   / NULLIF(SUM(w * svpt), 0)               AS df_rate,
+
+            -- bp_save_pct: only rows where bp_faced > 0 contribute
+            SUM(CASE WHEN bp_faced > 0 THEN w * bp_saved ELSE 0 END)
+                / NULLIF(
+                    SUM(CASE WHEN bp_faced > 0 THEN w * bp_faced ELSE 0 END),
+                  0)                                                AS bp_save_pct
+
+        FROM weighted
+        GROUP BY player_id, surface
+        HAVING match_count >= {min_matches}
+    """)
+
+    cur = conn.execute("SELECT COUNT(*) AS n FROM player_surface_stats")
+    print(f"    → {cur.fetchone()['n']:,} (player, surface) combinations written")
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 def main():
     if not os.path.isdir(DATA_DIR):
@@ -384,15 +506,17 @@ def main():
     conn.execute("PRAGMA foreign_keys=ON;")
 
     # ── Clean slate ───────────────────────────────────────────────────────────
-    for view  in ["Rankings", "player_surface_stats"]:
+    for view  in ["Rankings"]:
         conn.execute(f"DROP VIEW  IF EXISTS {view};")
-    for table in ["PlayerMatchStats", "PlayerTournamentStats", "Match", "Tournament", "Player"]:
+    for table in ["player_surface_stats", "PlayerMatchStats", "PlayerTournamentStats",
+                  "Match", "Tournament", "Player"]:
         conn.execute(f"DROP TABLE IF EXISTS {table};")
     conn.commit()
 
     for stmt in SCHEMA.strip().split(";"):
         if stmt.strip():
             conn.execute(stmt)
+    conn.execute(SURFACE_STATS_TABLE)
     conn.commit()
 
     t0    = time.time()
@@ -454,7 +578,10 @@ def main():
     for stmt in VIEWS.strip().split(";"):
         if stmt.strip():
             conn.execute(stmt)
+    conn.commit()
 
+    # ── Weighted surface stats ─────────────────────────────────────────────────
+    compute_weighted_surface_stats(conn, min_matches=60)
     conn.commit()
     conn.close()
 
