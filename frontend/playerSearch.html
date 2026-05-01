@@ -1,442 +1,331 @@
 <!DOCTYPE html>
-
-<html class="light" lang="en"><head>
+<html class="light" lang="en">
+<head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;family=Work+Sans:wght@100..900&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Work+Sans:wght@100..900&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="style.css"/>
 <script src="tailwind.config.js"></script>
 <script src="components.js"></script>
 </head>
 <body class="bg-background text-on-background font-body-md">
-<!-- TopNavBar -->
 <app-header></app-header>
 <main class="min-h-screen">
-<!-- Hero Search Section -->
-<section class="relative h-[400px] flex flex-col justify-center items-center overflow-hidden bg-primary-container">
-<div class="absolute inset-0 opacity-40">
-<img alt="Arena Background" class="w-full h-full object-cover" data-alt="A cinematic, wide-angle shot of a professional tennis arena at dusk, with intense stadium floodlights creating long shadows across the pristine blue court. The atmosphere is charged with professional energy and high-stakes competition. Deep navy tones dominate the palette, accented by the sharp, neon yellow-green of a tennis ball in the foreground. The style is minimalist-athletic and high-performance." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAau0nzypBovwToMjpRQ4hdQpXqwu1hYpaozYOD_Ul9zBI-zUFALY_GO8g4XZp6lot53kcyOfZhKXU_C-L9lxqROna9VlAKIczmZsxwBRgbL7QSnxRg3oDVGSvP15wVU8Bl9yW4q0TS0wU1uSDu_0lNm2sAayJPpccALZU46SoskLyylOaVwdfW1_gI21SM9w8tbWlOo9UghE39vhZlS5GJ3rJpvdYDRURRqEBpaOAh40kjej0azSSi2NlNSZAIXWmG5wSc321FcBL9"/>
-<div class="absolute inset-0 bg-gradient-to-t from-primary-container via-primary-container/60 to-transparent"></div>
-</div>
-<div class="relative z-10 w-full max-w-4xl px-gutter text-center">
-<span class="font-label-bold text-secondary-container uppercase tracking-widest mb-4 block">Global Database</span>
-<h1 class="font-display-xl text-white mb-8">Player Intelligence</h1>
-<div class="bg-white p-2 rounded-lg flex items-center shadow-xl border border-outline-variant/20">
-<span class="material-symbols-outlined text-outline px-4">person_search</span>
-<input id="search-input" class="flex-1 border-none focus:ring-0 text-lg py-4 font-body-md text-on-surface" placeholder="Search by name, rank, or specific metric..." type="text"/>
-<button id="analyze-btn" class="bg-secondary text-on-secondary px-8 py-4 font-label-bold uppercase rounded-sm hover:opacity-90 transition-opacity active:scale-95">Analyze</button>
-</div>
-</div>
-</section>
-<!-- Filters & Table Section -->
-<section class="max-w-container-max mx-auto px-gutter py-xl">
-<!-- Filter Bar -->
-<div class="flex flex-col md:flex-row justify-between items-end mb-lg gap-md">
-<div>
-<h2 class="font-headline-md text-primary mb-2 uppercase tracking-tight">Global Rankings</h2>
-<p class="font-body-md text-on-surface-variant">Live performance metrics from the current professional circuit.</p>
-</div>
-<div class="flex gap-sm items-center">
-<select id="tour-select" class="border border-[#E9ECEF] px-4 py-2 font-label-bold text-xs bg-white outline-none uppercase focus:ring-2 focus:ring-secondary">
-<option value="ATP">ATP (Men)</option>
-<option value="WTA">WTA (Women)</option>
-</select>
-</div>
-</div>
-<!-- Rankings Table -->
-<div class="bg-white border border-[#E9ECEF] overflow-hidden">
-<table class="w-full text-left border-collapse">
-<thead class="bg-surface-container-low border-b border-[#E9ECEF]">
-<tr>
-<th class="px-6 py-4 font-label-bold text-xs uppercase text-outline tracking-wider w-20">Rank</th>
-<th class="px-6 py-4 font-label-bold text-xs uppercase text-outline tracking-wider">Player</th>
-<th class="px-6 py-4 font-label-bold text-xs uppercase text-outline tracking-wider">Matches</th>
-<th class="px-6 py-4 font-label-bold text-xs uppercase text-outline tracking-wider text-center">Serve Win%</th>
-<th class="px-6 py-4 font-label-bold text-xs uppercase text-outline tracking-wider text-right">Ace Rate</th>
-<th class="px-6 py-4 font-label-bold text-xs uppercase text-outline tracking-wider text-center">Status</th>
-<th class="px-6 py-4"></th>
-</tr>
-</thead>
-<tbody id="rankings-tbody" class="divide-y divide-[#E9ECEF]">
-<!-- Row 1 -->
-<tr class="hover:bg-slate-50 transition-colors cursor-pointer group">
-<td class="px-6 py-6">
-<span class="font-stats-num text-2xl text-primary opacity-30 group-hover:opacity-100 transition-opacity">01</span>
-</td>
-<td class="px-6 py-6">
-<div class="flex items-center gap-4">
-<img alt="Player Avatar" class="w-12 h-12 rounded-full object-cover border border-[#E9ECEF]" data-alt="Detailed portrait of a top-tier male tennis player in his late 20s, showing intense focus and athletic determination. He is wearing a high-performance navy athletic shirt. The lighting is crisp, highlighting the textures of his sweat and the fabric. The background is a blurred stadium interior, emphasizing professional sports excellence." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEMwx13ZMP7VeNgxN7RiPnJE2furt5ZoXU07SHJI1oj_qCzkb1j9kgXSf0l7AYUc7QjYGtB-Y5LphQfz6asLMk1OoYMvWxoyF2bNtehkFuF1Hgtiwsoaq3ma5AjH0ezDqfKxNWa6KIaEoTZst_3RVWsR3oXMSOcM4f4-s1Q8vRCAjyQbg09ETkGTpzqJJgLlONJuSBoepFWKbkyxSnC5xsZ5-54j7R4iDa78MgREkNxiv5Wh-IEN3FCIu8ngPLhIykDt_Ha5eXSi-z"/>
-<div>
-<div class="font-label-bold text-on-surface uppercase">Alexander Novak</div>
-<div class="text-xs text-on-surface-variant font-body-md">Baseline Aggressor</div>
-</div>
-</div>
-</td>
-<td class="px-6 py-6">
-<div class="flex items-center gap-2 font-body-md text-on-surface">
-<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">flag</span>
-<span>SRB</span>
-</div>
-</td>
-<td class="px-6 py-6">
-<div class="w-full max-w-[120px] mx-auto">
-<div class="flex justify-between text-[10px] font-label-bold uppercase mb-1">
-<span>88%</span>
-</div>
-<div class="h-1 bg-surface-container-highest rounded-full overflow-hidden">
-<div class="h-full bg-secondary w-[88%]"></div>
-</div>
-</div>
-</td>
-<td class="px-6 py-6 text-right">
-<span class="font-label-bold text-primary">12,450</span>
-</td>
-<td class="px-6 py-6 text-center">
-<span class="inline-flex items-center px-3 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-label-bold uppercase rounded-full">Active</span>
-</td>
-<td class="px-6 py-6 text-right">
-<button class="material-symbols-outlined text-outline hover:text-primary transition-colors">analytics</button>
-</td>
-</tr>
-<!-- Row 2 -->
-<tr class="hover:bg-slate-50 transition-colors cursor-pointer group">
-<td class="px-6 py-6">
-<span class="font-stats-num text-2xl text-primary opacity-30 group-hover:opacity-100 transition-opacity">02</span>
-</td>
-<td class="px-6 py-6">
-<div class="flex items-center gap-4">
-<img alt="Player Avatar" class="w-12 h-12 rounded-full object-cover border border-[#E9ECEF]" data-alt="A professional headshot of a female tennis champion with a fierce, determined gaze. She is wearing elite athletic gear in a crisp white and navy color scheme. The lighting is bright and high-key, creating an energetic and powerful athletic aesthetic. The overall mood is focused and professional, against a clean, technical background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRn1WsDi10GKhJQMEdyLvTAWEbmFNMyqIPtFqL2vX2K9EsyuZAH8Go-IzK0zYQi0hElIVLxqZfhGgIqyO-zDJfwdRbxuiN6kX3O2EtyF8nwpTc3Gxqr6vE-HwtBJtelv112Zf8xYXqZIaCB5JcKKgjxO7vQB6tirCbUDOL02BA_KiaPZOEQBmCGjp4gztqSQxRGERAR9J9fg2k-yN7jeQzYW-3zE5XFhv3KBDM9oeD8FWnX0Gb1vzeGJDlrb4RGXqyE7mqtT0Ls6vZ"/>
-<div>
-<div class="font-label-bold text-on-surface uppercase">Elena Rybak</div>
-<div class="text-xs text-on-surface-variant font-body-md">Hard Court Specialist</div>
-</div>
-</div>
-</td>
-<td class="px-6 py-6">
-<div class="flex items-center gap-2 font-body-md text-on-surface">
-<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">flag</span>
-<span>KAZ</span>
-</div>
-</td>
-<td class="px-6 py-6">
-<div class="w-full max-w-[120px] mx-auto">
-<div class="flex justify-between text-[10px] font-label-bold uppercase mb-1">
-<span>84%</span>
-</div>
-<div class="h-1 bg-surface-container-highest rounded-full overflow-hidden">
-<div class="h-full bg-secondary w-[84%]"></div>
-</div>
-</div>
-</td>
-<td class="px-6 py-6 text-right">
-<span class="font-label-bold text-primary">10,120</span>
-</td>
-<td class="px-6 py-6 text-center">
-<span class="inline-flex items-center px-3 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-label-bold uppercase rounded-full">Active</span>
-</td>
-<td class="px-6 py-6 text-right">
-<button class="material-symbols-outlined text-outline hover:text-primary transition-colors">analytics</button>
-</td>
-</tr>
-<!-- Row 3 -->
-<tr class="hover:bg-slate-50 transition-colors cursor-pointer group">
-<td class="px-6 py-6">
-<span class="font-stats-num text-2xl text-primary opacity-30 group-hover:opacity-100 transition-opacity">03</span>
-</td>
-<td class="px-6 py-6">
-<div class="flex items-center gap-4">
-<img alt="Player Avatar" class="w-12 h-12 rounded-full object-cover border border-[#E9ECEF]" data-alt="A portrait of a young, energetic male tennis player with a muscular athletic build, wearing a vibrant neon-accented white athletic shirt. His expression is disciplined and ready for action. The studio lighting is sharp, highlighting his athletic form. The background is a minimalist dark navy texture, providing a high-contrast professional look." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJXoAIO4i47VFzeBoD-C6i_SzWD08ns1Z4_EjyoKHD0IN-rZJ89WmuDwWgqPSE1z-NjjiHb9tReRiQCxBUNOmRU_wivws2M78o1KT_609wVLrYPZjFwdA_rWLfIwnIfYS9MkMWAiBTR4Fwj-ONOfyaLo9lQvb-MKyIxr8vJbDrzjfj1crZbF7YAdQ-WTTqOa1UnMpko1eMYiAiuAPZMU9sseiuAX755uC1WuBPVOxpuo5EEAJ9pVMlLg27TYyWmafoauDAc1BBgLGu"/>
-<div>
-<div class="font-label-bold text-on-surface uppercase">Carlos Alcar</div>
-<div class="text-xs text-on-surface-variant font-body-md">All-Court Versatility</div>
-</div>
-</div>
-</td>
-<td class="px-6 py-6">
-<div class="flex items-center gap-2 font-body-md text-on-surface">
-<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">flag</span>
-<span>ESP</span>
-</div>
-</td>
-<td class="px-6 py-6">
-<div class="w-full max-w-[120px] mx-auto">
-<div class="flex justify-between text-[10px] font-label-bold uppercase mb-1">
-<span>82%</span>
-</div>
-<div class="h-1 bg-surface-container-highest rounded-full overflow-hidden">
-<div class="h-full bg-secondary w-[82%]"></div>
-</div>
-</div>
-</td>
-<td class="px-6 py-6 text-right">
-<span class="font-label-bold text-primary">9,800</span>
-</td>
-<td class="px-6 py-6 text-center">
-<span class="inline-flex items-center px-3 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-label-bold uppercase rounded-full">Active</span>
-</td>
-<td class="px-6 py-6 text-right">
-<button class="material-symbols-outlined text-outline hover:text-primary transition-colors">analytics</button>
-</td>
-</tr>
-<!-- Row 4 -->
-<tr class="hover:bg-slate-50 transition-colors cursor-pointer group">
-<td class="px-6 py-6">
-<span class="font-stats-num text-2xl text-primary opacity-30 group-hover:opacity-100 transition-opacity">04</span>
-</td>
-<td class="px-6 py-6">
-<div class="flex items-center gap-4">
-<img alt="Player Avatar" class="w-12 h-12 rounded-full object-cover border border-[#E9ECEF]" data-alt="Close-up professional portrait of an elite female tennis analyst with a technical, focused expression. She is wearing a dark navy blazer over an athletic top. The lighting is directional and dramatic, creating a sense of professional reliability and expertise. The aesthetic is modern-minimalist with a focus on data and high-performance clarity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAzRSKMZsnsuEC8Eml1zeb5RQFMVTTRfp3DmxKNYsmYB6Z7gdonKsvTLrlsG2FqPzwnA3MbpScxXtK2aa3Tsl4T6z1kytPV6i0UeKRdydW8U2CfdciXXBkqcB_EP1OMtrJH_UsT-Q-vLCKW7NzeB4WjPSAxC63tTxycNLAGrvTts3lb4wogAeGPnspk7YP36N65xc4HtOy16AfNDeo6w-GdN2_gIRMdO-NiXlX4-YMmzObaeuSMxISbFfJbHQORyZ_rqEZQeIeo64z"/>
-<div>
-<div class="font-label-bold text-on-surface uppercase">Iga Swiatek</div>
-<div class="text-xs text-on-surface-variant font-body-md">Clay Court Specialist</div>
-</div>
-</div>
-</td>
-<td class="px-6 py-6">
-<div class="flex items-center gap-2 font-body-md text-on-surface">
-<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">flag</span>
-<span>POL</span>
-</div>
-</td>
-<td class="px-6 py-6">
-<div class="w-full max-w-[120px] mx-auto">
-<div class="flex justify-between text-[10px] font-label-bold uppercase mb-1">
-<span>79%</span>
-</div>
-<div class="h-1 bg-surface-container-highest rounded-full overflow-hidden">
-<div class="h-full bg-secondary w-[79%]"></div>
-</div>
-</div>
-</td>
-<td class="px-6 py-6 text-right">
-<span class="font-label-bold text-primary">8,950</span>
-</td>
-<td class="px-6 py-6 text-center">
-<span class="inline-flex items-center px-3 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-label-bold uppercase rounded-full">Active</span>
-</td>
-<td class="px-6 py-6 text-right">
-<button class="material-symbols-outlined text-outline hover:text-primary transition-colors">analytics</button>
-</td>
-</tr>
-<!-- Row 5 -->
-<tr class="hover:bg-slate-50 transition-colors cursor-pointer group">
-<td class="px-6 py-6">
-<span class="font-stats-num text-2xl text-primary opacity-30 group-hover:opacity-100 transition-opacity">05</span>
-</td>
-<td class="px-6 py-6">
-<div class="flex items-center gap-4">
-<img alt="Player Avatar" class="w-12 h-12 rounded-full object-cover border border-[#E9ECEF]" data-alt="Portrait of a young male professional athlete with intense focus, wearing a technical navy blue compression shirt. He has a clean, athletic look with sharp features. The background is a crisp white tennis court surface under bright sunlight, creating high-contrast shadows. The style is athletic-minimalist, conveying professional discipline and high performance." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkcyo258Jgb1cg6KLpD7tmnnIvi07AuvWsJbGU9YmDzEvrgFkRmGzo_8Mgl94zdlq2FJx4Zy_SeHmMsjc97d1RACHv0I0_ZAkTLIT9hMHZwaUogNt4j1fsErCAeM1UelIdGeusO0jnjj7EU4nfbqs1kEn_LoUMASaj1Rzk2rlDGMwuROBHmSimh1zXojxU_R4_f0KwLo4zz2G9zWCjjVnDV5o-nowFXU9WdnpmP3D-JMGFwlMjNhVM4XEc23qf8S17INdvoTje106Y"/>
-<div>
-<div class="font-label-bold text-on-surface uppercase">Jannik Sin</div>
-<div class="text-xs text-on-surface-variant font-body-md">Precision Server</div>
-</div>
-</div>
-</td>
-<td class="px-6 py-6">
-<div class="flex items-center gap-2 font-body-md text-on-surface">
-<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">flag</span>
-<span>ITA</span>
-</div>
-</td>
-<td class="px-6 py-6">
-<div class="w-full max-w-[120px] mx-auto">
-<div class="flex justify-between text-[10px] font-label-bold uppercase mb-1">
-<span>75%</span>
-</div>
-<div class="h-1 bg-surface-container-highest rounded-full overflow-hidden">
-<div class="h-full bg-secondary w-[75%]"></div>
-</div>
-</div>
-</td>
-<td class="px-6 py-6 text-right">
-<span class="font-label-bold text-primary">7,600</span>
-</td>
-<td class="px-6 py-6 text-center">
-<span class="inline-flex items-center px-3 py-1 bg-surface-container text-outline text-[10px] font-label-bold uppercase rounded-full">Inactive</span>
-</td>
-<td class="px-6 py-6 text-right">
-<button class="material-symbols-outlined text-outline hover:text-primary transition-colors">analytics</button>
-</td>
-</tr>
-</tbody>
-</table>
-<!-- Pagination -->
-<div class="px-6 py-4 bg-surface-container-low flex justify-between items-center border-t border-[#E9ECEF]">
-<span id="player-count" class="text-xs font-body-md text-on-surface-variant">Loading…</span>
-<div class="flex gap-1" id="pagination-controls">
-<button class="w-8 h-8 flex items-center justify-center border border-[#E9ECEF] bg-white text-primary hover:bg-secondary-container transition-colors font-label-bold text-xs">1</button>
-<button class="w-8 h-8 flex items-center justify-center border border-[#E9ECEF] bg-white text-outline hover:bg-secondary-container hover:text-primary transition-colors font-label-bold text-xs">2</button>
-<button class="w-8 h-8 flex items-center justify-center border border-[#E9ECEF] bg-white text-outline hover:bg-secondary-container hover:text-primary transition-colors font-label-bold text-xs">3</button>
-<button class="w-8 h-8 flex items-center justify-center border border-[#E9ECEF] bg-white text-outline hover:bg-secondary-container hover:text-primary transition-colors font-label-bold text-xs">
-<span class="material-symbols-outlined text-sm">chevron_right</span>
-</button>
-</div>
-</div>
-</div>
-<!-- Bento Info Cards -->
-<div class="mt-xl grid grid-cols-1 md:grid-cols-3 gap-lg">
-<div class="bg-primary text-white p-lg flex flex-col justify-between min-h-[200px]">
-<span class="material-symbols-outlined text-secondary-container text-4xl">psychology</span>
-<div>
-<h3 class="font-headline-md uppercase mb-2">Predictive Logic</h3>
-<p class="text-sm opacity-80 font-body-md">Real-time simulation engine predicts player performance based on environmental and physical variables.</p>
-</div>
-</div>
-<div class="bg-white border border-[#E9ECEF] p-lg flex flex-col justify-between min-h-[200px]">
-<span class="material-symbols-outlined text-primary text-4xl">monitoring</span>
-<div>
-<h3 class="font-headline-md text-primary uppercase mb-2">Elite Scouting</h3>
-<p class="text-sm text-on-surface-variant font-body-md">Advanced filtering for identifying breakout talent across international circuits and satellite tournaments.</p>
-</div>
-</div>
-<div class="bg-secondary text-primary p-lg flex flex-col justify-between min-h-[200px]">
-<span class="material-symbols-outlined text-primary text-4xl">rocket_launch</span>
-<div>
-<h3 class="font-headline-md uppercase mb-2">Power Search</h3>
-<p class="text-sm opacity-80 font-body-md font-medium">Use AI-driven prompts to find players with specific tactical profiles or match-up histories.</p>
-</div>
-</div>
-</div>
-</section>
+
+  <!-- Hero Search Section -->
+  <section class="relative h-[400px] flex flex-col justify-center items-center overflow-hidden bg-primary-container">
+    <div class="absolute inset-0 opacity-40">
+      <img alt="Arena Background" class="w-full h-full object-cover"
+           src="https://lh3.googleusercontent.com/aida-public/AB6AXuAau0nzypBovwToMjpRQ4hdQpXqwu1hYpaozYOD_Ul9zBI-zUFALY_GO8g4XZp6lot53kcyOfZhKXU_C-L9lxqROna9VlAKIczmZsxwBRgbL7QSnxRg3oDVGSvP15wVU8Bl9yW4q0TS0wU1uSDu_0lNm2sAayJPpccALZU46SoskLyylOaVwdfW1_gI21SM9w8tbWlOo9UghE39vhZlS5GJ3rJpvdYDRURRqEBpaOAh40kjej0azSSi2NlNSZAIXWmG5wSc321FcBL9"/>
+      <div class="absolute inset-0 bg-gradient-to-t from-primary-container via-primary-container/60 to-transparent"></div>
+    </div>
+    <div class="relative z-10 w-full max-w-4xl px-gutter text-center">
+      <span class="font-label-bold text-secondary-container uppercase tracking-widest mb-4 block">Global Database</span>
+      <h1 class="font-display-xl text-white mb-8">Player Intelligence</h1>
+      <div class="bg-white p-2 rounded-lg flex items-center shadow-xl border border-outline-variant/20">
+        <span class="material-symbols-outlined text-outline px-4">person_search</span>
+        <input id="search-input"
+               class="flex-1 border-none focus:ring-0 text-lg py-4 font-body-md text-on-surface"
+               placeholder="Search by name, rank, or archetype…" type="text"/>
+        <button id="analyze-btn"
+                class="bg-secondary text-on-secondary px-8 py-4 font-label-bold uppercase rounded-sm hover:opacity-90 transition-opacity active:scale-95">
+          Analyze
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filters & Table Section -->
+  <section class="max-w-container-max mx-auto px-gutter py-xl">
+    <div class="flex flex-col md:flex-row justify-between items-end mb-lg gap-md">
+      <div>
+        <h2 class="font-headline-md text-primary mb-2 uppercase tracking-tight">Global Rankings</h2>
+        <p class="font-body-md text-on-surface-variant">
+          Live performance metrics — ranked by career match volume.
+        </p>
+      </div>
+      <div class="flex gap-sm items-center">
+        <!-- Archetype filter -->
+        <select id="archetype-filter"
+                class="border border-[#E9ECEF] px-4 py-2 font-label-bold text-xs bg-white outline-none uppercase focus:ring-2 focus:ring-secondary">
+          <option value="">All Archetypes</option>
+          <option value="Big Server">💣 Big Server</option>
+          <option value="Iron Wall">🛡️ Iron Wall</option>
+          <option value="Tactician">🧠 Tactician</option>
+          <option value="Precision Machine">🎯 Precision Machine</option>
+          <option value="All-Court Athlete">⚡ All-Court Athlete</option>
+          <option value="Grinder">🏃 Grinder</option>
+        </select>
+        <select id="tour-select"
+                class="border border-[#E9ECEF] px-4 py-2 font-label-bold text-xs bg-white outline-none uppercase focus:ring-2 focus:ring-secondary">
+          <option value="ATP">ATP (Men)</option>
+          <option value="WTA">WTA (Women)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Rankings Table -->
+    <div class="bg-white border border-[#E9ECEF] overflow-hidden">
+      <table class="w-full text-left border-collapse">
+        <thead class="bg-surface-container-low border-b border-[#E9ECEF]">
+          <tr>
+            <th class="px-6 py-4 font-label-bold text-xs uppercase text-outline tracking-wider w-16">Rank</th>
+            <th class="px-6 py-4 font-label-bold text-xs uppercase text-outline tracking-wider">Player</th>
+            <th class="px-6 py-4 font-label-bold text-xs uppercase text-outline tracking-wider">Matches</th>
+            <th class="px-6 py-4 font-label-bold text-xs uppercase text-outline tracking-wider text-center">Serve Win%</th>
+            <th class="px-6 py-4 font-label-bold text-xs uppercase text-outline tracking-wider text-right">Ace Rate</th>
+            <th class="px-6 py-4 font-label-bold text-xs uppercase text-outline tracking-wider text-center hidden md:table-cell">Archetype</th>
+            <th class="px-6 py-4"></th>
+          </tr>
+        </thead>
+        <tbody id="rankings-tbody" class="divide-y divide-[#E9ECEF]">
+          <tr>
+            <td colspan="7" class="px-6 py-12 text-center text-on-surface-variant font-body-md">Loading rankings…</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Pagination -->
+      <div class="px-6 py-4 bg-surface-container-low flex justify-between items-center border-t border-[#E9ECEF]">
+        <span id="player-count" class="text-xs font-body-md text-on-surface-variant">Loading…</span>
+        <div class="flex gap-1" id="pagination-controls"></div>
+      </div>
+    </div>
+
+    <!-- Bento Info Cards -->
+    <div class="mt-xl grid grid-cols-1 md:grid-cols-3 gap-lg">
+      <div class="bg-primary text-white p-lg flex flex-col justify-between min-h-[200px]">
+        <span class="material-symbols-outlined text-secondary-container text-4xl">psychology</span>
+        <div>
+          <h3 class="font-headline-md uppercase mb-2">Predictive Logic</h3>
+          <p class="text-sm opacity-80 font-body-md">
+            Real-time simulation engine predicts player performance based on historical serve statistics.
+          </p>
+        </div>
+      </div>
+      <div class="bg-white border border-[#E9ECEF] p-lg flex flex-col justify-between min-h-[200px]">
+        <span class="material-symbols-outlined text-primary text-4xl">monitoring</span>
+        <div>
+          <h3 class="font-headline-md text-primary uppercase mb-2">Elite Scouting</h3>
+          <p class="text-sm text-on-surface-variant font-body-md">
+            Filter by archetype to identify players that match a specific tactical profile.
+          </p>
+        </div>
+      </div>
+      <div class="bg-secondary text-primary p-lg flex flex-col justify-between min-h-[200px]">
+        <span class="material-symbols-outlined text-primary text-4xl">rocket_launch</span>
+        <div>
+          <h3 class="font-headline-md uppercase mb-2">Power Search</h3>
+          <p class="text-sm opacity-80 font-body-md font-medium">
+            Search by name and filter by archetype to find players with specific tactical profiles.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
-<!-- Simple Footer -->
+
 <footer class="bg-surface-container-lowest border-t border-[#E9ECEF] py-lg px-8 mt-xxl">
-<div class="max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-center gap-md">
-<span class="text-xs font-label-bold text-outline uppercase">© 2024 ACE ANALYTICS - Performance Lab</span>
-<div class="flex gap-8 text-xs font-label-bold text-outline uppercase tracking-wider">
-<a class="hover:text-primary" href="#">Data Integrity</a>
-<a class="hover:text-primary" href="#">API Access</a>
-<a class="hover:text-primary" href="#">Privacy Protocol</a>
-</div>
-</div>
+  <div class="max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-center gap-md">
+    <span class="text-xs font-label-bold text-outline uppercase">© 2024 COURT ANALYTICS — Performance Lab</span>
+    <div class="flex gap-8 text-xs font-label-bold text-outline uppercase tracking-wider">
+      <a class="hover:text-primary" href="#">Data Integrity</a>
+      <a class="hover:text-primary" href="#">API Access</a>
+      <a class="hover:text-primary" href="#">Privacy Protocol</a>
+    </div>
+  </div>
 </footer>
+
 <script>
 (function () {
-  let allPlayers = [];
-  let currentTour = 'ATP';
-  let currentPage = 1;
+  const ARCHETYPE_EMOJI = {
+    'Big Server':        '💣',
+    'Iron Wall':         '🛡️',
+    'Tactician':         '🧠',
+    'Precision Machine': '🎯',
+    'All-Court Athlete': '⚡',
+    'Grinder':           '🏃',
+  };
+  // Tailwind-compatible colour pairs per archetype
+  const ARCHETYPE_STYLE = {
+    'Big Server':        'bg-red-100 text-red-800',
+    'Iron Wall':         'bg-blue-100 text-blue-800',
+    'Tactician':         'bg-purple-100 text-purple-800',
+    'Precision Machine': 'bg-amber-100 text-amber-800',
+    'All-Court Athlete': 'bg-green-100 text-green-800',
+    'Grinder':           'bg-slate-100 text-slate-600',
+  };
+
+  let allPlayers     = [];
+  let currentTour    = 'ATP';
+  let currentPage    = 1;
   const itemsPerPage = 10;
   let currentFiltered = [];
 
+  /* ── Fetch rankings (extended endpoint) ───────────────────────────────── */
   async function loadRankings(tour) {
     const tbody = document.getElementById('rankings-tbody');
-    tbody.innerHTML = '<tr><td colspan="7" style="padding:48px;text-align:center;color:#444650;font-family:Work Sans,sans-serif;">Loading rankings…</td></tr>';
-    const res = await fetch('/api/rankings?tour=' + tour + '&limit=100');
-    allPlayers = await res.json();
-    currentFiltered = allPlayers;
+    tbody.innerHTML = `<tr><td colspan="7" class="px-6 py-12 text-center text-on-surface-variant font-body-md">Loading…</td></tr>`;
+
+    // Use the extended endpoint so we get archetype labels
+    const res   = await fetch('/api/rankings/extended?tour=' + tour + '&limit=200');
+    allPlayers  = await res.json();
+    applyFilters();
+  }
+
+  /* ── Apply search + archetype filter ─────────────────────────────────── */
+  function applyFilters() {
+    const q         = document.getElementById('search-input').value.trim().toLowerCase();
+    const archetype = document.getElementById('archetype-filter').value;
+
+    currentFiltered = allPlayers.filter(p => {
+      const nameMatch      = !q         || p.player.toLowerCase().includes(q);
+      const archetypeMatch = !archetype || p.archetype === archetype;
+      return nameMatch && archetypeMatch;
+    });
+
     currentPage = 1;
     renderTable();
     renderPagination();
   }
 
+  /* ── Render table rows ────────────────────────────────────────────────── */
   function renderTable() {
-    const tbody = document.getElementById('rankings-tbody');
+    const tbody   = document.getElementById('rankings-tbody');
     const countEl = document.getElementById('player-count');
-    
-    const start = (currentPage - 1) * itemsPerPage;
-    const shown = currentFiltered.slice(start, start + itemsPerPage);
-    
+    const start   = (currentPage - 1) * itemsPerPage;
+    const shown   = currentFiltered.slice(start, start + itemsPerPage);
+
     if (!shown.length) {
-      tbody.innerHTML = '<tr><td colspan="7" style="padding:48px;text-align:center;color:#444650;">No players found.</td></tr>';
+      tbody.innerHTML = `<tr><td colspan="7" class="px-6 py-12 text-center text-on-surface-variant font-body-md">No players found.</td></tr>`;
       if (countEl) countEl.textContent = 'Showing 0 of 0 players';
       return;
     }
-    
-    tbody.innerHTML = shown.map((p, i) => `
-      <tr class="hover:bg-slate-50 transition-colors cursor-pointer group"
-          onclick="location.href='player.html?name=${encodeURIComponent(p.player)}&tour=${currentTour}'">
-        <td class="px-6 py-6">
-          <span class="font-stats-num text-2xl text-primary" style="opacity:.3">${String(start + i + 1).padStart(2,'0')}</span>
-        </td>
-        <td class="px-6 py-6">
-          <div class="font-label-bold text-on-surface uppercase">${p.player}</div>
-          <div class="text-xs text-on-surface-variant font-body-md">${currentTour} Tour</div>
-        </td>
-        <td class="px-6 py-6 font-body-md text-on-surface">${p.total_matches.toLocaleString()}</td>
-        <td class="px-6 py-6">
-          <div style="max-width:120px">
-            <div class="text-[10px] font-label-bold uppercase mb-1">${(p.serve_win_pct*100).toFixed(0)}%</div>
-            <div class="h-1 bg-surface-container-highest rounded-full overflow-hidden">
-              <div class="h-full bg-secondary" style="width:${(p.serve_win_pct*100).toFixed(0)}%"></div>
+
+    tbody.innerHTML = shown.map((p, i) => {
+      const archEmoji = ARCHETYPE_EMOJI[p.archetype]  || '';
+      const archStyle = ARCHETYPE_STYLE[p.archetype]  || 'bg-slate-100 text-slate-500';
+      const rank      = String(start + i + 1).padStart(2, '0');
+
+      return `
+        <tr class="hover:bg-slate-50 transition-colors cursor-pointer group"
+            onclick="location.href='player.html?name=${encodeURIComponent(p.player)}&tour=${currentTour}'">
+          <td class="px-6 py-5">
+            <span class="font-stats-num text-2xl text-primary" style="opacity:.3">${rank}</span>
+          </td>
+          <td class="px-6 py-5">
+            <div class="flex items-center gap-3">
+              <img alt="${p.player}"
+                   class="w-10 h-10 rounded-full border border-[#E9ECEF] flex-shrink-0"
+                   src="https://api.dicebear.com/9.x/micah/svg?seed=${encodeURIComponent(p.player)}&backgroundColor=002366&radius=50"/>
+              <div>
+                <div class="font-label-bold text-on-surface uppercase text-sm">${p.player}</div>
+                <div class="text-xs text-on-surface-variant font-body-md">${currentTour} Tour</div>
+              </div>
             </div>
-          </div>
-        </td>
-        <td class="px-6 py-6 text-right font-label-bold text-primary">${(p.ace_rate*100).toFixed(2)}%</td>
-        <td class="px-6 py-6 text-center">
-          <span class="inline-flex items-center px-3 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-label-bold uppercase rounded-full">Active</span>
-        </td>
-        <td class="px-6 py-6 text-right">
-          <button class="material-symbols-outlined text-outline hover:text-primary transition-colors">analytics</button>
-        </td>
-      </tr>
-    `).join('');
-    
-    if (countEl) countEl.textContent = 'Showing ' + (start + 1) + '-' + Math.min(start + itemsPerPage, currentFiltered.length) + ' of ' + currentFiltered.length + ' players';
+          </td>
+          <td class="px-6 py-5 font-body-md text-on-surface text-sm">${Number(p.total_matches).toLocaleString()}</td>
+          <td class="px-6 py-5">
+            <div style="max-width:120px">
+              <div class="text-[10px] font-label-bold uppercase mb-1">${p.serve_win_pct.toFixed(0)}%</div>
+              <div class="h-1 bg-surface-container-highest rounded-full overflow-hidden">
+                <div class="h-full bg-secondary" style="width:${p.serve_win_pct.toFixed(0)}%"></div>
+              </div>
+            </div>
+          </td>
+          <td class="px-6 py-5 text-right font-label-bold text-primary text-sm">${p.ace_rate.toFixed(2)}%</td>
+          <td class="px-6 py-5 text-center hidden md:table-cell">
+            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-label-bold uppercase ${archStyle}">
+              ${archEmoji} ${p.archetype || '—'}
+            </span>
+          </td>
+          <td class="px-6 py-5 text-right">
+            <button class="material-symbols-outlined text-outline hover:text-primary transition-colors group-hover:text-primary">
+              analytics
+            </button>
+          </td>
+        </tr>`;
+    }).join('');
+
+    if (countEl) countEl.textContent =
+      `Showing ${start + 1}–${Math.min(start + itemsPerPage, currentFiltered.length)} of ${currentFiltered.length} players`;
   }
 
+  /* ── Pagination ───────────────────────────────────────────────────────── */
   function renderPagination() {
     const totalPages = Math.ceil(currentFiltered.length / itemsPerPage);
-    const container = document.getElementById('pagination-controls');
+    const container  = document.getElementById('pagination-controls');
     if (!container) return;
-    
-    let html = '';
-    for (let i = 1; i <= Math.min(3, totalPages); i++) {
-        html += `<button class="w-8 h-8 flex items-center justify-center border border-[#E9ECEF] ${currentPage === i ? 'bg-secondary-container text-primary' : 'bg-white text-outline hover:bg-secondary-container hover:text-primary'} transition-colors font-label-bold text-xs" onclick="window.goToPage(${i})">${i}</button>`;
+
+    // Show up to 5 page buttons around the current page
+    const pages = [];
+    const range = 2;
+    for (let i = Math.max(1, currentPage - range); i <= Math.min(totalPages, currentPage + range); i++) {
+      pages.push(i);
     }
-    if (totalPages > 3) {
-        html += `<button class="w-8 h-8 flex items-center justify-center border border-[#E9ECEF] bg-white text-outline hover:bg-secondary-container hover:text-primary transition-colors font-label-bold text-xs" onclick="window.goToPage(${currentPage < totalPages ? currentPage + 1 : totalPages})"><span class="material-symbols-outlined text-sm">chevron_right</span></button>`;
+
+    let html = '';
+    if (currentPage > 1) {
+      html += `<button onclick="window.goToPage(${currentPage - 1})"
+                       class="w-8 h-8 flex items-center justify-center border border-[#E9ECEF] bg-white text-outline hover:bg-secondary-container hover:text-primary transition-colors">
+                 <span class="material-symbols-outlined text-sm">chevron_left</span>
+               </button>`;
+    }
+    pages.forEach(p => {
+      html += `<button onclick="window.goToPage(${p})"
+                       class="w-8 h-8 flex items-center justify-center border border-[#E9ECEF] font-label-bold text-xs transition-colors
+                              ${currentPage === p ? 'bg-secondary-container text-primary' : 'bg-white text-outline hover:bg-secondary-container hover:text-primary'}">
+                 ${p}
+               </button>`;
+    });
+    if (currentPage < totalPages) {
+      html += `<button onclick="window.goToPage(${currentPage + 1})"
+                       class="w-8 h-8 flex items-center justify-center border border-[#E9ECEF] bg-white text-outline hover:bg-secondary-container hover:text-primary transition-colors">
+                 <span class="material-symbols-outlined text-sm">chevron_right</span>
+               </button>`;
     }
     container.innerHTML = html;
   }
 
-  window.goToPage = function(page) {
+  window.goToPage = function (page) {
     currentPage = page;
     renderTable();
     renderPagination();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  /* ── Event listeners ──────────────────────────────────────────────────── */
   document.getElementById('tour-select').addEventListener('change', function () {
     currentTour = this.value;
     loadRankings(currentTour);
   });
 
-  function doSearch() {
-    const q = document.getElementById('search-input').value.trim().toLowerCase();
-    currentFiltered = q ? allPlayers.filter(p => p.player.toLowerCase().includes(q)) : allPlayers;
-    currentPage = 1;
-    renderTable();
-    renderPagination();
-  }
+  document.getElementById('search-input').addEventListener('input', applyFilters);
+  document.getElementById('archetype-filter').addEventListener('change', applyFilters);
 
-  document.getElementById('search-input').addEventListener('input', doSearch);
-  const analyzeBtn = document.getElementById('analyze-btn');
-  if(analyzeBtn) analyzeBtn.addEventListener('click', () => {
-      const q = document.getElementById('search-input').value.trim();
-      if (q) {
-          // Fallback: If they click analyze without picking from dropdown, we assume they want to view that profile if it exists.
-          window.location.href = 'player.html?name=' + encodeURIComponent(q) + '&tour=' + currentTour;
-      }
+  document.getElementById('analyze-btn').addEventListener('click', () => {
+    const q = document.getElementById('search-input').value.trim();
+    if (q) window.location.href = 'player.html?name=' + encodeURIComponent(q) + '&tour=' + currentTour;
   });
-  
+
+  // Autocomplete — navigates directly to player page on selection
   if (window.setupPlayerAutocomplete) {
-      window.setupPlayerAutocomplete('search-input', () => currentTour, (name, tour) => {
-          window.location.href = 'player.html?name=' + encodeURIComponent(name) + '&tour=' + tour;
-      });
+    window.setupPlayerAutocomplete('search-input', () => currentTour, (name) => {
+      window.location.href = 'player.html?name=' + encodeURIComponent(name) + '&tour=' + currentTour;
+    });
   }
 
-  // Pre-fill search from URL ?q= param
-  const q = new URLSearchParams(window.location.search).get('q');
-  if (q) {
-    document.getElementById('search-input').value = q;
-  }
+  /* ── Pre-fill search from URL ?q= param ──────────────────────────────── */
+  const urlQ = new URLSearchParams(window.location.search).get('q');
+  if (urlQ) document.getElementById('search-input').value = urlQ;
 
-  loadRankings('ATP').then(() => {
-    if (q) doSearch();
-  });
+  /* ── Boot ─────────────────────────────────────────────────────────────── */
+  loadRankings('ATP').then(() => { if (urlQ) applyFilters(); });
 })();
 </script>
-<!-- Bottom Nav (mobile only) -->
+
 <app-bottom-nav></app-bottom-nav>
-</body></html>
+</body>
+</html>

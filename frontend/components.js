@@ -39,31 +39,67 @@ class AppBottomNav extends HTMLElement {
 }
 customElements.define('app-bottom-nav', AppBottomNav);
 
-window.setupPlayerAutocomplete = function(inputId, tourGetter, onSelect) {
+/**
+ * Attaches a live-search autocomplete dropdown to a text input.
+ *
+ * @param {string}   inputId      - ID of the <input> element
+ * @param {Function|string} tourGetter    - () => tour string, or a static string e.g. 'ATP'
+ * @param {Function} onSelect     - called with (playerName, tour) when the user picks a result
+ * @param {Function|string} [surfaceGetter] - optional () => surface string e.g. 'Clay'.
+ *                                            When provided, results are filtered to players
+ *                                            who have stats on that surface. Pass null to
+ *                                            search across all surfaces (default).
+ */
+window.setupPlayerAutocomplete = function(inputId, tourGetter, onSelect, surfaceGetter) {
     const input = document.getElementById(inputId);
     if (!input) return;
-    
+
     let wrap = input.parentElement;
     if (getComputedStyle(wrap).position === 'static') {
         wrap.style.position = 'relative';
     }
-    
+
     const drop = document.createElement('ul');
-    drop.style.cssText = 'position:absolute;top:100%;left:0;right:0;z-index:200;background:#fff;border:1px solid #E9ECEF;max-height:200px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.1);display:none;list-style:none;padding:0;margin:0; text-align:left;';
+    drop.style.cssText = [
+        'position:absolute', 'top:100%', 'left:0', 'right:0', 'z-index:200',
+        'background:#fff', 'border:1px solid #E9ECEF', 'max-height:220px',
+        'overflow-y:auto', 'box-shadow:0 4px 12px rgba(0,0,0,.1)',
+        'display:none', 'list-style:none', 'padding:0', 'margin:0', 'text-align:left',
+    ].join(';');
     wrap.appendChild(drop);
-    
+
+    function buildUrl(q) {
+        const tour    = typeof tourGetter    === 'function' ? tourGetter()    : (tourGetter    || 'ATP');
+        const surface = typeof surfaceGetter === 'function' ? surfaceGetter() : (surfaceGetter || '');
+        let url = `/api/players/search?q=${encodeURIComponent(q)}&tour=${tour}`;
+        if (surface) url += `&surface=${encodeURIComponent(surface)}`;
+        return { url, tour };
+    }
+
     let timer;
     input.addEventListener('input', () => {
         clearTimeout(timer);
         timer = setTimeout(async () => {
             const q = input.value.trim();
             if (q.length < 2) { drop.style.display = 'none'; return; }
-            const tour = typeof tourGetter === 'function' ? tourGetter() : (tourGetter || 'ATP');
+            const { url, tour } = buildUrl(q);
             try {
-                const res = await fetch('/api/players/search?q=' + encodeURIComponent(q) + '&tour=' + tour);
+                const res  = await fetch(url);
                 const list = await res.json();
                 drop.innerHTML = '';
-                if (!list.length) { drop.style.display = 'none'; return; }
+                if (!list.length) {
+                    // Show a friendly "no results" hint so the user knows the
+                    // surface filter is active and affecting results
+                    const surface = typeof surfaceGetter === 'function' ? surfaceGetter() : '';
+                    const li = document.createElement('li');
+                    li.style.cssText = 'padding:10px 16px;font-family:Lexend,sans-serif;font-size:11px;color:#757682;font-style:italic;';
+                    li.textContent = surface
+                        ? `No ${surface} stats found for "${q}"`
+                        : `No players found for "${q}"`;
+                    drop.appendChild(li);
+                    drop.style.display = 'block';
+                    return;
+                }
                 list.forEach(name => {
                     const li = document.createElement('li');
                     li.style.cssText = 'padding:8px 16px;cursor:pointer;font-family:Lexend,sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;border-bottom:1px solid #f3f4f5;color:#00113a;';
@@ -82,5 +118,13 @@ window.setupPlayerAutocomplete = function(inputId, tourGetter, onSelect) {
             } catch(e) { console.error(e); }
         }, 200);
     });
+
     input.addEventListener('blur', () => setTimeout(() => { drop.style.display = 'none'; }, 150));
+
+    // Expose a method so the simulator page can force-close the dropdown and
+    // re-trigger a search whenever the tour/surface selectors change.
+    input._autocompleteRefresh = () => {
+        drop.style.display = 'none';
+        if (input.value.trim().length >= 2) input.dispatchEvent(new Event('input'));
+    };
 };
