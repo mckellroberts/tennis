@@ -15,7 +15,7 @@
 <main class="min-h-screen">
 
   <!-- Hero Search Section -->
-  <section class="relative h-[400px] flex flex-col justify-center items-center overflow-hidden bg-primary-container">
+  <section class="relative h-[400px] flex flex-col justify-center items-center bg-primary-container">
     <div class="absolute inset-0 opacity-40">
       <img alt="Arena Background" class="w-full h-full object-cover"
            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAau0nzypBovwToMjpRQ4hdQpXqwu1hYpaozYOD_Ul9zBI-zUFALY_GO8g4XZp6lot53kcyOfZhKXU_C-L9lxqROna9VlAKIczmZsxwBRgbL7QSnxRg3oDVGSvP15wVU8Bl9yW4q0TS0wU1uSDu_0lNm2sAayJPpccALZU46SoskLyylOaVwdfW1_gI21SM9w8tbWlOo9UghE39vhZlS5GJ3rJpvdYDRURRqEBpaOAh40kjej0azSSi2NlNSZAIXWmG5wSc321FcBL9"/>
@@ -28,7 +28,7 @@
         <span class="material-symbols-outlined text-outline px-4">person_search</span>
         <input id="search-input"
                class="flex-1 border-none focus:ring-0 text-lg py-4 font-body-md text-on-surface"
-               placeholder="Search by name, rank, or archetype…" type="text"/>
+               placeholder="Search by name or nationality…" type="text"/>
         <button id="analyze-btn"
                 class="bg-secondary text-on-secondary px-8 py-4 font-label-bold uppercase rounded-sm hover:opacity-90 transition-opacity active:scale-95">
           Analyze
@@ -48,16 +48,7 @@
       </div>
       <div class="flex gap-sm items-center">
         <!-- Archetype filter -->
-        <select id="archetype-filter"
-                class="border border-[#E9ECEF] px-4 py-2 font-label-bold text-xs bg-white outline-none uppercase focus:ring-2 focus:ring-secondary">
-          <option value="">All Archetypes</option>
-          <option value="Big Server">💣 Big Server</option>
-          <option value="Iron Wall">🛡️ Iron Wall</option>
-          <option value="Tactician">🧠 Tactician</option>
-          <option value="Precision Machine">🎯 Precision Machine</option>
-          <option value="All-Court Athlete">⚡ All-Court Athlete</option>
-          <option value="Grinder">🏃 Grinder</option>
-        </select>
+
         <select id="tour-select"
                 class="border border-[#E9ECEF] px-4 py-2 font-label-bold text-xs bg-white outline-none uppercase focus:ring-2 focus:ring-secondary">
           <option value="ATP">ATP (Men)</option>
@@ -71,18 +62,18 @@
       <table class="w-full text-left border-collapse">
         <thead class="bg-surface-container-low border-b border-[#E9ECEF]">
           <tr>
-            <th class="px-6 py-4 font-label-bold text-xs uppercase text-outline tracking-wider w-16">Rank</th>
+
             <th class="px-6 py-4 font-label-bold text-xs uppercase text-outline tracking-wider">Player</th>
             <th class="px-6 py-4 font-label-bold text-xs uppercase text-outline tracking-wider">Matches</th>
             <th class="px-6 py-4 font-label-bold text-xs uppercase text-outline tracking-wider text-center">Serve Win%</th>
             <th class="px-6 py-4 font-label-bold text-xs uppercase text-outline tracking-wider text-right">Ace Rate</th>
-            <th class="px-6 py-4 font-label-bold text-xs uppercase text-outline tracking-wider text-center hidden md:table-cell">Archetype</th>
+
             <th class="px-6 py-4"></th>
           </tr>
         </thead>
         <tbody id="rankings-tbody" class="divide-y divide-[#E9ECEF]">
           <tr>
-            <td colspan="7" class="px-6 py-12 text-center text-on-surface-variant font-body-md">Loading rankings…</td>
+            <td colspan="5" class="px-6 py-12 text-center text-on-surface-variant font-body-md">Loading rankings…</td>
           </tr>
         </tbody>
       </table>
@@ -94,36 +85,7 @@
       </div>
     </div>
 
-    <!-- Bento Info Cards -->
-    <div class="mt-xl grid grid-cols-1 md:grid-cols-3 gap-lg">
-      <div class="bg-primary text-white p-lg flex flex-col justify-between min-h-[200px]">
-        <span class="material-symbols-outlined text-secondary-container text-4xl">psychology</span>
-        <div>
-          <h3 class="font-headline-md uppercase mb-2">Predictive Logic</h3>
-          <p class="text-sm opacity-80 font-body-md">
-            Real-time simulation engine predicts player performance based on historical serve statistics.
-          </p>
-        </div>
-      </div>
-      <div class="bg-white border border-[#E9ECEF] p-lg flex flex-col justify-between min-h-[200px]">
-        <span class="material-symbols-outlined text-primary text-4xl">monitoring</span>
-        <div>
-          <h3 class="font-headline-md text-primary uppercase mb-2">Elite Scouting</h3>
-          <p class="text-sm text-on-surface-variant font-body-md">
-            Filter by archetype to identify players that match a specific tactical profile.
-          </p>
-        </div>
-      </div>
-      <div class="bg-secondary text-primary p-lg flex flex-col justify-between min-h-[200px]">
-        <span class="material-symbols-outlined text-primary text-4xl">rocket_launch</span>
-        <div>
-          <h3 class="font-headline-md uppercase mb-2">Power Search</h3>
-          <p class="text-sm opacity-80 font-body-md font-medium">
-            Search by name and filter by archetype to find players with specific tactical profiles.
-          </p>
-        </div>
-      </div>
-    </div>
+
   </section>
 </main>
 
@@ -140,23 +102,7 @@
 
 <script>
 (function () {
-  const ARCHETYPE_EMOJI = {
-    'Big Server':        '💣',
-    'Iron Wall':         '🛡️',
-    'Tactician':         '🧠',
-    'Precision Machine': '🎯',
-    'All-Court Athlete': '⚡',
-    'Grinder':           '🏃',
-  };
-  // Tailwind-compatible colour pairs per archetype
-  const ARCHETYPE_STYLE = {
-    'Big Server':        'bg-red-100 text-red-800',
-    'Iron Wall':         'bg-blue-100 text-blue-800',
-    'Tactician':         'bg-purple-100 text-purple-800',
-    'Precision Machine': 'bg-amber-100 text-amber-800',
-    'All-Court Athlete': 'bg-green-100 text-green-800',
-    'Grinder':           'bg-slate-100 text-slate-600',
-  };
+
 
   let allPlayers     = [];
   let currentTour    = 'ATP';
@@ -167,7 +113,7 @@
   /* ── Fetch rankings (extended endpoint) ───────────────────────────────── */
   async function loadRankings(tour) {
     const tbody = document.getElementById('rankings-tbody');
-    tbody.innerHTML = `<tr><td colspan="7" class="px-6 py-12 text-center text-on-surface-variant font-body-md">Loading…</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-12 text-center text-on-surface-variant font-body-md">Loading…</td></tr>`;
 
     // Use the extended endpoint so we get archetype labels
     const res   = await fetch('/api/rankings/extended?tour=' + tour + '&limit=200');
@@ -178,12 +124,9 @@
   /* ── Apply search + archetype filter ─────────────────────────────────── */
   function applyFilters() {
     const q         = document.getElementById('search-input').value.trim().toLowerCase();
-    const archetype = document.getElementById('archetype-filter').value;
 
     currentFiltered = allPlayers.filter(p => {
-      const nameMatch      = !q         || p.player.toLowerCase().includes(q);
-      const archetypeMatch = !archetype || p.archetype === archetype;
-      return nameMatch && archetypeMatch;
+      return !q || p.player.toLowerCase().includes(q);
     });
 
     currentPage = 1;
@@ -199,22 +142,15 @@
     const shown   = currentFiltered.slice(start, start + itemsPerPage);
 
     if (!shown.length) {
-      tbody.innerHTML = `<tr><td colspan="7" class="px-6 py-12 text-center text-on-surface-variant font-body-md">No players found.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-12 text-center text-on-surface-variant font-body-md">No players found.</td></tr>`;
       if (countEl) countEl.textContent = 'Showing 0 of 0 players';
       return;
     }
 
     tbody.innerHTML = shown.map((p, i) => {
-      const archEmoji = ARCHETYPE_EMOJI[p.archetype]  || '';
-      const archStyle = ARCHETYPE_STYLE[p.archetype]  || 'bg-slate-100 text-slate-500';
-      const rank      = String(start + i + 1).padStart(2, '0');
-
       return `
         <tr class="hover:bg-slate-50 transition-colors cursor-pointer group"
             onclick="location.href='player.html?name=${encodeURIComponent(p.player)}&tour=${currentTour}'">
-          <td class="px-6 py-5">
-            <span class="font-stats-num text-2xl text-primary" style="opacity:.3">${rank}</span>
-          </td>
           <td class="px-6 py-5">
             <div class="flex items-center gap-3">
               <img alt="${p.player}"
@@ -236,11 +172,6 @@
             </div>
           </td>
           <td class="px-6 py-5 text-right font-label-bold text-primary text-sm">${p.ace_rate.toFixed(2)}%</td>
-          <td class="px-6 py-5 text-center hidden md:table-cell">
-            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-label-bold uppercase ${archStyle}">
-              ${archEmoji} ${p.archetype || '—'}
-            </span>
-          </td>
           <td class="px-6 py-5 text-right">
             <button class="material-symbols-outlined text-outline hover:text-primary transition-colors group-hover:text-primary">
               analytics
@@ -303,7 +234,7 @@
   });
 
   document.getElementById('search-input').addEventListener('input', applyFilters);
-  document.getElementById('archetype-filter').addEventListener('change', applyFilters);
+
 
   document.getElementById('analyze-btn').addEventListener('click', () => {
     const q = document.getElementById('search-input').value.trim();

@@ -14,7 +14,7 @@ class AppHeader extends HTMLElement {
 <a class="${p.includes('simulator.html') ? activeClass : inactiveClass}" href="simulator.html">Simulation</a>
 </div>
 <div class="flex items-center gap-4">
-<span class="material-symbols-outlined text-[#002366]">account_circle</span>
+
 </div>
 </nav>
 </header>`;
@@ -32,7 +32,7 @@ class AppBottomNav extends HTMLElement {
 <nav class="md:hidden fixed bottom-0 w-full z-50 flex justify-around items-center bg-white dark:bg-slate-900 px-4 pb-safe border-t border-[#E9ECEF] dark:border-slate-800">
 <a class="${p.includes('index.html') || p === '/' || p.endsWith('frontend/') ? activeClass : inactiveClass}" href="index.html"><span class="material-symbols-outlined">home</span><span>Home</span></a>
 <a class="${p.includes('playerSearch.html') || p.includes('player.html') ? activeClass : inactiveClass}" href="playerSearch.html"><span class="material-symbols-outlined">person</span><span>Players</span></a>
-<a class="bottom-nav-link bottom-nav-link-inactive" href="#"><span class="material-symbols-outlined">grid_view</span><span>Brackets</span></a>
+
 <a class="${p.includes('simulator.html') ? activeClass : inactiveClass}" href="simulator.html"><span class="material-symbols-outlined">analytics</span><span>Simulate</span></a>
 </nav>`;
     }
@@ -61,7 +61,7 @@ window.setupPlayerAutocomplete = function(inputId, tourGetter, onSelect, surface
 
     const drop = document.createElement('ul');
     drop.style.cssText = [
-        'position:absolute', 'top:100%', 'left:0', 'right:0', 'z-index:200',
+        'position:absolute', 'top:100%', 'left:0', 'right:0', 'z-index:1000',
         'background:#fff', 'border:1px solid #E9ECEF', 'max-height:220px',
         'overflow-y:auto', 'box-shadow:0 4px 12px rgba(0,0,0,.1)',
         'display:none', 'list-style:none', 'padding:0', 'margin:0', 'text-align:left',
